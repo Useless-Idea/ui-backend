@@ -1,9 +1,9 @@
 package space.uselessidea.uibackend.api.config.security.dto;
 
-import java.util.Date;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.google.gson.annotations.SerializedName;
+import java.util.Date;
 import lombok.Builder;
 import lombok.Data;
 

@@ -8,27 +8,31 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.AbstractOAuth2TokenAuthenticationToken;
 
 @Getter
-public class JwtUserToken extends AbstractOAuth2TokenAuthenticationToken<Jwt> implements User {
+public class JwtUserToken extends AbstractOAuth2TokenAuthenticationToken<Jwt> implements CharacterPrincipal {
 
-  private final Long userId;
+  private final Long charId;
   private final Long corpId;
-  private final String userName;
+  private final String username;
   private final String corpName;
 
-  protected JwtUserToken(Jwt token, Collection<? extends GrantedAuthority> authorities) {
+  protected JwtUserToken(Jwt token, Long charId, String username, Long corpId, String corpName,
+      Collection<? extends GrantedAuthority> authorities) {
     super(token, authorities);
-    this.userId = Long.valueOf(token.getClaimAsString("sub").split(":")[2]);
-    this.userName = token.getClaimAsString("name");
+    this.setAuthenticated(true);
+    this.charId = charId;
+    this.username = username;
+    this.corpId = corpId;
+    this.corpName = corpName;
   }
 
   @Override
   public Map<String, Object> getTokenAttributes() {
-    return null;
+    return this.getToken().getClaims();
   }
 
   @Override
-  public Long getUserId() {
-    return null;
+  public Long getCharacterId() {
+    return charId;
   }
 
   @Override
@@ -37,12 +41,12 @@ public class JwtUserToken extends AbstractOAuth2TokenAuthenticationToken<Jwt> im
   }
 
   @Override
-  public String getUserName() {
-    return null;
+  public String getCharName() {
+    return username;
   }
 
   @Override
   public Long getCorpId() {
-    return null;
+    return corpId;
   }
 }
