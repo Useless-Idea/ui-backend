@@ -1,0 +1,44 @@
+name: Deploy on Master Push
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo Hello
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          cat ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          echo Hello
+          ls ~/.ssh
+          ssh-keyscan -p $SSH_PORT -H $SSH_HOST > ~/.ssh/known_hosts
+          echo Hello
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+
+      - name: Deploy to Server
+        run: |
+          ssh $SSH_USER@$SSH_HOST -p $SSH_PORT<< 'EOF'
+            cd ~/useless-idea/ui-backend
+            git pull origin master
+            docker compose down
+            docker compose up --build -d
+            exit
+          EOF
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
