@@ -1,10 +1,10 @@
 package space.uselessidea.uibackend.api.config.security;
 
-import java.util.Arrays;
+import java.security.Principal;
 import java.util.Collection;
 import org.springframework.security.core.GrantedAuthority;
 
-public interface CharacterPrincipal {
+public interface CharacterPrincipal extends Principal {
 
   Long getCharacterId();
 
