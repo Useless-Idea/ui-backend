@@ -33,6 +33,9 @@ jobs:
         run: |
           ssh $SSH_USER@$SSH_HOST -p $SSH_PORT<< 'EOF'
             cd ~/useless-idea/ui-backend
+            git reset --hard
+            echo "ALLOWED_ORIGINS={{ vars.ALLOWED_ORIGINS }}" > .env
+          
             git pull origin master
             docker compose down
             docker compose up --build -d
