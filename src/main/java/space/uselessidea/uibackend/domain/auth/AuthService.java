@@ -1,8 +1,6 @@
 package space.uselessidea.uibackend.domain.auth;
 
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import space.uselessidea.uibackend.api.config.security.CharacterPrincipal;
 import space.uselessidea.uibackend.domain.auth.dto.AuthMeResponse;
@@ -24,8 +22,8 @@ public class AuthService {
         .charName(jwtUserToken.getCharName())
         .corpId(jwtUserToken.getCorpId())
         .corpName(corporationPublicData.getName())
-        .roles(jwtUserToken.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(
-            Collectors.toSet()))
+        .roles(jwtUserToken.getRoles())
+        .permission(jwtUserToken.getPermissions())
         .build();
   }
 

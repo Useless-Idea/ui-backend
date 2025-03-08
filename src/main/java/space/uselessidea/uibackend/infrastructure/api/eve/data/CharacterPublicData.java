@@ -10,7 +10,8 @@ import lombok.Data;
 )
 public class CharacterPublicData {
 
-  String name;
-  Long corporationId;
+  private String name;
+  private Long corporationId;
+  private Long allianceId;
 
 }

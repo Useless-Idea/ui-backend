@@ -2,6 +2,7 @@ package space.uselessidea.uibackend.api.config.security;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -15,15 +16,20 @@ public class JwtUserToken extends AbstractOAuth2TokenAuthenticationToken<Jwt> im
   private final Long corpId;
   private final String username;
   private final String corpName;
+  private final Set<String> roles;
+  private final Set<String> permissions;
 
   protected JwtUserToken(Jwt token, Long charId, String username, Long corpId, String corpName,
-      Collection<? extends GrantedAuthority> authorities) {
+      Collection<? extends GrantedAuthority> authorities, Set<String> roles, Set<String> permissions,
+      boolean isBlocked) {
     super(token, authorities);
-    this.setAuthenticated(true);
+    this.setAuthenticated(!isBlocked);
     this.charId = charId;
     this.username = username;
     this.corpId = corpId;
     this.corpName = corpName;
+    this.roles = roles;
+    this.permissions = permissions;
   }
 
   @Override

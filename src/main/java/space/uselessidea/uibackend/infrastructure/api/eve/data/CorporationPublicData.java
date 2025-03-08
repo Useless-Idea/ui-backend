@@ -11,5 +11,8 @@ import lombok.Data;
 public class CorporationPublicData {
 
   private String name;
+  private Long allianceId;
+  private Long ceoId;
+  private String ticker;
 
 }

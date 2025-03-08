@@ -17,7 +17,7 @@ public class AuthMeResponse {
   private Long charId;
   private String corpName;
   private Long corpId;
+  private Set<String> permission;
   private Set<String> roles;
-
 
 }
