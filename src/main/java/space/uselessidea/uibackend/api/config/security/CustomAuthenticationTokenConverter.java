@@ -3,7 +3,6 @@ package space.uselessidea.uibackend.api.config.security;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
@@ -11,16 +10,16 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 import space.uselessidea.uibackend.domain.character.dto.CharactedData;
-import space.uselessidea.uibackend.domain.character.port.secondrt.CharacterPort;
+import space.uselessidea.uibackend.domain.character.port.secondary.CharacterSecondaryPort;
 import space.uselessidea.uibackend.domain.eve.api.secondary.EveApiPort;
-import space.uselessidea.uibackend.infrastructure.api.eve.data.CharacterPublicData;
+import space.uselessidea.uibackend.infrastructure.eve.api.data.CharacterPublicData;
 
 @RequiredArgsConstructor
 @Component
 public class CustomAuthenticationTokenConverter implements Converter<Jwt, AbstractAuthenticationToken> {
 
   private final EveApiPort eveApiPort;
-  private final CharacterPort characterPort;
+  private final CharacterSecondaryPort characterPort;
 
   @Override
   public AbstractAuthenticationToken convert(Jwt source) {
@@ -32,10 +31,10 @@ public class CustomAuthenticationTokenConverter implements Converter<Jwt, Abstra
     Set<String> userPermission = characterData.getPermission();
     List<SimpleGrantedAuthority> roles = userRole.stream()
         .map(role -> new SimpleGrantedAuthority("ROLE_" + role.toUpperCase()))
-        .collect(Collectors.toList());
+        .toList();
     List<SimpleGrantedAuthority> permission = userPermission.stream()
         .map(role -> new SimpleGrantedAuthority(role.toUpperCase()))
-        .collect(Collectors.toList());
+        .toList();
     List<SimpleGrantedAuthority> sgaList = new ArrayList<>();
     sgaList.addAll(roles);
     sgaList.addAll(permission);

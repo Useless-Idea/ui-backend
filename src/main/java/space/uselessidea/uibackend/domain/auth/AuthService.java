@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import space.uselessidea.uibackend.api.config.security.CharacterPrincipal;
 import space.uselessidea.uibackend.domain.auth.dto.AuthMeResponse;
 import space.uselessidea.uibackend.domain.eve.api.secondary.EveApiPort;
-import space.uselessidea.uibackend.infrastructure.api.eve.data.CorporationPublicData;
+import space.uselessidea.uibackend.infrastructure.eve.api.data.CorporationPublicData;
 
 @Service
 @RequiredArgsConstructor

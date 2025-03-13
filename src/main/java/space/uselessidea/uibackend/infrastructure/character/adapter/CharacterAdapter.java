@@ -5,20 +5,20 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import space.uselessidea.uibackend.domain.character.dto.CharactedData;
-import space.uselessidea.uibackend.domain.character.port.secondrt.CharacterPort;
+import space.uselessidea.uibackend.domain.character.port.secondary.CharacterSecondaryPort;
 import space.uselessidea.uibackend.domain.eve.api.secondary.EveApiPort;
-import space.uselessidea.uibackend.infrastructure.api.eve.data.CharacterPublicData;
-import space.uselessidea.uibackend.infrastructure.api.eve.data.CorporationPublicData;
 import space.uselessidea.uibackend.infrastructure.character.persistence.Character;
 import space.uselessidea.uibackend.infrastructure.character.persistence.Corporation;
 import space.uselessidea.uibackend.infrastructure.character.persistence.Permission;
 import space.uselessidea.uibackend.infrastructure.character.persistence.Role;
 import space.uselessidea.uibackend.infrastructure.character.repository.CharacterRepository;
 import space.uselessidea.uibackend.infrastructure.character.repository.CorporationRepository;
+import space.uselessidea.uibackend.infrastructure.eve.api.data.CharacterPublicData;
+import space.uselessidea.uibackend.infrastructure.eve.api.data.CorporationPublicData;
 
 @Service
 @RequiredArgsConstructor
-public class CharacterAdapter implements CharacterPort {
+public class CharacterAdapter implements CharacterSecondaryPort {
 
   private final CharacterRepository characterRepository;
   private final EveApiPort eveApiPort;
@@ -27,9 +27,19 @@ public class CharacterAdapter implements CharacterPort {
   @Override
   @Transactional
   public CharactedData getCharacterData(Long id) {
-    Character character = characterRepository.findById(
-        id).orElseGet(() -> createCharacter(id));
+    Character character = characterRepository.findById(id)
+        .orElseGet(() -> createCharacter(id));
+    return map(character);
+  }
 
+  @Override
+  public CharactedData saveCharacterData(CharactedData characterData) {
+    Long charId = characterData.getCharacterId();
+    Character character = characterRepository.findById(charId)
+        .orElseGet(() -> createCharacter(charId));
+    character.setIsTokenActive(characterData.getTokenActive());
+    character.setVersion(characterData.getVersion());
+    character = characterRepository.save(character);
     return map(character);
   }
 
@@ -72,6 +82,8 @@ public class CharacterAdapter implements CharacterPort {
             .flatMap(role -> role.getPermissions().stream())
             .map(Permission::getCode)
             .collect(Collectors.toSet()))
+        .tokenActive(character.getIsTokenActive())
+        .version(character.getVersion())
         .build();
   }
 }

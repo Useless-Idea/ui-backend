@@ -1,10 +1,10 @@
-package space.uselessidea.uibackend.infrastructure.api.eve;
+package space.uselessidea.uibackend.infrastructure.eve.api;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import space.uselessidea.uibackend.domain.eve.api.secondary.EveApiPort;
-import space.uselessidea.uibackend.infrastructure.api.eve.data.CharacterPublicData;
-import space.uselessidea.uibackend.infrastructure.api.eve.data.CorporationPublicData;
+import space.uselessidea.uibackend.infrastructure.eve.api.data.CharacterPublicData;
+import space.uselessidea.uibackend.infrastructure.eve.api.data.CorporationPublicData;
 
 @Component
 @RequiredArgsConstructor

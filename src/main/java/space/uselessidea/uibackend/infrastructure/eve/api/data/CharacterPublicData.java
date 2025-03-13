@@ -1,4 +1,4 @@
-package space.uselessidea.uibackend.infrastructure.api.eve.data;
+package space.uselessidea.uibackend.infrastructure.eve.api.data;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;

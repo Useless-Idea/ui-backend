@@ -65,3 +65,18 @@ CREATE TABLE character_role (
   CONSTRAINT user_role_character_id_fkey FOREIGN KEY (character_id) REFERENCES "character"(id),
   CONSTRAINT user_role_role_uuid_fkey FOREIGN KEY (role_uuid) REFERENCES "role"("uuid")
 );
+
+--changeset psikora:3
+
+CREATE TABLE esi_token (
+                             char_id BIGINT NOT NULL,
+                             exp_date TIMESTAMP NOT NULL,
+                             refresh_token varchar(255) NOT NULL,
+                             jwt text NOT NULL,
+                             PRIMARY KEY (char_id)
+);
+
+--changeset psikora:4
+ALTER TABLE "character"
+    ADD "version" BIGINT DEFAULT 0 NOT NULL;
+

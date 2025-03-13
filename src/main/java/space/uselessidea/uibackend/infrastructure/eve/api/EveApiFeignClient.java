@@ -1,11 +1,11 @@
-package space.uselessidea.uibackend.infrastructure.api.eve;
+package space.uselessidea.uibackend.infrastructure.eve.api;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import space.uselessidea.uibackend.infrastructure.api.eve.data.CharacterPublicData;
-import space.uselessidea.uibackend.infrastructure.api.eve.data.CorporationPublicData;
+import space.uselessidea.uibackend.infrastructure.eve.api.data.CharacterPublicData;
+import space.uselessidea.uibackend.infrastructure.eve.api.data.CorporationPublicData;
 
 @FeignClient(value = "eveApiFeignClient", url = "https://esi.evetech.net/latest")
 public interface EveApiFeignClient {

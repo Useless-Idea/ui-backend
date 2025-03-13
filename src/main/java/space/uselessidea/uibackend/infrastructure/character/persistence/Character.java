@@ -9,6 +9,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import jakarta.validation.constraints.NotNull;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -47,5 +48,8 @@ public class Character {
       joinColumns = @JoinColumn(name = "character_id"),
       inverseJoinColumns = @JoinColumn(name = "role_uuid"))
   private Set<Role> roles = new LinkedHashSet<>();
+
+  @Version
+  private Long version;
 
 }

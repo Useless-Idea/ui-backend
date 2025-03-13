@@ -1,18 +1,19 @@
-package space.uselessidea.uibackend.infrastructure.api.eve.data;
+package space.uselessidea.uibackend.infrastructure.eve.auth.data;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 @JsonNaming(
     PropertyNamingStrategies.SnakeCaseStrategy.class
 )
-public class CorporationPublicData {
+public class TokenData {
 
-  private String name;
-  private Long allianceId;
-  private Long ceoId;
-  private String ticker;
+  private String accessToken;
+  private String refreshToken;
+  private Long expiresIn;
 
 }
