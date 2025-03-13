@@ -55,6 +55,7 @@ public class TokenAdapter implements TokenSecondaryPort {
 
   private EsiTokenDto map(EsiToken esiToken) {
     return EsiTokenDto.builder()
+        .id(esiToken.getId())
         .jwt(esiToken.getJwt())
         .refreshToken(esiToken.getRefreshToken())
         .expDate(esiToken.getExpDate())
