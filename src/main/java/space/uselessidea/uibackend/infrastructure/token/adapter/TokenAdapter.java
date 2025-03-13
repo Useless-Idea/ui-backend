@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import space.uselessidea.uibackend.domain.token.dto.EsiTokenDto;
 import space.uselessidea.uibackend.domain.token.port.secondary.TokenSecondaryPort;
@@ -13,6 +14,7 @@ import space.uselessidea.uibackend.infrastructure.token.repository.EsiTokenRepos
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class TokenAdapter implements TokenSecondaryPort {
 
   private final EsiTokenRepository esiTokenRepository;
@@ -48,6 +50,7 @@ public class TokenAdapter implements TokenSecondaryPort {
   @Override
   public void deleteToken(Long id) {
     esiTokenRepository.deleteById(id);
+    log.info("Delete Token for char[{}]", id);
   }
 
   private EsiTokenDto map(EsiToken esiToken) {
