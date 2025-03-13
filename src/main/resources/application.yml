@@ -40,6 +40,11 @@ spring:
     enabled: true
     change-log: classpath:db/changelog/db.changelog-master.xml
     contexts: prod
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:password}
 
 eve-sso:
   clientId: ${EVE_SSO_CLIENT_ID:}
