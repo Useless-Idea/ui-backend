@@ -41,7 +41,7 @@ jobs:
             echo "POSTGRES_DB=${{ vars.POSTGRES_DB }}" >> .env
             echo "POSTGRES_USERNAME=${{ secrets.POSTGRES_USERNAME }}" >> .env
             echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
-            echo "RABBIT_MQ_HOST=${{ vars.RABBIT_MQ_HOST }}" > .env
+            echo "RABBIT_MQ_HOST=${{ vars.RABBIT_MQ_HOST }}" >> .env
             echo "RABBIT_MQ_PORT=${{ vars.RABBIT_MQ_PORT }}" >> .env
             echo "RABBIT_MQ_USERNAME=${{ vars.RABBIT_MQ_USERNAME }}" >> .env
             echo "RABBIT_MQ_PASSWORD=${{ vars.RABBIT_MQ_PASSWORD }}" >> .env
