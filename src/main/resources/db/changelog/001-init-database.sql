@@ -80,3 +80,7 @@ CREATE TABLE esi_token (
 ALTER TABLE "character"
     ADD "version" BIGINT DEFAULT 0 NOT NULL;
 
+--changeset psikora:5
+ALTER TABLE esi_token
+    ADD COLUMN features TEXT;
+

@@ -1,6 +1,8 @@
 package space.uselessidea.uibackend.domain.token;
 
 import java.time.Instant;
+import java.util.List;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -8,6 +10,7 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
+import space.uselessidea.uibackend.domain.FeatureEnum;
 import space.uselessidea.uibackend.domain.exception.ApplicationException;
 import space.uselessidea.uibackend.domain.exception.ErrorCode;
 import space.uselessidea.uibackend.domain.token.dto.EsiTokenDto;
@@ -35,8 +38,10 @@ public class TokenService implements TokenPrimaryPort {
     Jwt jwt = jwtDecoder.decode(tokenData.getAccessToken());
     Instant expiresAt = jwt.getExpiresAt();
     Long charId = Long.valueOf(jwt.getClaimAsString("sub").split(":")[2]);
+    List<String> scpList = jwt.getClaimAsStringList("scp");
+    Set<FeatureEnum> featureSet = FeatureEnum.mapFromScpList(scpList);
 
-    tokenSecondaryPort.saveToken(charId, expiresAt, tokenData);
+    tokenSecondaryPort.saveToken(charId, expiresAt, tokenData, featureSet);
     return charId;
   }
 

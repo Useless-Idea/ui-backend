@@ -2,10 +2,12 @@ package space.uselessidea.uibackend.infrastructure.token.adapter;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import space.uselessidea.uibackend.domain.FeatureEnum;
 import space.uselessidea.uibackend.domain.token.dto.EsiTokenDto;
 import space.uselessidea.uibackend.domain.token.port.secondary.TokenSecondaryPort;
 import space.uselessidea.uibackend.infrastructure.eve.auth.data.TokenData;
@@ -21,7 +23,7 @@ public class TokenAdapter implements TokenSecondaryPort {
 
 
   @Override
-  public EsiTokenDto saveToken(Long charId, Instant expiresAt, TokenData tokenData) {
+  public EsiTokenDto saveToken(Long charId, Instant expiresAt, TokenData tokenData, Set<FeatureEnum> featureSet) {
     EsiToken esiToken = esiTokenRepository.findById(charId).orElseGet(() -> {
       EsiToken token = new EsiToken();
       token.setId(charId);
@@ -30,6 +32,7 @@ public class TokenAdapter implements TokenSecondaryPort {
     esiToken.setExpDate(expiresAt);
     esiToken.setJwt(tokenData.getAccessToken());
     esiToken.setRefreshToken(tokenData.getRefreshToken());
+    esiToken.setFeatures(featureSet);
     esiToken = esiTokenRepository.save(esiToken);
     return map(esiToken);
   }
@@ -59,6 +62,7 @@ public class TokenAdapter implements TokenSecondaryPort {
         .jwt(esiToken.getJwt())
         .refreshToken(esiToken.getRefreshToken())
         .expDate(esiToken.getExpDate())
+        .features(esiToken.getFeatures())
         .build();
 
   }
