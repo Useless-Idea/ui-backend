@@ -38,8 +38,8 @@ public class TokenAdapter implements TokenSecondaryPort {
   }
 
   @Override
-  public void getToken(Long charId) {
-
+  public EsiTokenDto getToken(Long charId) {
+    return map(esiTokenRepository.getReferenceById(charId));
   }
 
   @Override

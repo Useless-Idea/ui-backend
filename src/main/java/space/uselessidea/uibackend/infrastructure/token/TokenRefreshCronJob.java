@@ -1,4 +1,4 @@
-package space.uselessidea.uibackend.domain.token;
+package space.uselessidea.uibackend.infrastructure.token;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,8 @@ public class TokenRefreshCronJob {
 
 
   @Transactional
-  @Scheduled(cron = "${cronjob.tokenrefresh}")
+  //@Scheduled(cron = "${cronjob.tokenrefresh}")
+  @Scheduled(fixedDelay = 10 * 60 * 1000)
   public void refreshAllTokens() {
     log.info("refreshAllTokens---START");
     tokenPrimaryPort.refreshAllTokens();

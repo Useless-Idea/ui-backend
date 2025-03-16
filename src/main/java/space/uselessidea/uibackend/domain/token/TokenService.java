@@ -46,6 +46,12 @@ public class TokenService implements TokenPrimaryPort {
   }
 
   @Override
+  public String getAccessToken(Long characterId) {
+    EsiTokenDto token = tokenSecondaryPort.getToken(characterId);
+    return token.getJwt();
+  }
+
+  @Override
   public void refreshAllTokens() {
     tokenSecondaryPort.getAllTokens().forEach(this::refreshToken);
   }

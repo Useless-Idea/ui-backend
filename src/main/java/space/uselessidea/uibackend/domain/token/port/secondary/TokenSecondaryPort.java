@@ -12,7 +12,7 @@ public interface TokenSecondaryPort {
 
   EsiTokenDto saveToken(Long charId, Instant expiresAt, TokenData tokenData, Set<FeatureEnum> featureSet);
 
-  void getToken(Long charId);
+  EsiTokenDto getToken(Long charId);
 
   List<EsiTokenDto> getAllTokens();
 

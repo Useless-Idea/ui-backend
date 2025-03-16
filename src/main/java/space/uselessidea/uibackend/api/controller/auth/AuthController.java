@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import space.uselessidea.uibackend.api.config.security.CharacterPrincipal;
 import space.uselessidea.uibackend.domain.FeatureEnum;
 import space.uselessidea.uibackend.domain.auth.dto.AuthMeResponse;
-import space.uselessidea.uibackend.infrastructure.eve.auth.EveAuthAdapter;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -20,7 +19,6 @@ import space.uselessidea.uibackend.infrastructure.eve.auth.EveAuthAdapter;
 public class AuthController {
 
 
-  private final EveAuthAdapter eveAuthAdapter;
   private final AuthApiService authApiService;
 
   @GetMapping("/me")

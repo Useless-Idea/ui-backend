@@ -6,5 +6,7 @@ public interface TokenPrimaryPort {
 
   Long addToken(TokenData tokenData);
 
+  String getAccessToken(Long characterId);
+
   void refreshAllTokens();
 }
