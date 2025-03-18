@@ -3,6 +3,8 @@ package space.uselessidea.uibackend.infrastructure.character.adapter;
 import jakarta.transaction.Transactional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import space.uselessidea.uibackend.domain.character.dto.CharactedData;
 import space.uselessidea.uibackend.domain.character.port.secondary.CharacterSecondaryPort;
@@ -41,6 +43,11 @@ public class CharacterAdapter implements CharacterSecondaryPort {
     character.setVersion(characterData.getVersion());
     character = characterRepository.save(character);
     return map(character);
+  }
+
+  @Override
+  public Page<CharactedData> getCharacterDataPage(Pageable pageable) {
+    return characterRepository.findAll(pageable).map(this::map);
   }
 
   private Character createCharacter(Long characterId) {

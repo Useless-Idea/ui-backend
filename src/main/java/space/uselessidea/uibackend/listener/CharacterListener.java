@@ -16,7 +16,7 @@ public class CharacterListener {
 
   @RabbitListener(queues = {RabbitMqConfig.CHAR_UPDATE_QUEUE})
   private void handleNewToken(Long characterId) {
-    characterPrimaryPort.getCharacterData(characterId);
+    characterPrimaryPort.updateCharacterData(characterId);
   }
 
 }
