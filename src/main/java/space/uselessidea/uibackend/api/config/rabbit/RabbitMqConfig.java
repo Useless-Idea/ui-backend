@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMqConfig {
 
   public static final String TOKEN_QUEUE = "q.token";
+  public static final String CHAR_UPDATE_QUEUE = "q.character_update";
 
   @Bean
   public MessageConverter jsonToMapMessageConverter() {
@@ -23,6 +24,11 @@ public class RabbitMqConfig {
   @Bean
   Queue tokenQueue() {
     return new Queue(TOKEN_QUEUE);
+  }
+
+  @Bean
+  Queue characterUpdateQueue() {
+    return new Queue(CHAR_UPDATE_QUEUE);
   }
 
 }
