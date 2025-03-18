@@ -15,7 +15,7 @@ import space.uselessidea.uibackend.infrastructure.eve.api.data.TypeData;
 @RequiredArgsConstructor
 public class EveApiAdapter implements EveApiPort {
 
-  private final EveApiFeignClient eveApiFeignClient;
+  private EveApiFeignClient eveApiFeignClient;
 
   @Override
   public CharacterPublicData getCharPublicData(Long charId) {
