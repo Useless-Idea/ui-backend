@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
@@ -28,6 +30,8 @@ public class TokenService implements TokenPrimaryPort {
   private final EveAuthSecondaryPort eveAuthSecondaryPort;
   private final TokenSecondaryPort tokenSecondaryPort;
   private final EveProperties eveProperties;
+  private final RabbitTemplate rabbitTemplate;
+  private final Queue characterUpdateQueue;
 
   @Override
   public Long addToken(TokenData tokenData) {
@@ -42,6 +46,7 @@ public class TokenService implements TokenPrimaryPort {
     Set<FeatureEnum> featureSet = FeatureEnum.mapFromScpList(scpList);
 
     tokenSecondaryPort.saveToken(charId, expiresAt, tokenData, featureSet);
+    rabbitTemplate.convertAndSend(characterUpdateQueue.getName(), charId);
     return charId;
   }
 

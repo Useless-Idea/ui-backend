@@ -41,6 +41,11 @@ public class CharacterService implements CharacterPrimaryPort {
 
   }
 
+  @Override
+  public CharactedData getCharacterData(Long characterId) {
+    return characterSecondaryPort.getCharacterData(characterId);
+  }
+
   private void canGetUserSkills(Long characterId, CharacterPrincipal principal) {
     if (principal.getCharacterId().equals(characterId)) {
       return;
