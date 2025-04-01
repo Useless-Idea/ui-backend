@@ -28,6 +28,8 @@ public class SecurityConfig {
         )
         .authorizeHttpRequests(auth -> auth
             .requestMatchers(
+                antMatcher("/api/v1/term"),
+                antMatcher("/api/v1/term/**"),
                 antMatcher("/api/v1/test"),
                 antMatcher("/api/v1/auth/login"),
                 antMatcher("/api/v1/auth/callback"),
