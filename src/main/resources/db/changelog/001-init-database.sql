@@ -84,3 +84,9 @@ ALTER TABLE "character"
 ALTER TABLE esi_token
     ADD COLUMN features TEXT;
 
+--changeset mike:6 add terms table
+CREATE TABLE "terms" (
+   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  term varchar NOT NULL,
+  description varchar NOT NULL
+)
