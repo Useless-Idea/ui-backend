@@ -1,4 +1,4 @@
-package space.uselessidea.uibackend.infrastructure.token.persistence;
+package space.uselessidea.uibackend.infrastructure.eve.api.token.persistence;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
@@ -12,7 +12,7 @@ import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 import space.uselessidea.uibackend.domain.FeatureEnum;
-import space.uselessidea.uibackend.infrastructure.token.persistence.converter.FeatureConverter;
+import space.uselessidea.uibackend.infrastructure.eve.api.token.persistence.converter.FeatureConverter;
 
 @Getter
 @Setter

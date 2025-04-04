@@ -1,4 +1,4 @@
-package space.uselessidea.uibackend.infrastructure.token.persistence.converter;
+package space.uselessidea.uibackend.infrastructure.eve.api.token.persistence.converter;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
