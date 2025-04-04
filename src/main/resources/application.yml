@@ -8,7 +8,7 @@ spring:
   rabbitmq:
     listener:
       simple:
-        auto-startup: false
+        auto-startup: ${RABBIT_MQ_AUTO_STARTUP:false}
 
     host: ${RABBIT_MQ_HOST:localhost}
     port: ${RABBIT_MQ_PORT:5672}
