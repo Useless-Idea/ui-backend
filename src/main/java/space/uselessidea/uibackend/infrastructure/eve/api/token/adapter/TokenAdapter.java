@@ -1,4 +1,4 @@
-package space.uselessidea.uibackend.infrastructure.token.adapter;
+package space.uselessidea.uibackend.infrastructure.eve.api.token.adapter;
 
 import java.time.Instant;
 import java.util.List;
@@ -10,9 +10,9 @@ import org.springframework.stereotype.Service;
 import space.uselessidea.uibackend.domain.FeatureEnum;
 import space.uselessidea.uibackend.domain.token.dto.EsiTokenDto;
 import space.uselessidea.uibackend.domain.token.port.secondary.TokenSecondaryPort;
+import space.uselessidea.uibackend.infrastructure.eve.api.token.persistence.EsiToken;
+import space.uselessidea.uibackend.infrastructure.eve.api.token.repository.EsiTokenRepository;
 import space.uselessidea.uibackend.infrastructure.eve.auth.data.TokenData;
-import space.uselessidea.uibackend.infrastructure.token.persistence.EsiToken;
-import space.uselessidea.uibackend.infrastructure.token.repository.EsiTokenRepository;
 
 @Service
 @RequiredArgsConstructor
