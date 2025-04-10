@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 import space.uselessidea.uibackend.api.config.rabbit.RabbitMqConfig;
-import space.uselessidea.uibackend.domain.character.port.primary.CharacterPrimaryPort;
 import space.uselessidea.uibackend.domain.exception.ApplicationException;
 import space.uselessidea.uibackend.domain.token.port.primary.TokenPrimaryPort;
 import space.uselessidea.uibackend.infrastructure.eve.auth.data.TokenData;
@@ -17,7 +16,6 @@ import space.uselessidea.uibackend.infrastructure.eve.auth.data.TokenData;
 public class TokenListener {
 
   private final TokenPrimaryPort tokenPrimaryPort;
-  private final CharacterPrimaryPort characterPrimaryPort;
 
   @RabbitListener(queues = {RabbitMqConfig.TOKEN_QUEUE})
   private void handleNewToken(String token) {
@@ -28,9 +26,7 @@ public class TokenListener {
       charId = tokenPrimaryPort.addToken(tokenData);
     } catch (ApplicationException applicationException) {
       log.error(String.format("Token [%s] is not valid", tokenData.getAccessToken()));
-      return;
     }
-    //characterPrimaryPort.changeTokenStatus(charId, true);
 
   }
 
