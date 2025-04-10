@@ -13,6 +13,7 @@ public class RabbitMqConfig {
   public static final String TOKEN_QUEUE = "q.token";
   public static final String CHAR_UPDATE_QUEUE = "q.character_update";
   public static final String ITEM_TYPE_QUEUE = "q.item_type";
+  public static final String FIT_UPDATE_QUEUE = "q.fit";
 
   @Bean
   public MessageConverter jsonToMapMessageConverter() {
@@ -35,6 +36,11 @@ public class RabbitMqConfig {
   @Bean
   Queue itemTypeQueue() {
     return new Queue(ITEM_TYPE_QUEUE);
+  }
+
+  @Bean
+  Queue fitUpdateQueue() {
+    return new Queue(FIT_UPDATE_QUEUE);
   }
 
 }

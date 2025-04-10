@@ -98,4 +98,10 @@ CREATE TABLE "item_type"
     id     BIGINT  NOT NULL,
     "name" varchar NOT NULL
 );
+--changeset psikora:7
+CREATE TABLE "fit"
+(
+    "uuid" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    eft    varchar NOT NULL
+);
 

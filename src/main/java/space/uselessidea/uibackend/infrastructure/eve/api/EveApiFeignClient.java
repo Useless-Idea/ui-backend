@@ -34,7 +34,7 @@ public interface EveApiFeignClient {
   CorporationPublicData getCorporationPublicData(@PathVariable("corporation_id") Long corporationId);
 
   @RequestMapping(method = RequestMethod.GET, value = "/universe/types/?datasource=tranquility&page={page}")
-  ResponseEntity<Set<Long>> getItemTypeIds(@PathVariable("page") Integer corporationId);
+  ResponseEntity<Set<Long>> getItemTypeIds(@PathVariable("page") Integer page);
 
 
   /**
@@ -44,6 +44,6 @@ public interface EveApiFeignClient {
    * @return Item Type
    */
   @RequestMapping(method = RequestMethod.GET, value = "/universe/types/{type_id}/?datasource=tranquility&language=en")
-  @Cacheable(value = "Type", key = "#itemTypeId")
+  @Cacheable(value = "type", key = "#itemTypeId")
   ItemTypeApiResponse getItemByItemTypeId(@PathVariable("type_id") Long itemTypeId);
 }

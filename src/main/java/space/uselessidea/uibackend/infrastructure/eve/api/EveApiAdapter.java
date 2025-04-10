@@ -34,7 +34,7 @@ public class EveApiAdapter implements EveApiPort {
   }
 
   @Override
-  @Cacheable(value = "UserSkill", key = "#characterId")
+  @Cacheable(value = "user-skill", key = "#characterId")
   public Map<Long, Skill> getUserSkills(Long characterId, String accessToken) {
     SkillsApiResponse skillsApiResponse = eveApiFeignClient.getCharacterSkills(characterId, accessToken);
     Map<Long, Skill> map = toSkillMap(skillsApiResponse);
