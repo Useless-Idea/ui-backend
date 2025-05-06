@@ -14,7 +14,8 @@ public class TokenRefreshCronJob {
   private final TokenPrimaryPort tokenPrimaryPort;
 
 
-  @Scheduled(cron = "${cronjob.tokenrefresh}")
+  //@Scheduled(cron = "${cronjob.tokenrefresh}")
+  @Scheduled(fixedDelay = 10 * 60 * 1000)
   public void refreshAllTokens() {
     log.info("refreshAllTokens---START");
     tokenPrimaryPort.refreshAllTokens();

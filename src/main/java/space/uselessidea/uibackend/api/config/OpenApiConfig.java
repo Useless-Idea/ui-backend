@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @SecurityScheme(
     type = SecuritySchemeType.HTTP,
-    name = "Bearer ",
+    name = "Bearer",
     scheme = "bearer",
     bearerFormat = "JWT",
     in = SecuritySchemeIn.HEADER

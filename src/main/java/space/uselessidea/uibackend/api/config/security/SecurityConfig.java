@@ -31,6 +31,7 @@ public class SecurityConfig {
                 antMatcher("/api/v1/test"),
                 antMatcher("/api/v1/auth/login"),
                 antMatcher("/api/v1/auth/callback"),
+                antMatcher("/api/v1/skill/map"),
                 antMatcher("/v3/api-docs/**"),
                 antMatcher("/swagger-ui/**"),
                 antMatcher("/swagger-ui.html"),

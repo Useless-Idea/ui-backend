@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import space.uselessidea.uibackend.domain.category.dto.CategoryDto;
+import space.uselessidea.uibackend.domain.group.dto.GroupDto;
 import space.uselessidea.uibackend.infrastructure.eve.api.data.CharacterPublicData;
 import space.uselessidea.uibackend.infrastructure.eve.api.data.CorporationPublicData;
 import space.uselessidea.uibackend.infrastructure.eve.api.data.ItemTypeApiResponse;
@@ -46,4 +48,10 @@ public interface EveApiFeignClient {
   @RequestMapping(method = RequestMethod.GET, value = "/universe/types/{type_id}/?datasource=tranquility&language=en")
   @Cacheable(value = "type", key = "#itemTypeId")
   ItemTypeApiResponse getItemByItemTypeId(@PathVariable("type_id") Long itemTypeId);
+
+  @RequestMapping(method = RequestMethod.GET, value = "/universe/categories/{id}/?datasource=tranquility&language=en")
+  CategoryDto getCategoryDataById(@PathVariable("id") Long id);
+
+  @RequestMapping(method = RequestMethod.GET, value = "/universe/groups/{id}/?datasource=tranquility&language=en")
+  GroupDto getGroupDataById(@PathVariable("id") Long groupId);
 }

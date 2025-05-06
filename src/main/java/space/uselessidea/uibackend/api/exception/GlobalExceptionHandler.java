@@ -30,18 +30,19 @@ public class GlobalExceptionHandler {
       HttpServletRequest request
   ) {
     log.error(ERROR, exception);
-    return generateResponseByErrorCode(exception.getErrorCode(), locale, request);
+    return generateResponseByErrorCode(exception.getErrorCode(), locale, request, exception.getArgs());
   }
 
   private ResponseEntity<ErrorResponse> generateResponseByErrorCode(
       ErrorCode errorCodeEnum,
       Locale locale,
-      HttpServletRequest request
+      HttpServletRequest request,
+      Object[] args
   ) {
     String errorMessage = null;
     String errorCode = errorCodeEnum.getCode();
     if (errorCode != null) {
-      errorMessage = messageSource.getMessage(errorCode, null, errorCode, locale);
+      errorMessage = messageSource.getMessage(errorCode, args, errorCode, locale);
     }
 
     HttpStatus status = errorCodeEnum.getHttpStatus();

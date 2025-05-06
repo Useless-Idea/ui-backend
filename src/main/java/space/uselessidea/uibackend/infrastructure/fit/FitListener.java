@@ -19,7 +19,7 @@ public class FitListener {
 
   @RabbitListener(queues = {RabbitMqConfig.FIT_UPDATE_QUEUE})
   public void fitUpdate(UUID fitUuid) {
-    fitPrimaryPort.updateFit(fitUuid);
+    fitPrimaryPort.getFitByUuid(fitUuid);
 
   }
 

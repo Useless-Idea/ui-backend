@@ -1,9 +1,12 @@
 package space.uselessidea.uibackend.domain.exception;
 
 import java.io.Serial;
+import java.util.Arrays;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 @Getter
+@Slf4j
 public class ApplicationException extends RuntimeException {
 
   @Serial
@@ -14,26 +17,24 @@ public class ApplicationException extends RuntimeException {
   private final transient Object[] args;
 
   public ApplicationException(ErrorCode errorCode) {
-    super(errorCode.getCode());
-    this.errorCode = errorCode;
-    this.args = null;
+    this(errorCode, null, null);
   }
 
   public ApplicationException(ErrorCode errorCode, Object... args) {
-    super(errorCode.getCode());
-    this.errorCode = errorCode;
-    this.args = args;
+    this(errorCode, args, null);
   }
 
   public ApplicationException(ErrorCode errorCode, Throwable cause) {
-    super(errorCode.getCode(), cause);
-    this.errorCode = errorCode;
-    this.args = null;
+    this(errorCode, null, cause);
   }
 
   public ApplicationException(ErrorCode errorCode, Object[] args, Throwable cause) {
     super(errorCode.getCode(), cause);
     this.errorCode = errorCode;
     this.args = args;
+    log.error(String.format("""
+        ErrorCode: %s
+        Args: %s
+        """, errorCode.getCode(), Arrays.toString(args)));
   }
 }
