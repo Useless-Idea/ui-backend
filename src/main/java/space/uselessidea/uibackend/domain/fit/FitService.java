@@ -1,5 +1,6 @@
 package space.uselessidea.uibackend.domain.fit;
 
+import jakarta.transaction.Transactional;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -36,8 +37,8 @@ public class FitService implements FitPrimaryPort {
 
 
   public FitDto addFit(FitForm fitForm) {
-    FitDtoBuilder fitDto = fromEft(fitForm.getDescription());
-    UUID uuid = fitSecondaryPort.saveFit(fitForm.getDescription());
+    FitDtoBuilder fitDto = fromEft(fitForm.getFit());
+    UUID uuid = fitSecondaryPort.saveFit(fitForm.getFit());
     rabbitTemplate.convertAndSend(fitUpdateQueue.getName(), uuid);
 
     return fitDto
@@ -45,10 +46,12 @@ public class FitService implements FitPrimaryPort {
         .build();
   }
 
+
   @Override
-  @CachePut(value = "fit", key = "fitUuid")
-  public FitDto updateFit(UUID fitUuid) {
-    Fit fit = fitSecondaryPort.getFitByUuid(fitUuid);
+  @CachePut(value = "fits", key = "#uuid")
+  @Transactional
+  public FitDto getFitByUuid(UUID uuid) {
+    Fit fit = fitSecondaryPort.getFitByUuid(uuid);
     String eft = fit.getEft();
     FitDtoBuilder fitDto = fromEft(eft);
 
@@ -57,14 +60,20 @@ public class FitService implements FitPrimaryPort {
         .build();
   }
 
+  @Override
+  @Transactional
+  public Set<UUID> getAllUuid() {
+    return fitSecondaryPort.getAllUuid();
+  }
+
   private FitDtoBuilder fromEft(String eft) {
     Set<String> itemNameSet = new HashSet<>(getItemTypeNames(eft));
     itemNameSet.add(getShipName(eft));
     Map<Long, Long> requiredSkills = getRequiredSkills(itemNameSet);
 
     return FitDto.builder()
-        .shipName(getShipName(eft))
-        .name(getFitName(eft))
+        .shipName(getShipName(eft).trim())
+        .name(getFitName(eft).trim())
         .requiredSkills(requiredSkills);
   }
 
@@ -77,14 +86,14 @@ public class FitService implements FitPrimaryPort {
   }
 
   private String[] getFirstRowData(String eft) {
-    String firstRow = eft.split("\r?\n|\r", 2)[0];
+    String firstRow = eft.split("\\r?\\n", 2)[0];
     firstRow = firstRow.substring(1, firstRow.length() - 1);
     return firstRow.split(",", 2);
   }
 
   public Set<String> getItemTypeNames(String eft) {
-    return Arrays.stream(eft.split("\r?\n|\r")).skip(1)
-        .filter(String::isBlank)
+    return Arrays.stream(eft.split("\\r?\\n")).skip(1)
+        .filter(row -> !row.isBlank())
         .map(row -> row.split("x[0-9]+")[0])
         .map(String::trim)
         .collect(Collectors.toSet());

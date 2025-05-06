@@ -3,6 +3,8 @@ package space.uselessidea.uibackend.domain.eve.api.secondary;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import space.uselessidea.uibackend.domain.category.dto.CategoryDto;
+import space.uselessidea.uibackend.domain.group.dto.GroupDto;
 import space.uselessidea.uibackend.domain.itemtype.dto.ItemTypeDto;
 import space.uselessidea.uibackend.infrastructure.eve.api.Skill;
 import space.uselessidea.uibackend.infrastructure.eve.api.data.CharacterPublicData;
@@ -19,4 +21,8 @@ public interface EveApiPort {
   Set<Long> getAllItemTypeId();
 
   Optional<ItemTypeDto> getItemByItemTypeId(Long itemTypeId);
+
+  CategoryDto getCategoryDataById(Long id);
+
+  GroupDto getGroupDataById(Long groupId);
 }

@@ -1,6 +1,8 @@
 package space.uselessidea.uibackend.infrastructure.fit.adapter;
 
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import space.uselessidea.uibackend.domain.fit.port.FitSecondaryPort;
@@ -26,5 +28,13 @@ public class FitAdapter implements FitSecondaryPort {
   public Fit getFitByUuid(UUID fitUuid) {
 
     return fitRepository.getReferenceById(fitUuid);
+  }
+
+  @Override
+  public Set<UUID> getAllUuid() {
+    return fitRepository.findAll()
+        .stream()
+        .map(Fit::getUuid)
+        .collect(Collectors.toSet());
   }
 }

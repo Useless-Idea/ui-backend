@@ -9,7 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import space.uselessidea.uibackend.domain.category.dto.CategoryDto;
 import space.uselessidea.uibackend.domain.eve.api.secondary.EveApiPort;
+import space.uselessidea.uibackend.domain.group.dto.GroupDto;
 import space.uselessidea.uibackend.domain.itemtype.dto.ItemTypeDto;
 import space.uselessidea.uibackend.infrastructure.eve.api.data.CharacterPublicData;
 import space.uselessidea.uibackend.infrastructure.eve.api.data.CorporationPublicData;
@@ -73,6 +75,16 @@ public class EveApiAdapter implements EveApiPort {
         .requiredSkillMap(requiredSkillMap)
         .build();
     return Optional.of(itemTypeDto);
+  }
+
+  @Override
+  public CategoryDto getCategoryDataById(Long id) {
+    return eveApiFeignClient.getCategoryDataById(id);
+  }
+
+  @Override
+  public GroupDto getGroupDataById(Long groupId) {
+    return eveApiFeignClient.getGroupDataById(groupId);
   }
 
   public ItemTypeApiResponse getType(Long typeId) {
