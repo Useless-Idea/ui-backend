@@ -14,6 +14,7 @@ public class RabbitMqConfig {
   public static final String CHAR_UPDATE_QUEUE = "q.character_update";
   public static final String ITEM_TYPE_QUEUE = "q.item_type";
   public static final String FIT_UPDATE_QUEUE = "q.fit";
+  public static final String STATE_ID_QUEUE = "q.state_id";
 
   @Bean
   public MessageConverter jsonToMapMessageConverter() {
@@ -41,6 +42,16 @@ public class RabbitMqConfig {
   @Bean
   Queue fitUpdateQueue() {
     return new Queue(FIT_UPDATE_QUEUE);
+  }
+
+  /**
+   * Kolejka przeznaczona do wysyłania klientom informacji dotyczącej powiązania userId ze state
+   *
+   * @return Kolejka do przekazywania połączenia pomiędzy userId a state
+   */
+  @Bean
+  Queue stateIdQueue() {
+    return new Queue(STATE_ID_QUEUE);
   }
 
 }
