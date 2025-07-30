@@ -8,11 +8,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
+import space.uselessidea.uibackend.api.config.rabbit.ScopeUserDto;
 import space.uselessidea.uibackend.api.config.security.CharacterPrincipal;
 import space.uselessidea.uibackend.domain.FeatureEnum;
 import space.uselessidea.uibackend.domain.auth.AuthService;
+import space.uselessidea.uibackend.domain.auth.AuthUtils;
 import space.uselessidea.uibackend.domain.auth.dto.AuthMeResponse;
 import space.uselessidea.uibackend.infrastructure.eve.auth.EveAuthAdapter;
 import space.uselessidea.uibackend.infrastructure.eve.auth.data.TokenData;
@@ -28,6 +31,8 @@ public class AuthApiService {
   private final EveAuthAdapter eveAuthAdapter;
   private final RabbitTemplate rabbitTemplate;
   private final Queue tokenQueue;
+  private final Queue stateIdQueue;
+  private final AuthUtils authUtils;
 
   public AuthMeResponse getMe(CharacterPrincipal principal) {
     return authService.getMe(principal);
@@ -51,6 +56,14 @@ public class AuthApiService {
 
     Gson gson = new Gson();
     rabbitTemplate.convertAndSend(tokenQueue.getName(), gson.toJson(token));
+
+    Jwt jwt = authUtils.convertAccessTokenToJwt(token.getAccessToken());
+    long userId = authUtils.getSubFromJwtToken(jwt);
+
+    rabbitTemplate.convertAndSend(stateIdQueue.getName(), gson.toJson(ScopeUserDto.builder()
+        .id(userId)
+        .state(state)
+        .build()));
 
     log.info(token.getAccessToken());
     log.info(token.getRefreshToken());
