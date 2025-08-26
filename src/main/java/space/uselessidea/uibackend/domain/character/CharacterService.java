@@ -1,6 +1,8 @@
 package space.uselessidea.uibackend.domain.character;
 
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -34,13 +36,17 @@ public class CharacterService implements CharacterPrimaryPort {
   }
 
   @Override
+  public Set<Long> getCharacterIds() {
+    return characterSecondaryPort.getCharacterIds();
+  }
+
+  @Override
 
   public Map<Long, Skill> getUserSkills(Long characterId, CharacterPrincipal principal) {
     canGetUserSkills(characterId, principal);
     String accessToken = tokenPrimaryPort.getAccessToken(characterId);
     return eveApiPort.getUserSkills(
         characterId, accessToken);
-
   }
 
   @Override
@@ -61,6 +67,22 @@ public class CharacterService implements CharacterPrimaryPort {
 
   }
 
+  @Override
+  public boolean hasRequiredSkills(Long characterId, Map<Long, Long> requiredSkills) {
+    Map<Long, Skill> charSkills = getUserSkills(
+        characterId, null);
+    for (Entry<Long, Long> requiredEntry : requiredSkills.entrySet()) {
+      if (!charSkills.containsKey(requiredEntry.getKey())) {
+        return false;
+      }
+      if (charSkills.get(requiredEntry.getKey()).getActiveSkillLevel() < requiredEntry.getValue()) {
+        return false;
+      }
+
+    }
+    return true;
+  }
+
   private void canGetCharacterDataPage(CharacterPrincipal principal) {
 
     if (principal.getRoles().contains("ADMIN")) {
@@ -70,16 +92,23 @@ public class CharacterService implements CharacterPrimaryPort {
   }
 
   private void canGetCharacterData(Long characterId, CharacterPrincipal principal) {
+    if (principal == null) {
+      return;
+    }
     if (principal.getCharacterId().equals(characterId)) {
       return;
     }
     if (principal.getRoles().contains("ADMIN")) {
       return;
     }
+
     throw new ApplicationException(ErrorCode.INVALID_PERMISSION);
   }
 
   private void canGetUserSkills(Long characterId, CharacterPrincipal principal) {
+    if (principal == null) {
+      return;
+    }
     if (principal.getCharacterId().equals(characterId)) {
       return;
     }

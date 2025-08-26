@@ -2,9 +2,6 @@ package space.uselessidea.uibackend.domain.fit;
 
 import jakarta.transaction.Transactional;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -13,8 +10,7 @@ import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Service;
-import space.uselessidea.uibackend.domain.exception.ApplicationException;
-import space.uselessidea.uibackend.domain.exception.ErrorCode;
+import space.uselessidea.uibackend.domain.character.port.primary.CharacterPrimaryPort;
 import space.uselessidea.uibackend.domain.fit.dto.FitDto;
 import space.uselessidea.uibackend.domain.fit.dto.FitDto.FitDtoBuilder;
 import space.uselessidea.uibackend.domain.fit.dto.FitForm;
@@ -31,6 +27,7 @@ public class FitService implements FitPrimaryPort {
   public static final Integer FIT_NAME_INDEX = 1;
 
   private final PrimaryItemTypePort primaryItemTypePort;
+  private final CharacterPrimaryPort characterPrimaryPort;
   private final FitSecondaryPort fitSecondaryPort;
   private final RabbitTemplate rabbitTemplate;
   private final Queue fitUpdateQueue;
@@ -52,13 +49,16 @@ public class FitService implements FitPrimaryPort {
   @Transactional
   public FitDto getFitByUuid(UUID uuid) {
     Fit fit = fitSecondaryPort.getFitByUuid(uuid);
-    String eft = fit.getEft();
-    FitDtoBuilder fitDto = fromEft(eft);
 
-    return fitDto
-        .uuid(fit.getUuid())
+    String eft = fit.getEft();
+    FitDto fitDto = fromEft(eft).uuid(fit.getUuid())
         .build();
+    fit.setFitName(fitDto.getName());
+    fit.setShipName(fitDto.getShipName());
+    fit.setPilots(fit.getPilots());
+    return fitDto;
   }
+
 
   @Override
   @Transactional
@@ -67,14 +67,9 @@ public class FitService implements FitPrimaryPort {
   }
 
   private FitDtoBuilder fromEft(String eft) {
-    Set<String> itemNameSet = new HashSet<>(getItemTypeNames(eft));
-    itemNameSet.add(getShipName(eft));
-    Map<Long, Long> requiredSkills = getRequiredSkills(itemNameSet);
-
     return FitDto.builder()
         .shipName(getShipName(eft).trim())
-        .name(getFitName(eft).trim())
-        .requiredSkills(requiredSkills);
+        .name(getFitName(eft).trim());
   }
 
   public String getFitName(String eft) {
@@ -98,17 +93,4 @@ public class FitService implements FitPrimaryPort {
         .map(String::trim)
         .collect(Collectors.toSet());
   }
-
-
-  private Map<Long, Long> getRequiredSkills(Set<String> itemNameSet) {
-    return itemNameSet.stream()
-        .map(itemName -> primaryItemTypePort.getByName(itemName).orElseThrow(() -> new ApplicationException(
-            ErrorCode.ITEM_TYPE_NOT_EXIST)))
-        .map(itemTypeDto -> itemTypeDto.getRequiredSkillMap().entrySet())
-        .flatMap(Collection::stream)
-        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, Long::max));
-
-
-  }
-
 }

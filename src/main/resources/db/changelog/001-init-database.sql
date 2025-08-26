@@ -104,4 +104,10 @@ CREATE TABLE "fit"
     "uuid" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     eft    varchar NOT NULL
 );
+--changeset psikora:8
+ALTER TABLE fit
+    ADD COLUMN pilots JSONB,
+    ADD COLUMN ship_name varchar,
+    ADD COLUMN fit_name varchar
+    ;
 
