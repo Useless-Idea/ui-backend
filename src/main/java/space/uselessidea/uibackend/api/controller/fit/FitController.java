@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import space.uselessidea.uibackend.api.controller.fit.dto.SimpleListFit;
 import space.uselessidea.uibackend.domain.fit.dto.FitDto;
 import space.uselessidea.uibackend.domain.fit.dto.FitForm;
 
@@ -26,7 +27,7 @@ public class FitController {
 
   @GetMapping
   public ResponseEntity getFit() {
-    Set<FitDto> fits = fitApiService.getFits();
+    Set<SimpleListFit> fits = fitApiService.getFits();
     return ResponseEntity.ok(fits);
   }
 

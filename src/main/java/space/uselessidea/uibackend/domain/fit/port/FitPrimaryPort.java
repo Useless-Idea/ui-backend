@@ -11,5 +11,7 @@ public interface FitPrimaryPort {
 
   FitDto getFitByUuid(UUID uuid);
 
+  void updateFit(UUID fitUuid);
+
   Set<UUID> getAllUuid();
 }

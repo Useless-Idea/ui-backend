@@ -4,6 +4,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import space.uselessidea.uibackend.api.controller.fit.dto.SimpleListFit;
 import space.uselessidea.uibackend.domain.fit.dto.FitDto;
 import space.uselessidea.uibackend.domain.fit.dto.FitForm;
 import space.uselessidea.uibackend.domain.fit.port.FitPrimaryPort;
@@ -18,9 +19,10 @@ public class FitApiService {
     return fitPrimaryPort.addFit(fitForm);
   }
 
-  public Set<FitDto> getFits() {
+  public Set<SimpleListFit> getFits() {
     return fitPrimaryPort.getAllUuid().stream()
         .map(fitPrimaryPort::getFitByUuid)
+        .map(SimpleListFit::fromFitDto)
         .collect(Collectors.toSet());
   }
 }

@@ -12,7 +12,10 @@ public class FitDto implements Serializable {
 
   private UUID uuid;
   private String name;
+  private Long shipId;
   private String shipName;
   private Pilots pilots;
+  private String eft;
+  private String description;
 
 }

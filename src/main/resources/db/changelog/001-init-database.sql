@@ -110,4 +110,8 @@ ALTER TABLE fit
     ADD COLUMN ship_name varchar,
     ADD COLUMN fit_name varchar
     ;
+--changeset psikora:9
+ALTER TABLE fit
+    ADD COLUMN ship_id BIGINT
+;
 
