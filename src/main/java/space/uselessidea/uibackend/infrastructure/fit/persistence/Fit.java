@@ -28,6 +28,8 @@ public class Fit {
 
   @NotNull
   private String shipName;
+  @NotNull
+  private Long shipId;
 
   @NotNull
   private String fitName;
