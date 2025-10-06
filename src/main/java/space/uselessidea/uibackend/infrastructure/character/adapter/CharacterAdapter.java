@@ -1,6 +1,7 @@
 package space.uselessidea.uibackend.infrastructure.character.adapter;
 
 import jakarta.transaction.Transactional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -48,6 +49,11 @@ public class CharacterAdapter implements CharacterSecondaryPort {
   @Override
   public Page<CharactedData> getCharacterDataPage(Pageable pageable) {
     return characterRepository.findAll(pageable).map(this::map);
+  }
+
+  @Override
+  public Set<Long> getCharacterIds() {
+    return characterRepository.findAll().stream().map(Character::getId).collect(Collectors.toSet());
   }
 
   private Character createCharacter(Long characterId) {
