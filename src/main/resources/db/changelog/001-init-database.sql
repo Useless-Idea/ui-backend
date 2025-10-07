@@ -114,4 +114,9 @@ ALTER TABLE fit
 ALTER TABLE fit
     ADD COLUMN ship_id BIGINT
 ;
+--changeset psikora:10
+ALTER TABLE public.esi_token DROP COLUMN jwt;
+ALTER TABLE public.esi_token DROP COLUMN exp_date;
+
+
 

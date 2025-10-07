@@ -2,6 +2,7 @@ package space.uselessidea.uibackend.domain.token.port.secondary;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import space.uselessidea.uibackend.domain.FeatureEnum;
 import space.uselessidea.uibackend.domain.token.dto.EsiTokenDto;
@@ -12,7 +13,7 @@ public interface TokenSecondaryPort {
 
   EsiTokenDto saveToken(Long charId, Instant expiresAt, TokenData tokenData, Set<FeatureEnum> featureSet);
 
-  EsiTokenDto getToken(Long charId);
+  Optional<EsiTokenDto> getToken(Long charId);
 
   List<EsiTokenDto> getAllTokens();
 

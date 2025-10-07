@@ -2,6 +2,7 @@ package space.uselessidea.uibackend.domain.character;
 
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,9 +45,11 @@ public class CharacterService implements CharacterPrimaryPort {
 
   public Map<Long, Skill> getUserSkills(Long characterId, CharacterPrincipal principal) {
     canGetUserSkills(characterId, principal);
-    String accessToken = tokenPrimaryPort.getAccessToken(characterId);
-    return eveApiPort.getUserSkills(
-        characterId, accessToken);
+    Optional<String> accessToken = tokenPrimaryPort.getAccessToken(characterId);
+    return accessToken.map(
+        token -> eveApiPort.getUserSkills(characterId, token)
+    ).orElse(Map.of());
+
   }
 
   @Override

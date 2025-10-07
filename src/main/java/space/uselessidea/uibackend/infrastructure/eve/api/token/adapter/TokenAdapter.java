@@ -2,6 +2,7 @@ package space.uselessidea.uibackend.infrastructure.eve.api.token.adapter;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -29,8 +30,6 @@ public class TokenAdapter implements TokenSecondaryPort {
       token.setId(charId);
       return token;
     });
-    esiToken.setExpDate(expiresAt);
-    esiToken.setJwt(tokenData.getAccessToken());
     esiToken.setRefreshToken(tokenData.getRefreshToken());
     esiToken.setFeatures(featureSet);
     esiToken = esiTokenRepository.save(esiToken);
@@ -38,8 +37,14 @@ public class TokenAdapter implements TokenSecondaryPort {
   }
 
   @Override
-  public EsiTokenDto getToken(Long charId) {
-    return map(esiTokenRepository.getReferenceById(charId));
+  public Optional<EsiTokenDto> getToken(Long charId) {
+    //TODO to ma być obsłużone w redisie
+    /*
+    jak token jest w redis to spoko a jak nie to
+    refresh i robimy na optionalu
+     */
+    return esiTokenRepository.findById(charId)
+        .map(this::map);
   }
 
   @Override
@@ -59,9 +64,7 @@ public class TokenAdapter implements TokenSecondaryPort {
   private EsiTokenDto map(EsiToken esiToken) {
     return EsiTokenDto.builder()
         .id(esiToken.getId())
-        .jwt(esiToken.getJwt())
         .refreshToken(esiToken.getRefreshToken())
-        .expDate(esiToken.getExpDate())
         .features(esiToken.getFeatures())
         .build();
 

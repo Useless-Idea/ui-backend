@@ -2,11 +2,16 @@ package space.uselessidea.uibackend.domain.token;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
@@ -33,6 +38,8 @@ public class TokenService implements TokenPrimaryPort {
   private final RabbitTemplate rabbitTemplate;
   private final Queue characterUpdateQueue;
 
+  private final ConcurrentHashMap<Long, Lock> locks = new ConcurrentHashMap<>();
+
   @Override
   public Long addToken(TokenData tokenData) {
     if (!eveAuthSecondaryPort.verifyToken(tokenData.getAccessToken())) {
@@ -51,9 +58,19 @@ public class TokenService implements TokenPrimaryPort {
   }
 
   @Override
-  public String getAccessToken(Long characterId) {
-    EsiTokenDto token = tokenSecondaryPort.getToken(characterId);
-    return token.getJwt();
+  @Cacheable(value = "access-token",
+      key = "#characterId",
+      unless = "#result == null || #result.isEmpty()")
+  public Optional<String> getAccessToken(Long characterId) {
+    Lock lock = locks.computeIfAbsent(characterId, id -> new ReentrantLock());
+    lock.lock();
+    try {
+      return tokenSecondaryPort.getToken(characterId)
+          .flatMap(this::refreshToken);
+
+    } finally {
+      lock.unlock();
+    }
   }
 
   @Override
@@ -61,23 +78,26 @@ public class TokenService implements TokenPrimaryPort {
     tokenSecondaryPort.getAllTokens().forEach(this::refreshToken);
   }
 
-  public void refreshToken(EsiTokenDto esiTokenDto) {
+  public Optional<String> refreshToken(EsiTokenDto esiTokenDto) {
     TokenData tokenData = null;
     try {
       tokenData = eveAuthSecondaryPort.refreshToken(esiTokenDto.getRefreshToken());
     } catch (HttpClientErrorException e) {
-      log.error("Error during getting new access token by refresh token");
-      tokenSecondaryPort.deleteToken(esiTokenDto.getId());
-      return;
+      log.error("Error during getting new access token by refresh token for: {}", esiTokenDto.getId(), e);
+      //tokenSecondaryPort.deleteToken(esiTokenDto.getId());
+      return Optional.empty();
 
     }
     try {
       addToken(tokenData);
     } catch (ApplicationException e) {
-      log.error(e.getMessage());
+      log.error("Error during adding new access token by refresh token for: {}", esiTokenDto.getId(), e);
       if (ErrorCode.ACCESS_TOKEN_IS_INVALID.equals(e.getErrorCode())) {
-        tokenSecondaryPort.deleteToken(esiTokenDto.getId());
+
+        //tokenSecondaryPort.deleteToken(esiTokenDto.getId());
+        return Optional.empty();
       }
     }
+    return Optional.of(tokenData.getAccessToken());
   }
 }

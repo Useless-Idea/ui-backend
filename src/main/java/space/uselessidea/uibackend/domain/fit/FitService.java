@@ -5,11 +5,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,7 @@ import space.uselessidea.uibackend.infrastructure.fit.persistence.Fit;
 import space.uselessidea.uibackend.infrastructure.fit.persistence.Pilot;
 import space.uselessidea.uibackend.infrastructure.fit.persistence.Pilots;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class FitService implements FitPrimaryPort {
@@ -55,7 +58,12 @@ public class FitService implements FitPrimaryPort {
   public void updateFit(UUID fitUuid) {
     Fit fit = fitSecondaryPort.getFitByUuid(fitUuid);
     Set<String> itemList = getItemTypeNames(fit.getEft());
-    itemList.add(fit.getShipName());
+    if (fit.getShipName() != null) {
+      itemList.add(fit.getShipName());
+    }
+    itemList.stream().forEach(item -> {
+      log.info(item);
+    });
     Map<Long, Long> requiredSkillMap = itemList.stream()
         .map(primaryItemTypePort::getByName)
         .flatMap(Optional::stream)
@@ -120,9 +128,11 @@ public class FitService implements FitPrimaryPort {
 
   public Set<String> getItemTypeNames(String eft) {
     return Arrays.stream(eft.split("\\r?\\n")).skip(1)
+        .filter(Objects::nonNull)
         .filter(row -> !row.isBlank())
         .map(row -> row.split("x[0-9]+")[0])
         .map(String::trim)
+        .filter(s -> !s.isBlank())
         .collect(Collectors.toSet());
   }
 }

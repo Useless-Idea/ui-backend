@@ -54,6 +54,7 @@ public class ItemTypeService implements PrimaryItemTypePort {
 
   @Override
   public Optional<ItemTypeDto> getByName(String name) {
+    //nie muszę tego mieć w bazie, dociagnę sobie
     Long id = secondaryItemTypePort.getIdByName(name)
         .orElseThrow(() -> new ApplicationException(ErrorCode.ITEM_TYPE_NOT_EXIST, name));
 
