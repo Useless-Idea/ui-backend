@@ -2,6 +2,7 @@ package space.uselessidea.uibackend.infrastructure.pax_dei.adapter;
 
 import jakarta.transaction.Transactional;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,5 +31,10 @@ public class PointAdapter implements PointSecondaryPort {
   @Override
   public Set<PointDto> getAllPoints() {
     return pointRepository.findAll().stream().map(PointDto::from).collect(Collectors.toSet());
+  }
+
+  @Override
+  public void deletePoint(UUID uuid) {
+    pointRepository.deleteById(uuid);
   }
 }
