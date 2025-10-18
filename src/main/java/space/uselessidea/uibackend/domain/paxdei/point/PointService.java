@@ -1,13 +1,13 @@
-package space.uselessidea.uibackend.domain.pax_dei.point;
+package space.uselessidea.uibackend.domain.paxdei.point;
 
 import java.util.Set;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import space.uselessidea.uibackend.api.controller.pax_dei.points.CreatePointRequest;
-import space.uselessidea.uibackend.domain.pax_dei.point.dto.PointDto;
-import space.uselessidea.uibackend.domain.pax_dei.point.port.PointPrimaryPoint;
-import space.uselessidea.uibackend.domain.pax_dei.point.port.PointSecondaryPort;
+import space.uselessidea.uibackend.api.controller.paxdei.points.CreatePointRequest;
+import space.uselessidea.uibackend.domain.paxdei.point.dto.PointDto;
+import space.uselessidea.uibackend.domain.paxdei.point.port.PointPrimaryPoint;
+import space.uselessidea.uibackend.domain.paxdei.point.port.PointSecondaryPort;
 
 @Service
 @RequiredArgsConstructor
