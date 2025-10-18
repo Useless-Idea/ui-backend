@@ -2,10 +2,13 @@ package space.uselessidea.uibackend.api.controller.pax_dei.points;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import java.util.Set;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,7 +34,13 @@ public class PointController {
   @PostMapping
   public ResponseEntity<String> addPoint(@RequestBody final CreatePointRequest createPointRequest) {
     pointApiService.createPoint(createPointRequest);
-    return ResponseEntity.ok("Point added");
+    return ResponseEntity.ok().build();
+  }
+
+  @DeleteMapping("{uuid}")
+  public ResponseEntity<String> deletePoint(@PathVariable("uuid") UUID uuid) {
+    pointApiService.deletePoint(uuid);
+    return ResponseEntity.ok().build();
   }
 
 }

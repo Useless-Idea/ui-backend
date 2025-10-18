@@ -1,6 +1,7 @@
 package space.uselessidea.uibackend.domain.pax_dei.point;
 
 import java.util.Set;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import space.uselessidea.uibackend.api.controller.pax_dei.points.CreatePointRequest;
@@ -22,5 +23,10 @@ public class PointService implements PointPrimaryPoint {
   @Override
   public Set<PointDto> getAllPoints() {
     return pointSecondaryPort.getAllPoints();
+  }
+
+  @Override
+  public void deletePoint(UUID uuid) {
+    pointSecondaryPort.deletePoint(uuid);
   }
 }
