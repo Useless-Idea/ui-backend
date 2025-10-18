@@ -1,4 +1,4 @@
-package space.uselessidea.uibackend.api.controller.pax_dei.points;
+package space.uselessidea.uibackend.api.controller.paxdei.points;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import java.util.Set;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import space.uselessidea.uibackend.domain.pax_dei.point.dto.PointDto;
+import space.uselessidea.uibackend.domain.paxdei.point.dto.PointDto;
 
 @RestController
 @RequestMapping("/api/v1/pax_dei/point")

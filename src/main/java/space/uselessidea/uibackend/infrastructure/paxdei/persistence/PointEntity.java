@@ -1,4 +1,4 @@
-package space.uselessidea.uibackend.infrastructure.pax_dei.persistence;
+package space.uselessidea.uibackend.infrastructure.paxdei.persistence;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

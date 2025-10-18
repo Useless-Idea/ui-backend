@@ -1,4 +1,4 @@
-package space.uselessidea.uibackend.infrastructure.pax_dei.adapter;
+package space.uselessidea.uibackend.infrastructure.paxdei.adapter;
 
 import jakarta.transaction.Transactional;
 import java.util.Set;
@@ -6,11 +6,11 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import space.uselessidea.uibackend.api.controller.pax_dei.points.CreatePointRequest;
-import space.uselessidea.uibackend.domain.pax_dei.point.dto.PointDto;
-import space.uselessidea.uibackend.domain.pax_dei.point.port.PointSecondaryPort;
-import space.uselessidea.uibackend.infrastructure.pax_dei.persistence.PointEntity;
-import space.uselessidea.uibackend.infrastructure.pax_dei.repository.PointRepository;
+import space.uselessidea.uibackend.api.controller.paxdei.points.CreatePointRequest;
+import space.uselessidea.uibackend.domain.paxdei.point.dto.PointDto;
+import space.uselessidea.uibackend.domain.paxdei.point.port.PointSecondaryPort;
+import space.uselessidea.uibackend.infrastructure.paxdei.persistence.PointEntity;
+import space.uselessidea.uibackend.infrastructure.paxdei.repository.PointRepository;
 
 @Service
 @RequiredArgsConstructor

@@ -1,4 +1,4 @@
-package space.uselessidea.uibackend.api.controller.pax_dei.points;
+package space.uselessidea.uibackend.api.controller.paxdei.points;
 
 import lombok.Getter;
 

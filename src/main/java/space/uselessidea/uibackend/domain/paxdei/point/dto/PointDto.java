@@ -1,9 +1,9 @@
-package space.uselessidea.uibackend.domain.pax_dei.point.dto;
+package space.uselessidea.uibackend.domain.paxdei.point.dto;
 
 import java.util.UUID;
 import lombok.Builder;
 import lombok.Data;
-import space.uselessidea.uibackend.infrastructure.pax_dei.persistence.PointEntity;
+import space.uselessidea.uibackend.infrastructure.paxdei.persistence.PointEntity;
 
 @Builder
 @Data
