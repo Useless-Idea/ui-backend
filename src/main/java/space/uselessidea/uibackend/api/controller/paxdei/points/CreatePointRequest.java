@@ -5,8 +5,8 @@ import lombok.Getter;
 @Getter
 public class CreatePointRequest {
 
-  private Long x;
-  private Long y;
+  private Long xpos;
+  private Long ypos;
   private String text;
 
 

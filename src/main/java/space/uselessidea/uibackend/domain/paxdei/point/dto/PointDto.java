@@ -10,15 +10,15 @@ import space.uselessidea.uibackend.infrastructure.paxdei.persistence.PointEntity
 public class PointDto {
 
   private UUID uuid;
-  private Long x;
-  private Long y;
+  private Long xpos;
+  private Long ypos;
   private String text;
 
   public static PointDto from(PointEntity pointEntity) {
     return PointDto.builder()
         .uuid(pointEntity.getUuid())
-        .x(pointEntity.getX())
-        .y(pointEntity.getY())
+        .xpos(pointEntity.getXpos())
+        .ypos(pointEntity.getYpos())
         .text(pointEntity.getText())
         .build();
   }

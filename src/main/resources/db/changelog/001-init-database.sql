@@ -125,6 +125,11 @@ CREATE TABLE "point"
     y    BIGINT NOT NULL,
     "text"    varchar NOT NULL
 );
+--changeset psikora:12
+ALTER TABLE "point"
+    RENAME COLUMN xpos TO xValue;
+ALTER TABLE "point"
+    RENAME COLUMN ypos TO yValue;
 
 
 
