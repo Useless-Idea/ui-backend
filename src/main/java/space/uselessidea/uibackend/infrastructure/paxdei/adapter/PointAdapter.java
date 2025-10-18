@@ -22,8 +22,8 @@ public class PointAdapter implements PointSecondaryPort {
   @Transactional
   public void createPoint(CreatePointRequest createPointRequest) {
     PointEntity point = new PointEntity();
-    point.setX(createPointRequest.getX());
-    point.setY(createPointRequest.getY());
+    point.setXpos(createPointRequest.getXpos());
+    point.setYpos(createPointRequest.getYpos());
     point.setText(createPointRequest.getText());
     pointRepository.save(point);
   }

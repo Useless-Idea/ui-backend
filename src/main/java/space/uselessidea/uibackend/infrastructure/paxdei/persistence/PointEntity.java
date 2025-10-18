@@ -22,9 +22,9 @@ public class PointEntity {
   private UUID uuid;
 
   @NotNull
-  private Long x;
+  private Long xpos;
   @NotNull
-  private Long y;
+  private Long ypos;
 
   @NotNull
   private String text;
