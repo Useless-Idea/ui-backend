@@ -117,6 +117,14 @@ ALTER TABLE fit
 --changeset psikora:10
 ALTER TABLE public.esi_token DROP COLUMN jwt;
 ALTER TABLE public.esi_token DROP COLUMN exp_date;
+--changeset psikora:11
+CREATE TABLE "point"
+(
+    "uuid" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    x    BIGINT NOT NULL,
+    y    BIGINT NOT NULL,
+    "text"    varchar NOT NULL
+);
 
 
 
