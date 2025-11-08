@@ -54,4 +54,7 @@ public interface EveApiFeignClient {
 
   @RequestMapping(method = RequestMethod.GET, value = "/universe/groups/{id}/?datasource=tranquility&language=en")
   GroupDto getGroupDataById(@PathVariable("id") Long groupId);
+
+  @RequestMapping(method = RequestMethod.GET, value = "/status")
+  String getStatus();
 }

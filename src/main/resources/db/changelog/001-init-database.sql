@@ -127,9 +127,9 @@ CREATE TABLE "point"
 );
 --changeset psikora:12
 ALTER TABLE "point"
-    RENAME COLUMN xpos TO xValue;
+    RENAME COLUMN x TO xpos;
 ALTER TABLE "point"
-    RENAME COLUMN ypos TO yValue;
+    RENAME COLUMN y TO ypos;
 
 
 
