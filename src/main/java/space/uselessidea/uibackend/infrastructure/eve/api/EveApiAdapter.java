@@ -106,5 +106,9 @@ public class EveApiAdapter implements EveApiPort {
 
   }
 
+  public String getStatus() {
+    return eveApiFeignClient.getStatus();
+  }
+
 
 }
