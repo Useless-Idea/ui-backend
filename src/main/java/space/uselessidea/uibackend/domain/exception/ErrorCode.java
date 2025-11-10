@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 public enum ErrorCode {
 
   ACCESS_DENIED("error.access.denied", HttpStatus.UNAUTHORIZED),
+  FIT_NOT_EXIST("error.fit.not.exist", HttpStatus.BAD_REQUEST),
   ITEM_TYPE_NOT_EXIST("error.item.type.not.exist", HttpStatus.BAD_REQUEST),
   ACCESS_TOKEN_IS_INVALID("error.access.token.is.invalid", HttpStatus.FORBIDDEN),
   INVALID_PERMISSION("error.invalid.permissions", HttpStatus.FORBIDDEN),

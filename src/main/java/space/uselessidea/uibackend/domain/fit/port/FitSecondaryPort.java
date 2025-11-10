@@ -1,5 +1,6 @@
 package space.uselessidea.uibackend.domain.fit.port;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import space.uselessidea.uibackend.domain.fit.dto.FitDto;
@@ -10,9 +11,9 @@ public interface FitSecondaryPort {
 
   UUID saveFit(FitDto eft);
 
-  Fit updatePilotsList(UUID fitUuid, Pilots pilots);
+  Optional<Fit> updatePilotsList(UUID fitUuid, Pilots pilots);
 
-  Fit getFitByUuid(UUID fitUuid);
+  Optional<Fit> getFitByUuid(UUID fitUuid);
 
   Set<UUID> getAllUuid();
 }

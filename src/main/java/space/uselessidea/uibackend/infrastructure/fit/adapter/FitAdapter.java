@@ -1,5 +1,6 @@
 package space.uselessidea.uibackend.infrastructure.fit.adapter;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -19,25 +20,33 @@ public class FitAdapter implements FitSecondaryPort {
 
   @Override
   public UUID saveFit(FitDto fitDto) {
-    Fit fit = new Fit();
+    Fit fit = getFitByUuid(fitDto.getUuid()).orElse(new Fit());
     fit.setEft(fitDto.getEft());
     fit.setShipId(fitDto.getShipId());
+    fit.setShipName(fitDto.getShipName());
+    fit.setFitName(fitDto.getName());
     fit = fitRepository.save(fit);
     return fit.getUuid();
 
   }
 
   @Override
-  public Fit updatePilotsList(UUID fitUuid, Pilots pilots) {
-    Fit fit = getFitByUuid(fitUuid);
+  public Optional<Fit> updatePilotsList(UUID fitUuid, Pilots pilots) {
+    Optional<Fit> fitOpt = getFitByUuid(fitUuid);
+    if (fitOpt.isEmpty()) {
+      return Optional.empty();
+    }
+    Fit fit = fitOpt.get();
     fit.setPilots(pilots);
-    return fitRepository.save(fit);
+    return Optional.of(fitRepository.save(fit));
   }
 
   @Override
-  public Fit getFitByUuid(UUID fitUuid) {
-
-    return fitRepository.getReferenceById(fitUuid);
+  public Optional<Fit> getFitByUuid(UUID fitUuid) {
+    if (fitUuid == null) {
+      return Optional.empty();
+    }
+    return fitRepository.findById(fitUuid);
   }
 
   @Override
