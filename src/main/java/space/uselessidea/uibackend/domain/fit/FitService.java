@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -16,6 +15,8 @@ import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 import space.uselessidea.uibackend.domain.character.port.primary.CharacterPrimaryPort;
+import space.uselessidea.uibackend.domain.exception.ApplicationException;
+import space.uselessidea.uibackend.domain.exception.ErrorCode;
 import space.uselessidea.uibackend.domain.fit.dto.FitDto;
 import space.uselessidea.uibackend.domain.fit.dto.FitDto.FitDtoBuilder;
 import space.uselessidea.uibackend.domain.fit.dto.FitForm;
@@ -44,8 +45,6 @@ public class FitService implements FitPrimaryPort {
 
   public FitDto addFit(FitForm fitForm) {
     FitDto fitDto = fromEft(fitForm.getFit()).build();
-    ItemTypeDto ship = primaryItemTypePort.getByName(fitDto.getShipName()).orElseThrow();
-    fitDto.setShipId(ship.getItemId());
     fitDto.setDescription(fitForm.getDescription());
 
     UUID uuid = fitSecondaryPort.saveFit(fitDto);
@@ -56,14 +55,20 @@ public class FitService implements FitPrimaryPort {
 
   @Transactional
   public void updateFit(UUID fitUuid) {
-    Fit fit = fitSecondaryPort.getFitByUuid(fitUuid);
-    Set<String> itemList = getItemTypeNames(fit.getEft());
-    if (fit.getShipName() != null) {
-      itemList.add(fit.getShipName());
-    }
-    itemList.stream().forEach(item -> {
-      log.info(item);
-    });
+    Fit fitE = fitSecondaryPort.getFitByUuid(fitUuid)
+        .orElseThrow(() -> new ApplicationException(ErrorCode.FIT_NOT_EXIST, fitUuid));
+
+    FitDto fitDto = fromEft(fitE.getEft()).build();
+    fitDto.setUuid(fitE.getUuid());
+
+    fitSecondaryPort.saveFit(fitDto);
+
+    Set<String> itemList = getItemTypeNames(fitDto.getEft());
+
+    itemList.add(fitDto.getShipName());
+
+    itemList.forEach(log::info);
+
     Map<Long, Long> requiredSkillMap = itemList.stream()
         .map(primaryItemTypePort::getByName)
         .flatMap(Optional::stream)
@@ -88,7 +93,8 @@ public class FitService implements FitPrimaryPort {
 
   @Transactional
   public FitDto getFitByUuid(UUID uuid) {
-    Fit fit = fitSecondaryPort.getFitByUuid(uuid);
+    Fit fit = fitSecondaryPort.getFitByUuid(uuid)
+        .orElseThrow(() -> new ApplicationException(ErrorCode.FIT_NOT_EXIST, uuid));
     return FitDto.builder()
         .uuid(fit.getUuid())
         .name(fit.getFitName())
@@ -106,8 +112,11 @@ public class FitService implements FitPrimaryPort {
   }
 
   private FitDtoBuilder fromEft(String eft) {
+    String shipName = getShipName(eft);
+    ItemTypeDto ship = primaryItemTypePort.getByName(shipName).orElseThrow();
     return FitDto.builder()
-        .shipName(getShipName(eft).trim())
+        .shipName(ship.getName())
+        .shipId(ship.getItemId())
         .eft(eft)
         .name(getFitName(eft).trim());
   }
@@ -128,7 +137,6 @@ public class FitService implements FitPrimaryPort {
 
   public Set<String> getItemTypeNames(String eft) {
     return Arrays.stream(eft.split("\\r?\\n")).skip(1)
-        .filter(Objects::nonNull)
         .filter(row -> !row.isBlank())
         .map(row -> row.split("x[0-9]+")[0])
         .map(String::trim)

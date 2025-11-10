@@ -68,6 +68,10 @@ public class TokenService implements TokenPrimaryPort {
       return tokenSecondaryPort.getToken(characterId)
           .flatMap(this::refreshToken);
 
+    } catch (HttpClientErrorException.BadRequest e) {
+      // logujemy błąd, ale nie wrzucamy do cache
+      log.warn("Nie idało się pobrać tokena dla characterId: {}", characterId);
+      return Optional.empty();
     } finally {
       lock.unlock();
     }
