@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -32,7 +33,7 @@ public class FitController {
   }
 
   @GetMapping
-  public ResponseEntity getFit() {
+  public ResponseEntity<Page<SimpleListFit>> getFit() {
     List<SimpleListFit> fits = new ArrayList<>(fitApiService.getFits());
     Pageable pageable = PageRequest.of(1, Integer.MAX_VALUE);
     PageImpl<SimpleListFit> response = new PageImpl<>(fits, pageable, fits.size());
