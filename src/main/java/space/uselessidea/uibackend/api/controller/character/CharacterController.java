@@ -1,5 +1,6 @@
 package space.uselessidea.uibackend.api.controller.character;
 
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import space.uselessidea.uibackend.api.config.security.CharacterPrincipal;
+import space.uselessidea.uibackend.domain.character.dto.CharacterFeature;
 
 @RestController
 @RequestMapping("/api/v1/character")
@@ -40,6 +42,15 @@ public class CharacterController {
   @GetMapping("")
   public ResponseEntity getCharacterPage(Pageable pageable, CharacterPrincipal characterPrincipal) {
     return ResponseEntity.ok(characterApiService.getCharacters(pageable, characterPrincipal));
+  }
+
+  @GetMapping("/scope")
+  public ResponseEntity<Set<CharacterFeature>> getScope(CharacterPrincipal principal) {
+
+    Long characterId = principal.getCharacterId();
+    Set<CharacterFeature> response = characterApiService.getCharacterFeatures(characterId);
+
+    return ResponseEntity.ok(response);
   }
 
 }

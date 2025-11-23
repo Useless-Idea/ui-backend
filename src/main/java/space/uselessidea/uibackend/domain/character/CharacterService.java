@@ -1,16 +1,24 @@
 package space.uselessidea.uibackend.domain.character;
 
+import com.nimbusds.jwt.JWT;
+import com.nimbusds.jwt.JWTParser;
+import java.text.ParseException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import space.uselessidea.uibackend.api.config.security.CharacterPrincipal;
+import space.uselessidea.uibackend.domain.FeatureEnum;
 import space.uselessidea.uibackend.domain.character.dto.CharactedData;
+import space.uselessidea.uibackend.domain.character.dto.CharacterFeature;
 import space.uselessidea.uibackend.domain.character.port.primary.CharacterPrimaryPort;
 import space.uselessidea.uibackend.domain.character.port.secondary.CharacterSecondaryPort;
 import space.uselessidea.uibackend.domain.eve.api.secondary.EveApiPort;
@@ -84,6 +92,49 @@ public class CharacterService implements CharacterPrimaryPort {
 
     }
     return true;
+  }
+
+  @Override
+  public Set<CharacterFeature> getFeatureScope(Long characterId) {
+    Set<String> spcList = tokenPrimaryPort.getAccessToken(characterId)
+        .flatMap(this::parseJwtOptional)
+        .flatMap(this::extractScpClaim)
+        .orElse(Set.of());
+    return Arrays.stream(FeatureEnum.values()).map(
+        item ->
+            CharacterFeature.builder()
+                .feature(item)
+                .active(spcList.containsAll(item.getScopes()))
+                .build()
+    ).collect(Collectors.toSet());
+
+  }
+
+  //TODO to trzeba gdzieś wyciągnąć może do jakiegoś token UTILS
+  private Optional<JWT> parseJwtOptional(String token) {
+    try {
+      return Optional.of(JWTParser.parse(token));
+    } catch (ParseException e) {
+      return Optional.empty();
+    }
+  }
+
+  //TODO to trzeba gdzieś wyciągnąć może do jakiegoś token UTILS
+  private Optional<Set<String>> extractScpClaim(JWT jwt) {
+    try {
+      List<?> raw = jwt.getJWTClaimsSet().getListClaim("scp");
+      if (raw == null) {
+        return Optional.empty();
+      }
+      Set<String> scpList = raw.stream()
+          .map(Object::toString)
+          .collect(Collectors.toSet());
+
+      return Optional.of(scpList);
+
+    } catch (ParseException e) {
+      return Optional.empty();
+    }
   }
 
   private void canGetCharacterDataPage(CharacterPrincipal principal) {
