@@ -26,8 +26,8 @@ jobs:
             .
       - name: Push image
         run: |
-          docker push harbor.psikora.eu/psikora/ui-backend:${{ github.sha }}
-          docker push harbor.psikora.eu/psikora/ui-backend:latest
+          docker push harbor.psikora.eu/useless-idea/ui-backend:${{ github.sha }}
+          docker push harbor.psikora.eu/useless-idea/ui-backend:latest
 
       - name: Setup SSH
         run: |
