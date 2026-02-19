@@ -1,9 +1,7 @@
 services:
 
   ui-discord:
-    build:
-      context: .
-      dockerfile: docker/Dockerfile
+    image: harbor.psikora.eu/useless-idea/ui-backend:latest
     container_name: ui-backend
     ports:
       - 8082:8080
