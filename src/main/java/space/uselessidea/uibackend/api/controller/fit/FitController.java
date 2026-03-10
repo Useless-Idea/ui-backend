@@ -1,6 +1,7 @@
 package space.uselessidea.uibackend.api.controller.fit;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -31,5 +32,10 @@ public class FitController {
   @GetMapping
   public ResponseEntity<Page<SimpleListFit>> getFit(@RequestBody SearchFitDto searchFitDto) {
     return ResponseEntity.ok(fitApiService.getFits(searchFitDto));
+  }
+
+  @GetMapping("/map")
+  public ResponseEntity<Map<String, Long>> getShipNameIdMap() {
+    return ResponseEntity.ok(fitApiService.getShipNameIdMap());
   }
 }

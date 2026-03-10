@@ -1,5 +1,6 @@
 package space.uselessidea.uibackend.api.controller.fit;
 
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -21,5 +22,9 @@ public class FitApiService {
 
   public Page<SimpleListFit> getFits(SearchFitDto searchFitDto) {
     return fitPrimaryPort.getFitBySearchFitDto(searchFitDto).map(SimpleListFit::fromFitDto);
+  }
+
+  public Map<String, Long> getShipNameIdMap() {
+    return fitPrimaryPort.getShipNameIdMap();
   }
 }

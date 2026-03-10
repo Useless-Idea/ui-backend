@@ -1,5 +1,6 @@
 package space.uselessidea.uibackend.domain.fit.port;
 
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
@@ -18,4 +19,6 @@ public interface FitPrimaryPort {
   Set<UUID> getAllUuid();
 
   Page<FitDto> getFitBySearchFitDto(SearchFitDto searchFitDto);
+
+  Map<String, Long> getShipNameIdMap();
 }

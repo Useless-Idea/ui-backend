@@ -116,6 +116,15 @@ public class FitService implements FitPrimaryPort {
     return fitSecondaryPort.getFits(searchFitDto).map(this::mapToDto);
   }
 
+  @Override
+  public Map<String, Long> getShipNameIdMap() {
+    SearchFitDto searchFitDto = SearchFitDto.builder().page(0).size(Integer.MAX_VALUE).build();
+    return fitSecondaryPort.getFits(searchFitDto).stream()
+        .map(this::mapToDto)
+        .filter(fitDto -> fitDto.getShipName() != null && fitDto.getShipId() != null)
+        .collect(Collectors.toMap(FitDto::getShipName, FitDto::getShipId, (a, b) -> a));
+  }
+
   private FitDto mapToDto(Fit fit) {
     return FitDto.builder()
         .uuid(fit.getUuid())

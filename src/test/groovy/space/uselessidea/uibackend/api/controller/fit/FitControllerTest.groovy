@@ -78,6 +78,40 @@ class FitControllerTest extends RestAssuredSpecification {
         response.then().body("content[0].shipName", equalTo("Orthrus"))
     }
 
+    def "should return empty ship map"() {
+        when:
+        def response = given()
+                .header("Authorization", "Bearer ${UI_ADMIN_TOKEN}")
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .get('/api/v1/fit/map')
+
+        then:
+        1 * fitApiService.getShipNameIdMap() >> [:]
+
+        response.then().statusCode(200)
+        response.then().body("size()", equalTo(0))
+    }
+
+    def "should return ship map with entries"() {
+        when:
+        def response = given()
+                .header("Authorization", "Bearer ${UI_ADMIN_TOKEN}")
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .get('/api/v1/fit/map')
+
+        then:
+        1 * fitApiService.getShipNameIdMap() >> [
+                "Rifter": 587L,
+                "Orthrus": 17715L,
+                "Gila": 24698L
+        ]
+
+        response.then().statusCode(200)
+        response.then().body("size()", equalTo(3))
+        response.then().body("Rifter", equalTo(587))
+        response.then().body("Orthrus", equalTo(17715))
+        response.then().body("Gila", equalTo(24698))
+    }
 }
-
-
