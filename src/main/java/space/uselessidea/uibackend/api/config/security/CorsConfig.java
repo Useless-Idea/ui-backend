@@ -18,22 +18,22 @@ public class CorsConfig {
   private String[] allowedOrigins;
 
   private static final String[] ALLOWED_HEADERS = {
-      HttpHeaders.AUTHORIZATION,
-      HttpHeaders.ACCEPT_LANGUAGE,
-      HttpHeaders.CACHE_CONTROL,
-      HttpHeaders.CONTENT_TYPE,
-      HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN,
-      HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS,
-      HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS
+    HttpHeaders.AUTHORIZATION,
+    HttpHeaders.ACCEPT_LANGUAGE,
+    HttpHeaders.CACHE_CONTROL,
+    HttpHeaders.CONTENT_TYPE,
+    HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN,
+    HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS,
+    HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS
   };
 
   private static final String[] ALLOWED_METHODS = {
-      HttpMethod.GET.name(),
-      HttpMethod.POST.name(),
-      HttpMethod.PUT.name(),
-      HttpMethod.DELETE.name(),
-      HttpMethod.PATCH.name(),
-      HttpMethod.OPTIONS.name()
+    HttpMethod.GET.name(),
+    HttpMethod.POST.name(),
+    HttpMethod.PUT.name(),
+    HttpMethod.DELETE.name(),
+    HttpMethod.PATCH.name(),
+    HttpMethod.OPTIONS.name()
   };
 
   @Bean
@@ -56,8 +56,6 @@ public class CorsConfig {
   }
 
   private List<String> getCorsAllowedOrigins() {
-    return Arrays.stream(allowedOrigins)
-        .map(String::trim)
-        .toList();
+    return Arrays.stream(allowedOrigins).map(String::trim).toList();
   }
 }

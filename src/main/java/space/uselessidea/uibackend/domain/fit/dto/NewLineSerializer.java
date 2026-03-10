@@ -13,4 +13,3 @@ public class NewLineSerializer extends JsonSerializer<String> {
     gen.writeString(value != null ? value.replace("\n", "\\n") : null);
   }
 }
-

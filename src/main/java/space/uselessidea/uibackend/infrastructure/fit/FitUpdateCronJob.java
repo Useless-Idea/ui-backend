@@ -17,14 +17,16 @@ public class FitUpdateCronJob {
   private final RabbitTemplate rabbitTemplate;
   private final Queue fitUpdateQueue;
 
-  //Once per day
+  // Once per day
   @Scheduled(fixedDelay = 24 * 60 * 60 * 1000)
   public void updateFits() {
     log.info("UpdateFits---START");
-    fitPrimaryPort.getAllUuid().forEach(uuid -> {
-      rabbitTemplate.convertAndSend(fitUpdateQueue.getName(), uuid);
-    });
+    fitPrimaryPort
+        .getAllUuid()
+        .forEach(
+            uuid -> {
+              rabbitTemplate.convertAndSend(fitUpdateQueue.getName(), uuid);
+            });
     log.info("UpdateFits---FINISH");
   }
-
 }

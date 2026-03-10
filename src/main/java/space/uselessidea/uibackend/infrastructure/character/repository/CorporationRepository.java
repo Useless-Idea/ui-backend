@@ -5,6 +5,4 @@ import org.springframework.stereotype.Repository;
 import space.uselessidea.uibackend.infrastructure.character.persistence.Corporation;
 
 @Repository
-public interface CorporationRepository extends JpaRepository<Corporation, Long> {
-
-}
+public interface CorporationRepository extends JpaRepository<Corporation, Long> {}

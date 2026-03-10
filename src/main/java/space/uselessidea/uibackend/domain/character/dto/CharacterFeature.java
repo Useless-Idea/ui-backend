@@ -10,5 +10,4 @@ public class CharacterFeature {
 
   private FeatureEnum feature;
   private boolean active;
-
 }

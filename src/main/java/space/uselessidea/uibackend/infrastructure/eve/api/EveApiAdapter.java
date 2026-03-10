@@ -38,7 +38,8 @@ public class EveApiAdapter implements EveApiPort {
   @Override
   @Cacheable(value = "user-skill", key = "#characterId")
   public Map<Long, Skill> getUserSkills(Long characterId, String accessToken) {
-    SkillsApiResponse skillsApiResponse = eveApiFeignClient.getCharacterSkills(characterId, accessToken);
+    SkillsApiResponse skillsApiResponse =
+        eveApiFeignClient.getCharacterSkills(characterId, accessToken);
     Map<Long, Skill> map = toSkillMap(skillsApiResponse);
     return map;
   }
@@ -65,15 +66,18 @@ public class EveApiAdapter implements EveApiPort {
     Set<Long> requiredSkillsAttributeSet = new HashSet<>();
     requiredSkillsAttributeSet.addAll(RequiredSkillsUtils.REQUIRED_SKILL_MAPPING_MAP.keySet());
     requiredSkillsAttributeSet.addAll(RequiredSkillsUtils.REQUIRED_SKILL_MAPPING_MAP.values());
-    Set<Attribute> requiredSkillsSet = response.getDogmaAttributes().stream()
-        .filter(a -> requiredSkillsAttributeSet.contains(a.getAttributeId())).collect(
-            Collectors.toSet());
-    Map<Long, Long> requiredSkillMap = RequiredSkillsUtils.attributesToRequiredSkillMap(requiredSkillsSet);
-    ItemTypeDto itemTypeDto = ItemTypeDto.builder()
-        .itemId(itemTypeId)
-        .name(response.getName())
-        .requiredSkillMap(requiredSkillMap)
-        .build();
+    Set<Attribute> requiredSkillsSet =
+        response.getDogmaAttributes().stream()
+            .filter(a -> requiredSkillsAttributeSet.contains(a.getAttributeId()))
+            .collect(Collectors.toSet());
+    Map<Long, Long> requiredSkillMap =
+        RequiredSkillsUtils.attributesToRequiredSkillMap(requiredSkillsSet);
+    ItemTypeDto itemTypeDto =
+        ItemTypeDto.builder()
+            .itemId(itemTypeId)
+            .name(response.getName())
+            .requiredSkillMap(requiredSkillMap)
+            .build();
     return Optional.of(itemTypeDto);
   }
 
@@ -91,24 +95,21 @@ public class EveApiAdapter implements EveApiPort {
     return eveApiFeignClient.getItemByItemTypeId(typeId);
   }
 
-
   private Map<Long, Skill> toSkillMap(SkillsApiResponse skillsApiResponse) {
     return skillsApiResponse.getSkills().stream()
-        .map(skill ->
-            Skill.builder()
-                .skillId(skill.getSkillId())
-                .activeSkillLevel(skill.getActiveSkillLevel())
-                .skillpointsInSkill(skill.getSkillpointsInSkill())
-                .trainedSkillLevel(skill.getTrainedSkillLevel())
-                .name(getType(skill.getSkillId()).getName())
-                .build()
-        ).collect(Collectors.toMap(Skill::getSkillId, s -> s));
-
+        .map(
+            skill ->
+                Skill.builder()
+                    .skillId(skill.getSkillId())
+                    .activeSkillLevel(skill.getActiveSkillLevel())
+                    .skillpointsInSkill(skill.getSkillpointsInSkill())
+                    .trainedSkillLevel(skill.getTrainedSkillLevel())
+                    .name(getType(skill.getSkillId()).getName())
+                    .build())
+        .collect(Collectors.toMap(Skill::getSkillId, s -> s));
   }
 
   public String getStatus() {
     return eveApiFeignClient.getStatus();
   }
-
-
 }

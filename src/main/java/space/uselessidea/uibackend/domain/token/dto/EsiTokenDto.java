@@ -14,5 +14,4 @@ public class EsiTokenDto {
   private String refreshToken;
 
   private Set<FeatureEnum> features;
-
 }

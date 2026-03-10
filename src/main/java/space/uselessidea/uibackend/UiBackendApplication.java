@@ -15,6 +15,4 @@ public class UiBackendApplication {
   public static void main(String[] args) {
     SpringApplication.run(UiBackendApplication.class, args);
   }
-
-
 }

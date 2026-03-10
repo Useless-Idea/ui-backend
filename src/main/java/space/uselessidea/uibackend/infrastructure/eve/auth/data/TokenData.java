@@ -7,13 +7,10 @@ import lombok.Data;
 
 @Data
 @Builder
-@JsonNaming(
-    PropertyNamingStrategies.SnakeCaseStrategy.class
-)
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class TokenData {
 
   private String accessToken;
   private String refreshToken;
   private Long expiresIn;
-
 }

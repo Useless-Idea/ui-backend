@@ -9,16 +9,16 @@ import lombok.Data;
 
 @Data
 @Builder
-@JsonNaming(
-    PropertyNamingStrategies.SnakeCaseStrategy.class
-)
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ErrorResponse {
 
   private Date timestamp;
 
   private String path;
+
   @SerializedName("error_code")
   private String errorCode;
+
   @SerializedName("error_message")
   private String errorMessage;
 
@@ -30,5 +30,4 @@ public class ErrorResponse {
         .errorMessage(errorMessage)
         .build();
   }
-
 }

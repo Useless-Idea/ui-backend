@@ -27,15 +27,22 @@ public class ItemTypeService implements PrimaryItemTypePort {
   @Override
   public void updateItemTypes() {
     Set<Long> set = eveApiPort.getAllItemTypeId();
-    set.forEach(itemTypeId -> {
-      log.info(String.format("""
+    set.forEach(
+        itemTypeId -> {
+          log.info(
+              String.format(
+                  """
           Try to add %d to Queue
-          """, itemTypeId));
-      rabbitTemplate.convertAndSend(itemTypeQueue.getName(), itemTypeId);
-      log.info(String.format("""
+          """,
+                  itemTypeId));
+          rabbitTemplate.convertAndSend(itemTypeQueue.getName(), itemTypeId);
+          log.info(
+              String.format(
+                  """
           Added %d to Queue
-          """, itemTypeId));
-    });
+          """,
+                  itemTypeId));
+        });
   }
 
   @Override
@@ -44,7 +51,6 @@ public class ItemTypeService implements PrimaryItemTypePort {
       Optional<ItemTypeDto> itemTypeDto = eveApiPort.getItemByItemTypeId(itemTypeId);
       itemTypeDto.ifPresent(secondaryItemTypePort::save);
     }
-
   }
 
   @Override
@@ -54,9 +60,11 @@ public class ItemTypeService implements PrimaryItemTypePort {
 
   @Override
   public Optional<ItemTypeDto> getByName(String name) {
-    //nie muszę tego mieć w bazie, dociagnę sobie
-    Long id = secondaryItemTypePort.getIdByName(name)
-        .orElseThrow(() -> new ApplicationException(ErrorCode.ITEM_TYPE_NOT_EXIST, name));
+    // nie muszę tego mieć w bazie, dociagnę sobie
+    Long id =
+        secondaryItemTypePort
+            .getIdByName(name)
+            .orElseThrow(() -> new ApplicationException(ErrorCode.ITEM_TYPE_NOT_EXIST, name));
 
     return getById(id);
   }

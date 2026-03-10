@@ -16,20 +16,16 @@ import org.springframework.context.annotation.Configuration;
     name = "Bearer",
     scheme = "bearer",
     bearerFormat = "JWT",
-    in = SecuritySchemeIn.HEADER
-)
+    in = SecuritySchemeIn.HEADER)
 public class OpenApiConfig {
 
   @Bean
   public OpenAPI customOpenApi() {
     return new OpenAPI()
-        .info(new Info().title("Useless API")
-            .description("Spring Boot REST API")
-            .version("v1.0"))
-        .servers(Arrays.asList(
-            new Server().url("https://api.uselessidea.space").description("Prod Server"),
-            new Server().url("http://localhost:8080").description("Localhost Server")
-        ));
+        .info(new Info().title("Useless API").description("Spring Boot REST API").version("v1.0"))
+        .servers(
+            Arrays.asList(
+                new Server().url("https://api.uselessidea.space").description("Prod Server"),
+                new Server().url("http://localhost:8080").description("Localhost Server")));
   }
-
 }

@@ -37,5 +37,4 @@ public class Role {
 
   @ManyToMany(mappedBy = "roles")
   private Set<Permission> permissions = new LinkedHashSet<>();
-
 }

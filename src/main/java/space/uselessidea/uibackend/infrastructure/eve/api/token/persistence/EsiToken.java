@@ -28,8 +28,6 @@ public class EsiToken {
   @Column(name = "refresh_token", nullable = false)
   private String refreshToken;
 
-
   @Convert(converter = FeatureConverter.class)
   private Set<FeatureEnum> features;
-
 }

@@ -19,7 +19,6 @@ public class EveAuthAdapter implements EveAuthSecondaryPort {
 
   private final EveProperties eveProperties;
 
-
   private static final String TOKEN_URL = "https://login.eveonline.com/v2/oauth/token";
   private static final String VERIFY_TOKEN_URL = "https://esi.evetech.net/verify";
 
@@ -29,15 +28,13 @@ public class EveAuthAdapter implements EveAuthSecondaryPort {
     headers.set("Authorization", "Bearer " + token);
     RestTemplate restTemplate = new RestTemplate();
 
-    HttpEntity<String> request =
-        new HttpEntity<String>(headers);
+    HttpEntity<String> request = new HttpEntity<String>(headers);
     try {
       restTemplate.exchange(VERIFY_TOKEN_URL, HttpMethod.GET, request, String.class);
     } catch (HttpClientErrorException e) {
       return false;
     }
     return true;
-
   }
 
   @Override
@@ -50,17 +47,14 @@ public class EveAuthAdapter implements EveAuthSecondaryPort {
   private TokenData getTokenDataByForm(String form) {
     RestTemplate restTemplate = new RestTemplate();
 
-    HttpEntity<String> request =
-        new HttpEntity<String>(form, createHeaders());
+    HttpEntity<String> request = new HttpEntity<String>(form, createHeaders());
     return restTemplate.postForObject(TOKEN_URL, request, TokenData.class);
-
   }
 
   @Override
   public TokenData handleCallback(String code) {
     String form = "grant_type=authorization_code&code=" + code;
     return getTokenDataByForm(form);
-
   }
 
   private HttpHeaders createHeaders() {
@@ -75,5 +69,4 @@ public class EveAuthAdapter implements EveAuthSecondaryPort {
     String originalInput = eveProperties.getClientId() + ":" + eveProperties.getSecret();
     return Base64.getEncoder().encodeToString(originalInput.getBytes());
   }
-
 }

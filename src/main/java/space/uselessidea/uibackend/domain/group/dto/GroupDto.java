@@ -9,16 +9,12 @@ import lombok.Data;
 
 @Data
 @Builder
-@JsonNaming(
-    PropertyNamingStrategies.SnakeCaseStrategy.class
-)
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class GroupDto {
 
   private Long categoryId;
   private Long groupId;
   private String name;
   private boolean published;
-  @Builder.Default
-  private Set<Long> types = new HashSet<>();
-
+  @Builder.Default private Set<Long> types = new HashSet<>();
 }

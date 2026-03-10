@@ -10,5 +10,4 @@ public class Pilots {
 
   private List<Pilot> active;
   private List<Pilot> inactive;
-
 }

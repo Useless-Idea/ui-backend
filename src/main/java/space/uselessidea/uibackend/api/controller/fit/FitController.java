@@ -32,5 +32,4 @@ public class FitController {
   public ResponseEntity<Page<SimpleListFit>> getFit(@RequestBody SearchFitDto searchFitDto) {
     return ResponseEntity.ok(fitApiService.getFits(searchFitDto));
   }
-
 }

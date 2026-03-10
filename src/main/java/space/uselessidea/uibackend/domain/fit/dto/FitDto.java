@@ -17,5 +17,4 @@ public class FitDto implements Serializable {
   private Pilots pilots;
   private String eft;
   private String description;
-
 }

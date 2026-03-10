@@ -20,18 +20,22 @@ public class CharacterApiService {
 
   public Map<Long, Skill> getUserSkills(Long characterId, CharacterPrincipal characterPrincipal) {
     return characterPrimaryPort.getUserSkills(characterId, characterPrincipal);
-
   }
 
   public CharactedData getCharacter(Long characterId, CharacterPrincipal characterPrincipal) {
     return characterPrimaryPort.getCharacterData(characterId, characterPrincipal);
   }
 
-  public Page<CharactedData> getCharacters(Pageable pageable, CharacterPrincipal characterPrincipal) {
+  public Page<CharactedData> getCharacters(
+      Pageable pageable, CharacterPrincipal characterPrincipal) {
     return characterPrimaryPort.getCharacterDataPage(pageable, characterPrincipal);
   }
 
   public Set<CharacterFeature> getCharacterFeatures(Long characterId) {
     return characterPrimaryPort.getFeatureScope(characterId);
+  }
+
+  public Map<Long, String> getCharacterIdNameMap(CharacterPrincipal characterPrincipal) {
+    return characterPrimaryPort.getCharacterIdNameMap(characterPrincipal);
   }
 }

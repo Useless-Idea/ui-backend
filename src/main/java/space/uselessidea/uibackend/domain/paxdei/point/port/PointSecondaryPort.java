@@ -9,7 +9,6 @@ public interface PointSecondaryPort {
 
   void createPoint(CreatePointRequest createPointRequest);
 
-
   Set<PointDto> getAllPoints();
 
   void deletePoint(UUID uuid);

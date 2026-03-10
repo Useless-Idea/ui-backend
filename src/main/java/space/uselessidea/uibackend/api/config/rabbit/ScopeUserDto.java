@@ -13,5 +13,4 @@ public class ScopeUserDto {
 
   private Long id;
   private String state;
-
 }

@@ -5,5 +5,4 @@ import space.uselessidea.uibackend.domain.category.dto.CategoryDto;
 public interface CategoryPrimaryPort {
 
   CategoryDto getCategoryDataById(Long id);
-
 }

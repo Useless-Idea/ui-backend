@@ -23,35 +23,37 @@ public class SecurityErrorHandler implements AuthenticationEntryPoint, AccessDen
   private final Gson gson;
 
   @Override
-  public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)
+  public void commence(
+      HttpServletRequest request,
+      HttpServletResponse response,
+      AuthenticationException authException)
       throws IOException, ServletException {
     ErrorCode errorCode = ErrorCode.ACCESS_TOKEN_IS_INVALID;
     generateErrorResponse(errorCode, request, response);
-
   }
 
   @Override
-  public void handle(HttpServletRequest request, HttpServletResponse response,
-      AccessDeniedException accessDeniedException) throws IOException, ServletException {
+  public void handle(
+      HttpServletRequest request,
+      HttpServletResponse response,
+      AccessDeniedException accessDeniedException)
+      throws IOException, ServletException {
     ErrorCode errorCode = ErrorCode.ACCESS_DENIED;
     generateErrorResponse(errorCode, request, response);
-
   }
 
-  private void generateErrorResponse(ErrorCode errorCode, HttpServletRequest request, HttpServletResponse response)
+  private void generateErrorResponse(
+      ErrorCode errorCode, HttpServletRequest request, HttpServletResponse response)
       throws IOException {
     response.setStatus(errorCode.getHttpStatus().value());
     response.setContentType("application/json");
     response.setCharacterEncoding("UTF-8");
 
-    ErrorResponse errorResponse = ErrorResponse.of(
-        request.getRequestURI(),
-        errorCode.getCode(),
-        messageSource.getMessage(errorCode.getCode(), null,
-            request.getLocale())
-    );
+    ErrorResponse errorResponse =
+        ErrorResponse.of(
+            request.getRequestURI(),
+            errorCode.getCode(),
+            messageSource.getMessage(errorCode.getCode(), null, request.getLocale()));
     response.getWriter().write(gson.toJson(errorResponse));
   }
-
-
 }

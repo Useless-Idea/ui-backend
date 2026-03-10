@@ -5,5 +5,4 @@ import space.uselessidea.uibackend.domain.group.dto.GroupDto;
 public interface GroupPrimaryPort {
 
   GroupDto getGroupDataById(Long groupId);
-
 }

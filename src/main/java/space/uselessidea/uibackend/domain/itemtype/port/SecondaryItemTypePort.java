@@ -7,7 +7,6 @@ public interface SecondaryItemTypePort {
 
   ItemTypeDto save(ItemTypeDto itemTypeDto);
 
-
   boolean itemhasName(Long itemTypeId);
 
   Optional<Long> getIdByName(String name);

@@ -22,5 +22,4 @@ public class PointDto {
         .text(pointEntity.getText())
         .build();
   }
-
 }

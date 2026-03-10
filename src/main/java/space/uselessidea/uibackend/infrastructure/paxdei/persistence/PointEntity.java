@@ -21,12 +21,8 @@ public class PointEntity {
   @GeneratedValue
   private UUID uuid;
 
-  @NotNull
-  private Long xpos;
-  @NotNull
-  private Long ypos;
+  @NotNull private Long xpos;
+  @NotNull private Long ypos;
 
-  @NotNull
-  private String text;
-
+  @NotNull private String text;
 }

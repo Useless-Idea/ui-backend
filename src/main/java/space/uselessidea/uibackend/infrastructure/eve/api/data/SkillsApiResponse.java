@@ -6,24 +6,18 @@ import java.util.List;
 import lombok.Data;
 
 @Data
-@JsonNaming(
-    PropertyNamingStrategies.SnakeCaseStrategy.class
-)
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class SkillsApiResponse {
 
   private List<Skill> skills;
 
   @Data
-  @JsonNaming(
-      PropertyNamingStrategies.SnakeCaseStrategy.class
-  )
+  @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
   public static class Skill {
 
     private Long activeSkillLevel;
     private Long skillId;
     private Long skillpointsInSkill;
     private Long trainedSkillLevel;
-
   }
-
 }

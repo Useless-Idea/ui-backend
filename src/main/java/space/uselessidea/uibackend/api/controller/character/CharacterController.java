@@ -1,5 +1,6 @@
 package space.uselessidea.uibackend.api.controller.character;
 
+import java.util.Map;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,27 +22,33 @@ public class CharacterController {
   private final CharacterApiService characterApiService;
 
   @GetMapping("/{id}/skills")
-  public ResponseEntity getSkills(@PathVariable("id") Long characterId, CharacterPrincipal characterPrincipal) {
+  public ResponseEntity getSkills(
+      @PathVariable("id") Long characterId, CharacterPrincipal characterPrincipal) {
     return ResponseEntity.ok(characterApiService.getUserSkills(characterId, characterPrincipal));
-
   }
-
 
   /**
    * Get Character By Id
    *
-   * @param characterId        characterId
+   * @param characterId characterId
    * @param characterPrincipal characterPrincipal
    * @return characterData
    */
   @GetMapping("/{id}")
-  public ResponseEntity getCharacter(@PathVariable("id") Long characterId, CharacterPrincipal characterPrincipal) {
+  public ResponseEntity getCharacter(
+      @PathVariable("id") Long characterId, CharacterPrincipal characterPrincipal) {
     return ResponseEntity.ok(characterApiService.getCharacter(characterId, characterPrincipal));
   }
 
   @GetMapping("")
   public ResponseEntity getCharacterPage(Pageable pageable, CharacterPrincipal characterPrincipal) {
     return ResponseEntity.ok(characterApiService.getCharacters(pageable, characterPrincipal));
+  }
+
+  @GetMapping("/map")
+  public ResponseEntity<Map<Long, String>> getCharacterIdNameMap(
+      CharacterPrincipal characterPrincipal) {
+    return ResponseEntity.ok(characterApiService.getCharacterIdNameMap(characterPrincipal));
   }
 
   @GetMapping("/scope")
@@ -52,5 +59,4 @@ public class CharacterController {
 
     return ResponseEntity.ok(response);
   }
-
 }

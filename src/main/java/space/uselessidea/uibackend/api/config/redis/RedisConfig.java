@@ -23,7 +23,8 @@ public class RedisConfig {
 
   @Bean
   public RedisCacheConfiguration cacheConfiguration(ObjectMapper objectMapper) {
-    Jackson2JsonRedisSerializer<Object> serializer = new Jackson2JsonRedisSerializer<>(Object.class);
+    Jackson2JsonRedisSerializer<Object> serializer =
+        new Jackson2JsonRedisSerializer<>(Object.class);
 
     return RedisCacheConfiguration.defaultCacheConfig()
         .entryTtl(Duration.ofDays(60))
@@ -32,38 +33,36 @@ public class RedisConfig {
   }
 
   @Bean
-  public CacheManager cacheManager(ObjectMapper objectMapper, RedisConnectionFactory connectionFactory) {
+  public CacheManager cacheManager(
+      ObjectMapper objectMapper, RedisConnectionFactory connectionFactory) {
 
-    RedisCacheConfiguration itemCacheConfig = RedisCacheConfiguration.defaultCacheConfig()
-        .serializeValuesWith(
-            RedisSerializationContext.SerializationPair.fromSerializer(
-                new Jackson2JsonRedisSerializer<>(ItemTypeApiResponse.class)
-            )
-        );
+    RedisCacheConfiguration itemCacheConfig =
+        RedisCacheConfiguration.defaultCacheConfig()
+            .serializeValuesWith(
+                RedisSerializationContext.SerializationPair.fromSerializer(
+                    new Jackson2JsonRedisSerializer<>(ItemTypeApiResponse.class)));
 
-    RedisCacheConfiguration accessTokenConfig = RedisCacheConfiguration.defaultCacheConfig()
-        .entryTtl(Duration.ofMinutes(10))
-        .serializeValuesWith(
-            RedisSerializationContext.SerializationPair.fromSerializer(
-                new Jackson2JsonRedisSerializer<>(String.class)
-            )
-        );
+    RedisCacheConfiguration accessTokenConfig =
+        RedisCacheConfiguration.defaultCacheConfig()
+            .entryTtl(Duration.ofMinutes(10))
+            .serializeValuesWith(
+                RedisSerializationContext.SerializationPair.fromSerializer(
+                    new Jackson2JsonRedisSerializer<>(String.class)));
 
-    RedisCacheConfiguration fitCacheConfig = RedisCacheConfiguration.defaultCacheConfig()
-        .serializeValuesWith(
-            RedisSerializationContext.SerializationPair.fromSerializer(
-                new Jackson2JsonRedisSerializer<>(FitDto.class)
-            )
-        );
-    JavaType type = objectMapper.getTypeFactory().constructMapType(Map.class, Long.class, Skill.class);
+    RedisCacheConfiguration fitCacheConfig =
+        RedisCacheConfiguration.defaultCacheConfig()
+            .serializeValuesWith(
+                RedisSerializationContext.SerializationPair.fromSerializer(
+                    new Jackson2JsonRedisSerializer<>(FitDto.class)));
+    JavaType type =
+        objectMapper.getTypeFactory().constructMapType(Map.class, Long.class, Skill.class);
 
-    RedisCacheConfiguration userSkillsCacheConfig = RedisCacheConfiguration.defaultCacheConfig()
-        .entryTtl(Duration.ofMinutes(60))
-        .serializeValuesWith(
-            RedisSerializationContext.SerializationPair.fromSerializer(
-                new Jackson2JsonRedisSerializer<>(type)
-            )
-        );
+    RedisCacheConfiguration userSkillsCacheConfig =
+        RedisCacheConfiguration.defaultCacheConfig()
+            .entryTtl(Duration.ofMinutes(60))
+            .serializeValuesWith(
+                RedisSerializationContext.SerializationPair.fromSerializer(
+                    new Jackson2JsonRedisSerializer<>(type)));
 
     Map<String, RedisCacheConfiguration> cacheConfigs = new HashMap<>();
     cacheConfigs.put("type", itemCacheConfig);
@@ -75,5 +74,4 @@ public class RedisConfig {
         .withInitialCacheConfigurations(cacheConfigs)
         .build();
   }
-
 }

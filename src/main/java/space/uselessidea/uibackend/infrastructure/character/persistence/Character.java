@@ -44,12 +44,11 @@ public class Character {
   private Boolean isBlock = false;
 
   @ManyToMany
-  @JoinTable(name = "character_role",
+  @JoinTable(
+      name = "character_role",
       joinColumns = @JoinColumn(name = "character_id"),
       inverseJoinColumns = @JoinColumn(name = "role_uuid"))
   private Set<Role> roles = new LinkedHashSet<>();
 
-  @Version
-  private Long version;
-
+  @Version private Long version;
 }

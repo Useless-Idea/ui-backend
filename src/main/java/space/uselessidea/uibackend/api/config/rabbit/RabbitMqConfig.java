@@ -53,5 +53,4 @@ public class RabbitMqConfig {
   Queue stateIdQueue() {
     return new Queue(STATE_ID_QUEUE);
   }
-
 }

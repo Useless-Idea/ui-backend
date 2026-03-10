@@ -22,14 +22,18 @@ public class TokenAdapter implements TokenSecondaryPort {
 
   private final EsiTokenRepository esiTokenRepository;
 
-
   @Override
-  public EsiTokenDto saveToken(Long charId, Instant expiresAt, TokenData tokenData, Set<FeatureEnum> featureSet) {
-    EsiToken esiToken = esiTokenRepository.findById(charId).orElseGet(() -> {
-      EsiToken token = new EsiToken();
-      token.setId(charId);
-      return token;
-    });
+  public EsiTokenDto saveToken(
+      Long charId, Instant expiresAt, TokenData tokenData, Set<FeatureEnum> featureSet) {
+    EsiToken esiToken =
+        esiTokenRepository
+            .findById(charId)
+            .orElseGet(
+                () -> {
+                  EsiToken token = new EsiToken();
+                  token.setId(charId);
+                  return token;
+                });
     esiToken.setRefreshToken(tokenData.getRefreshToken());
     esiToken.setFeatures(featureSet);
     esiToken = esiTokenRepository.save(esiToken);
@@ -38,21 +42,17 @@ public class TokenAdapter implements TokenSecondaryPort {
 
   @Override
   public Optional<EsiTokenDto> getToken(Long charId) {
-    //TODO to ma być obsłużone w redisie
+    // TODO to ma być obsłużone w redisie
     /*
     jak token jest w redis to spoko a jak nie to
     refresh i robimy na optionalu
      */
-    return esiTokenRepository.findById(charId)
-        .map(this::map);
+    return esiTokenRepository.findById(charId).map(this::map);
   }
 
   @Override
   public List<EsiTokenDto> getAllTokens() {
-    return esiTokenRepository.findAll()
-        .stream()
-        .map(this::map)
-        .collect(Collectors.toList());
+    return esiTokenRepository.findAll().stream().map(this::map).collect(Collectors.toList());
   }
 
   @Override
@@ -67,6 +67,5 @@ public class TokenAdapter implements TokenSecondaryPort {
         .refreshToken(esiToken.getRefreshToken())
         .features(esiToken.getFeatures())
         .build();
-
   }
 }

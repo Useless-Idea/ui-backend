@@ -7,5 +7,4 @@ import space.uselessidea.uibackend.infrastructure.itemtype.persistence.ItemType;
 public interface ItemTypeRepository extends JpaRepository<ItemType, Long> {
 
   Optional<ItemType> findItemTypeByName(String name);
-
 }

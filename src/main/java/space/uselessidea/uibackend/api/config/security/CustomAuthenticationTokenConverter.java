@@ -16,7 +16,8 @@ import space.uselessidea.uibackend.infrastructure.eve.api.data.CharacterPublicDa
 
 @RequiredArgsConstructor
 @Component
-public class CustomAuthenticationTokenConverter implements Converter<Jwt, AbstractAuthenticationToken> {
+public class CustomAuthenticationTokenConverter
+    implements Converter<Jwt, AbstractAuthenticationToken> {
 
   private final EveApiPort eveApiPort;
   private final CharacterSecondaryPort characterPort;
@@ -25,21 +26,30 @@ public class CustomAuthenticationTokenConverter implements Converter<Jwt, Abstra
   public AbstractAuthenticationToken convert(Jwt source) {
     Long charId = Long.valueOf(source.getClaimAsString("sub").split(":")[2]);
     CharacterPublicData charPublicData = eveApiPort.getCharPublicData(charId);
-    CharactedData characterData = characterPort.getCharacterData(
-        charId);
+    CharactedData characterData = characterPort.getCharacterData(charId);
     Set<String> userRole = characterData.getRoles();
     Set<String> userPermission = characterData.getPermission();
-    List<SimpleGrantedAuthority> roles = userRole.stream()
-        .map(role -> new SimpleGrantedAuthority("ROLE_" + role.toUpperCase()))
-        .toList();
-    List<SimpleGrantedAuthority> permission = userPermission.stream()
-        .map(role -> new SimpleGrantedAuthority(role.toUpperCase()))
-        .toList();
+    List<SimpleGrantedAuthority> roles =
+        userRole.stream()
+            .map(role -> new SimpleGrantedAuthority("ROLE_" + role.toUpperCase()))
+            .toList();
+    List<SimpleGrantedAuthority> permission =
+        userPermission.stream()
+            .map(role -> new SimpleGrantedAuthority(role.toUpperCase()))
+            .toList();
     List<SimpleGrantedAuthority> sgaList = new ArrayList<>();
     sgaList.addAll(roles);
     sgaList.addAll(permission);
 
-    return new JwtUserToken(source, charId, charPublicData.getName(), charPublicData.getCorporationId(), "", sgaList,
-        userRole, userPermission, characterData.getIsBlocked());
+    return new JwtUserToken(
+        source,
+        charId,
+        charPublicData.getName(),
+        charPublicData.getCorporationId(),
+        "",
+        sgaList,
+        userRole,
+        userPermission,
+        characterData.getIsBlocked());
   }
 }

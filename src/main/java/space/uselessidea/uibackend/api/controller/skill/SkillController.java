@@ -19,5 +19,4 @@ public class SkillController {
   public ResponseEntity getSkillMap() {
     return ResponseEntity.ok(skillApiService.getGroupSkillMapping());
   }
-
 }

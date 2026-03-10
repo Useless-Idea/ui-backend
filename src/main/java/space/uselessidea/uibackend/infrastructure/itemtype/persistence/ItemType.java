@@ -19,5 +19,4 @@ public class ItemType {
 
   @Column(name = "name", length = Integer.MAX_VALUE)
   private String name;
-
 }

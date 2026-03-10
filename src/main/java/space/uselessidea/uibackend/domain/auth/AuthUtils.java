@@ -14,7 +14,8 @@ public class AuthUtils {
   private final EveProperties eveProperties;
 
   public Jwt convertAccessTokenToJwt(String accessToken) {
-    JwtDecoder jwtDecoder = NimbusJwtDecoder.withIssuerLocation(eveProperties.getIssuerUri()).build();
+    JwtDecoder jwtDecoder =
+        NimbusJwtDecoder.withIssuerLocation(eveProperties.getIssuerUri()).build();
     Jwt jwt = jwtDecoder.decode(accessToken);
     return jwt;
   }
@@ -22,5 +23,4 @@ public class AuthUtils {
   public Long getSubFromJwtToken(Jwt jwt) {
     return Long.valueOf(jwt.getClaimAsString("sub").split(":")[2]);
   }
-
 }

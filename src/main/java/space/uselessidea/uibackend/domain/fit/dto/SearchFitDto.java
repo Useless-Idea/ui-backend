@@ -19,5 +19,4 @@ public class SearchFitDto {
   public Pageable toPageable() {
     return PageRequest.of(page, size);
   }
-
 }

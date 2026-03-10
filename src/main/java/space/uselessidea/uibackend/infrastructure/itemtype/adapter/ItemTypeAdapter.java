@@ -25,8 +25,8 @@ public class ItemTypeAdapter implements SecondaryItemTypePort {
 
   @Override
   public boolean itemhasName(Long itemTypeId) {
-    return itemTypeRepository.findById(
-            itemTypeId)
+    return itemTypeRepository
+        .findById(itemTypeId)
         .filter(itemType -> itemType.getName() != null && !itemType.getName().isEmpty())
         .isPresent();
   }

@@ -5,6 +5,4 @@ import org.springframework.stereotype.Repository;
 import space.uselessidea.uibackend.infrastructure.eve.api.token.persistence.EsiToken;
 
 @Repository
-public interface EsiTokenRepository extends JpaRepository<EsiToken, Long> {
-
-}
+public interface EsiTokenRepository extends JpaRepository<EsiToken, Long> {}

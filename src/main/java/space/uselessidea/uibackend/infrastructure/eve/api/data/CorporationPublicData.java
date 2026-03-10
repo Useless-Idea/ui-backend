@@ -5,14 +5,11 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Data;
 
 @Data
-@JsonNaming(
-    PropertyNamingStrategies.SnakeCaseStrategy.class
-)
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class CorporationPublicData {
 
   private String name;
   private Long allianceId;
   private Long ceoId;
   private String ticker;
-
 }

@@ -32,5 +32,4 @@ public class Corporation {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "alliance_id")
   private Alliance alliance;
-
 }

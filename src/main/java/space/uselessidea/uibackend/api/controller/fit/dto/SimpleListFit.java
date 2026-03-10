@@ -16,13 +16,13 @@ public class SimpleListFit {
   private Pilots pilots;
   private Long shipId;
 
-
   public static SimpleListFit fromFitDto(FitDto fitDto) {
     return SimpleListFit.builder()
         .uuid(fitDto.getUuid())
         .name(fitDto.getName())
         .pilots(fitDto.getPilots())
         .shipId(fitDto.getShipId())
-        .shipName(fitDto.getShipName()).build();
+        .shipName(fitDto.getShipName())
+        .build();
   }
 }

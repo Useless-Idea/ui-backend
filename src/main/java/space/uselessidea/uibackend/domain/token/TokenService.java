@@ -45,7 +45,8 @@ public class TokenService implements TokenPrimaryPort {
     if (!eveAuthSecondaryPort.verifyToken(tokenData.getAccessToken())) {
       throw new ApplicationException(ErrorCode.ACCESS_TOKEN_IS_INVALID);
     }
-    JwtDecoder jwtDecoder = NimbusJwtDecoder.withIssuerLocation(eveProperties.getIssuerUri()).build();
+    JwtDecoder jwtDecoder =
+        NimbusJwtDecoder.withIssuerLocation(eveProperties.getIssuerUri()).build();
     Jwt jwt = jwtDecoder.decode(tokenData.getAccessToken());
     Instant expiresAt = jwt.getExpiresAt();
     Long charId = Long.valueOf(jwt.getClaimAsString("sub").split(":")[2]);
@@ -58,15 +59,15 @@ public class TokenService implements TokenPrimaryPort {
   }
 
   @Override
-  @Cacheable(value = "access-token",
+  @Cacheable(
+      value = "access-token",
       key = "#characterId",
       unless = "#result == null || #result.isEmpty()")
   public Optional<String> getAccessToken(Long characterId) {
     Lock lock = locks.computeIfAbsent(characterId, id -> new ReentrantLock());
     lock.lock();
     try {
-      return tokenSecondaryPort.getToken(characterId)
-          .flatMap(this::refreshToken);
+      return tokenSecondaryPort.getToken(characterId).flatMap(this::refreshToken);
 
     } catch (HttpClientErrorException.BadRequest e) {
       // logujemy błąd, ale nie wrzucamy do cache
@@ -87,18 +88,19 @@ public class TokenService implements TokenPrimaryPort {
     try {
       tokenData = eveAuthSecondaryPort.refreshToken(esiTokenDto.getRefreshToken());
     } catch (HttpClientErrorException e) {
-      log.error("Error during getting new access token by refresh token for: {}", esiTokenDto.getId(), e);
-      //tokenSecondaryPort.deleteToken(esiTokenDto.getId());
+      log.error(
+          "Error during getting new access token by refresh token for: {}", esiTokenDto.getId(), e);
+      // tokenSecondaryPort.deleteToken(esiTokenDto.getId());
       return Optional.empty();
-
     }
     try {
       addToken(tokenData);
     } catch (ApplicationException e) {
-      log.error("Error during adding new access token by refresh token for: {}", esiTokenDto.getId(), e);
+      log.error(
+          "Error during adding new access token by refresh token for: {}", esiTokenDto.getId(), e);
       if (ErrorCode.ACCESS_TOKEN_IS_INVALID.equals(e.getErrorCode())) {
 
-        //tokenSecondaryPort.deleteToken(esiTokenDto.getId());
+        // tokenSecondaryPort.deleteToken(esiTokenDto.getId());
         return Optional.empty();
       }
     }

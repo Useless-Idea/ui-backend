@@ -9,7 +9,6 @@ import space.uselessidea.uibackend.domain.itemtype.port.PrimaryItemTypePort;
 
 @Component
 @RequiredArgsConstructor
-
 @Slf4j
 public class ItemTypeListener {
 
@@ -19,6 +18,4 @@ public class ItemTypeListener {
   private void handleNewToken(Long itemTypeId) {
     primaryItemTypePort.updateItemType(itemTypeId);
   }
-
-
 }

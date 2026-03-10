@@ -12,12 +12,10 @@ import space.uselessidea.uibackend.domain.fit.port.FitPrimaryPort;
 
 @Component
 @RequiredArgsConstructor
-
 @Slf4j
 public class FitListener {
 
   private final FitPrimaryPort fitPrimaryPort;
-
 
   @RabbitListener(queues = {RabbitMqConfig.FIT_UPDATE_QUEUE})
   public void fitUpdate(UUID fitUuid) {
@@ -30,8 +28,6 @@ public class FitListener {
       } else {
         throw e;
       }
-
     }
   }
-
 }

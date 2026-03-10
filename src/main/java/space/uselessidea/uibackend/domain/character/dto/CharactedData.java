@@ -17,13 +17,9 @@ public class CharactedData {
   private String corporationName;
   private Long allianceId;
   private String allianceName;
-  @Builder.Default
-  private Set<String> roles = new HashSet<>();
-  @Builder.Default
-  private Set<String> permission = new HashSet<>();
+  @Builder.Default private Set<String> roles = new HashSet<>();
+  @Builder.Default private Set<String> permission = new HashSet<>();
   private Boolean isBlocked;
   private Boolean tokenActive;
   private Long version;
-
-
 }

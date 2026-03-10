@@ -18,5 +18,4 @@ public class CharacterListener {
   private void handleNewToken(Long characterId) {
     characterPrimaryPort.updateCharacterData(characterId);
   }
-
 }

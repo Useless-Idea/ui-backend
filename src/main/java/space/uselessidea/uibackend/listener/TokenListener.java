@@ -27,7 +27,5 @@ public class TokenListener {
     } catch (ApplicationException applicationException) {
       log.error(String.format("Token [%s] is not valid", tokenData.getAccessToken()));
     }
-
   }
-
 }

@@ -21,24 +21,16 @@ public class GlobalExceptionHandler {
   private static final String ERROR = "Error!";
   private final MessageSource messageSource;
 
-  @ExceptionHandler(
-      ApplicationException.class
-  )
+  @ExceptionHandler(ApplicationException.class)
   public ResponseEntity<ErrorResponse> handleApplicationExceptions(
-      ApplicationException exception,
-      Locale locale,
-      HttpServletRequest request
-  ) {
+      ApplicationException exception, Locale locale, HttpServletRequest request) {
     log.error(ERROR, exception);
-    return generateResponseByErrorCode(exception.getErrorCode(), locale, request, exception.getArgs());
+    return generateResponseByErrorCode(
+        exception.getErrorCode(), locale, request, exception.getArgs());
   }
 
   private ResponseEntity<ErrorResponse> generateResponseByErrorCode(
-      ErrorCode errorCodeEnum,
-      Locale locale,
-      HttpServletRequest request,
-      Object[] args
-  ) {
+      ErrorCode errorCodeEnum, Locale locale, HttpServletRequest request, Object[] args) {
     String errorMessage = null;
     String errorCode = errorCodeEnum.getCode();
     if (errorCode != null) {
@@ -46,9 +38,8 @@ public class GlobalExceptionHandler {
     }
 
     HttpStatus status = errorCodeEnum.getHttpStatus();
-    ErrorResponse responseError = ErrorResponse.of(request.getRequestURI(), errorCode,
-        errorMessage);
+    ErrorResponse responseError =
+        ErrorResponse.of(request.getRequestURI(), errorCode, errorMessage);
     return ResponseEntity.status(status).body(responseError);
   }
-
 }

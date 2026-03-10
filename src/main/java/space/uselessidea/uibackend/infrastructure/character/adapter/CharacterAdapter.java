@@ -30,16 +30,15 @@ public class CharacterAdapter implements CharacterSecondaryPort {
   @Override
   @Transactional
   public CharactedData getCharacterData(Long id) {
-    Character character = characterRepository.findById(id)
-        .orElseGet(() -> createCharacter(id));
+    Character character = characterRepository.findById(id).orElseGet(() -> createCharacter(id));
     return map(character);
   }
 
   @Override
   public CharactedData saveCharacterData(CharactedData characterData) {
     Long charId = characterData.getCharacterId();
-    Character character = characterRepository.findById(charId)
-        .orElseGet(() -> createCharacter(charId));
+    Character character =
+        characterRepository.findById(charId).orElseGet(() -> createCharacter(charId));
     character.setIsTokenActive(characterData.getTokenActive());
     character.setVersion(characterData.getVersion());
     character = characterRepository.save(character);
@@ -57,8 +56,7 @@ public class CharacterAdapter implements CharacterSecondaryPort {
   }
 
   private Character createCharacter(Long characterId) {
-    CharacterPublicData characterPublicData = eveApiPort.getCharPublicData(
-        characterId);
+    CharacterPublicData characterPublicData = eveApiPort.getCharPublicData(characterId);
     Corporation corporation = getCorporation(characterPublicData.getCorporationId());
     Character character = new Character();
     character.setId(characterId);
@@ -70,12 +68,14 @@ public class CharacterAdapter implements CharacterSecondaryPort {
   }
 
   public Corporation getCorporation(Long corporationId) {
-    return corporationRepository.findById(corporationId)
+    return corporationRepository
+        .findById(corporationId)
         .orElseGet(() -> createCorporation(corporationId));
   }
 
   private Corporation createCorporation(Long corporationId) {
-    CorporationPublicData corporationPublicData = eveApiPort.getCorporationPublicData(corporationId);
+    CorporationPublicData corporationPublicData =
+        eveApiPort.getCorporationPublicData(corporationId);
     Corporation corporation = new Corporation();
     corporation.setName(corporationPublicData.getName());
     corporation.setId(corporationId);
@@ -88,13 +88,12 @@ public class CharacterAdapter implements CharacterSecondaryPort {
         .characterName(character.getName())
         .characterId(character.getId())
         .isBlocked(character.getIsBlock())
-        .roles(character.getRoles().stream()
-            .map(Role::getCode)
-            .collect(Collectors.toSet()))
-        .permission(character.getRoles().stream()
-            .flatMap(role -> role.getPermissions().stream())
-            .map(Permission::getCode)
-            .collect(Collectors.toSet()))
+        .roles(character.getRoles().stream().map(Role::getCode).collect(Collectors.toSet()))
+        .permission(
+            character.getRoles().stream()
+                .flatMap(role -> role.getPermissions().stream())
+                .map(Permission::getCode)
+                .collect(Collectors.toSet()))
         .tokenActive(character.getIsTokenActive())
         .version(character.getVersion())
         .build();

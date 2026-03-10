@@ -8,9 +8,7 @@ import java.util.List;
 import lombok.Data;
 
 @Data
-@JsonNaming(
-    PropertyNamingStrategies.SnakeCaseStrategy.class
-)
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ItemTypeApiResponse implements Serializable {
 
   private String name;
@@ -19,13 +17,10 @@ public class ItemTypeApiResponse implements Serializable {
   private Long typeId;
 
   @Data
-  @JsonNaming(
-      PropertyNamingStrategies.SnakeCaseStrategy.class
-  )
+  @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
   public static class Attribute {
 
     private Long attributeId;
     private String value;
-
   }
 }

@@ -13,15 +13,15 @@ public class FeatureConverter implements AttributeConverter<Set<FeatureEnum>, St
 
   @Override
   public String convertToDatabaseColumn(Set<FeatureEnum> featureEnums) {
-    return featureEnums != null ? featureEnums.stream()
-        .map(Enum::name)
-        .collect(Collectors.joining(",")) : null;
+    return featureEnums != null
+        ? featureEnums.stream().map(Enum::name).collect(Collectors.joining(","))
+        : null;
   }
 
   @Override
   public Set<FeatureEnum> convertToEntityAttribute(String dbData) {
-    return dbData != null ? Arrays.stream(dbData.split(","))
-        .map(FeatureEnum::valueOf)
-        .collect(Collectors.toSet()) : new HashSet<>();
+    return dbData != null
+        ? Arrays.stream(dbData.split(",")).map(FeatureEnum::valueOf).collect(Collectors.toSet())
+        : new HashSet<>();
   }
 }

@@ -30,5 +30,4 @@ public class Alliance {
 
   @OneToMany(mappedBy = "alliance")
   private Set<Corporation> corporations = new LinkedHashSet<>();
-
 }

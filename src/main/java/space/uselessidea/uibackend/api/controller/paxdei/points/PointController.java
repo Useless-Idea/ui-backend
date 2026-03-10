@@ -28,7 +28,6 @@ public class PointController {
   public ResponseEntity<Set<PointDto>> getAllPoints() {
     Set<PointDto> response = pointApiService.getAllPoints();
     return ResponseEntity.ok(response);
-
   }
 
   @PostMapping
@@ -42,5 +41,4 @@ public class PointController {
     pointApiService.deletePoint(uuid);
     return ResponseEntity.ok().build();
   }
-
 }

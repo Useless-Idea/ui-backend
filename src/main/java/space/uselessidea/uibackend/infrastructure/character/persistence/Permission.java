@@ -38,9 +38,9 @@ public class Permission {
   private String description;
 
   @ManyToMany
-  @JoinTable(name = "permission_role",
+  @JoinTable(
+      name = "permission_role",
       joinColumns = @JoinColumn(name = "permission_uuid"),
       inverseJoinColumns = @JoinColumn(name = "role_uuid"))
   private Set<Role> roles = new LinkedHashSet<>();
-
 }

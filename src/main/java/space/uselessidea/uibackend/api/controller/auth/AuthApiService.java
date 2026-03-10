@@ -39,9 +39,10 @@ public class AuthApiService {
   }
 
   public String generateUrlForToken(Set<FeatureEnum> featureEnums) {
-    String scopes = featureEnums.stream()
-        .flatMap(featureEnum -> featureEnum.getScopes().stream())
-        .collect(Collectors.joining(" "));
+    String scopes =
+        featureEnums.stream()
+            .flatMap(featureEnum -> featureEnum.getScopes().stream())
+            .collect(Collectors.joining(" "));
     return UriComponentsBuilder.fromUriString("https://login.eveonline.com/v2/oauth/authorize")
         .queryParam("response_type", "code")
         .queryParam("redirect_uri", eveProperties.getCallback())
@@ -60,13 +61,11 @@ public class AuthApiService {
     Jwt jwt = authUtils.convertAccessTokenToJwt(token.getAccessToken());
     long userId = authUtils.getSubFromJwtToken(jwt);
 
-    rabbitTemplate.convertAndSend(stateIdQueue.getName(), gson.toJson(ScopeUserDto.builder()
-        .id(userId)
-        .state(state)
-        .build()));
+    rabbitTemplate.convertAndSend(
+        stateIdQueue.getName(),
+        gson.toJson(ScopeUserDto.builder().id(userId).state(state).build()));
 
     log.info(token.getAccessToken());
     log.info(token.getRefreshToken());
-
   }
 }

@@ -17,5 +17,4 @@ public class Skill implements Serializable {
   private Long skillId;
   private Long skillpointsInSkill;
   private Long trainedSkillLevel;
-
 }

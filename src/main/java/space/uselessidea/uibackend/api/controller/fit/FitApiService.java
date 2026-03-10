@@ -20,7 +20,6 @@ public class FitApiService {
   }
 
   public Page<SimpleListFit> getFits(SearchFitDto searchFitDto) {
-    return fitPrimaryPort.getFitBySearchFitDto(searchFitDto)
-        .map(SimpleListFit::fromFitDto);
+    return fitPrimaryPort.getFitBySearchFitDto(searchFitDto).map(SimpleListFit::fromFitDto);
   }
 }

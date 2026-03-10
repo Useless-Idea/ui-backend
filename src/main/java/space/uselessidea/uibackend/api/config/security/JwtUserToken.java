@@ -9,8 +9,8 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.AbstractOAuth2TokenAuthenticationToken;
 
 @Getter
-
-public class JwtUserToken extends AbstractOAuth2TokenAuthenticationToken<Jwt> implements CharacterPrincipal {
+public class JwtUserToken extends AbstractOAuth2TokenAuthenticationToken<Jwt>
+    implements CharacterPrincipal {
 
   private final Long charId;
   private final Long corpId;
@@ -19,8 +19,15 @@ public class JwtUserToken extends AbstractOAuth2TokenAuthenticationToken<Jwt> im
   private final Set<String> roles;
   private final Set<String> permissions;
 
-  protected JwtUserToken(Jwt token, Long charId, String username, Long corpId, String corpName,
-      Collection<? extends GrantedAuthority> authorities, Set<String> roles, Set<String> permissions,
+  protected JwtUserToken(
+      Jwt token,
+      Long charId,
+      String username,
+      Long corpId,
+      String corpName,
+      Collection<? extends GrantedAuthority> authorities,
+      Set<String> roles,
+      Set<String> permissions,
       boolean isBlocked) {
     super(token, authorities);
     this.setAuthenticated(!isBlocked);

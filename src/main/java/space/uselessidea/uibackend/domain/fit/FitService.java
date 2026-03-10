@@ -44,7 +44,6 @@ public class FitService implements FitPrimaryPort {
   private final RabbitTemplate rabbitTemplate;
   private final Queue fitUpdateQueue;
 
-
   public FitDto addFit(FitForm fitForm) {
     FitDto fitDto = fromEft(fitForm.getFit()).build();
     fitDto.setDescription(fitForm.getDescription());
@@ -57,8 +56,10 @@ public class FitService implements FitPrimaryPort {
 
   @Transactional
   public void updateFit(UUID fitUuid) {
-    Fit fitE = fitSecondaryPort.getFitByUuid(fitUuid)
-        .orElseThrow(() -> new ApplicationException(ErrorCode.FIT_NOT_EXIST, fitUuid));
+    Fit fitE =
+        fitSecondaryPort
+            .getFitByUuid(fitUuid)
+            .orElseThrow(() -> new ApplicationException(ErrorCode.FIT_NOT_EXIST, fitUuid));
 
     FitDto fitDto = fromEft(fitE.getEft()).build();
     fitDto.setUuid(fitE.getUuid());
@@ -71,35 +72,38 @@ public class FitService implements FitPrimaryPort {
 
     itemList.forEach(log::info);
 
-    Map<Long, Long> requiredSkillMap = itemList.stream()
-        .map(primaryItemTypePort::getByName)
-        .flatMap(Optional::stream)
-        .map(ItemTypeDto::getRequiredSkillMap)
-        .map(Map::entrySet)
-        .flatMap(Set::stream)
-        .collect(Collectors.toMap(
-            Entry::getKey,
-            Entry::getValue,
-            Long::max
-        ));
-    List<Pilot> pilotsList = characterPrimaryPort.getCharacterIds().stream()
-        .filter(characterId -> characterPrimaryPort.hasRequiredSkills(characterId, requiredSkillMap))
-        .map(characterId -> characterPrimaryPort.getCharacterData(characterId, null))
-        .map(characterData -> Pilot.builder().name(characterData.getCharacterName())
-            .id(characterData.getCharacterId()).build())
-        .toList();
-    fitSecondaryPort.updatePilotsList(fitUuid, Pilots.builder()
-        .active(pilotsList).build());
+    Map<Long, Long> requiredSkillMap =
+        itemList.stream()
+            .map(primaryItemTypePort::getByName)
+            .flatMap(Optional::stream)
+            .map(ItemTypeDto::getRequiredSkillMap)
+            .map(Map::entrySet)
+            .flatMap(Set::stream)
+            .collect(Collectors.toMap(Entry::getKey, Entry::getValue, Long::max));
+    List<Pilot> pilotsList =
+        characterPrimaryPort.getCharacterIds().stream()
+            .filter(
+                characterId ->
+                    characterPrimaryPort.hasRequiredSkills(characterId, requiredSkillMap))
+            .map(characterId -> characterPrimaryPort.getCharacterData(characterId, null))
+            .map(
+                characterData ->
+                    Pilot.builder()
+                        .name(characterData.getCharacterName())
+                        .id(characterData.getCharacterId())
+                        .build())
+            .toList();
+    fitSecondaryPort.updatePilotsList(fitUuid, Pilots.builder().active(pilotsList).build());
   }
-
 
   @Transactional
   public FitDto getFitByUuid(UUID uuid) {
-    Fit fit = fitSecondaryPort.getFitByUuid(uuid)
-        .orElseThrow(() -> new ApplicationException(ErrorCode.FIT_NOT_EXIST, uuid));
+    Fit fit =
+        fitSecondaryPort
+            .getFitByUuid(uuid)
+            .orElseThrow(() -> new ApplicationException(ErrorCode.FIT_NOT_EXIST, uuid));
     return mapToDto(fit);
   }
-
 
   @Override
   @Transactional
@@ -147,7 +151,8 @@ public class FitService implements FitPrimaryPort {
   }
 
   public Set<String> getItemTypeNames(String eft) {
-    return Arrays.stream(eft.split("\\r?\\n")).skip(1)
+    return Arrays.stream(eft.split("\\r?\\n"))
+        .skip(1)
         .filter(row -> !row.isBlank())
         .map(row -> row.split("x[0-9]+")[0])
         .map(String::trim)

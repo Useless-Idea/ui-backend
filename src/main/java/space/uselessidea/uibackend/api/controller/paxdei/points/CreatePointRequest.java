@@ -8,6 +8,4 @@ public class CreatePointRequest {
   private Long xpos;
   private Long ypos;
   private String text;
-
-
 }

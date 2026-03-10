@@ -7,9 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 
 @Data
-@JsonNaming(
-    PropertyNamingStrategies.SnakeCaseStrategy.class
-)
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @Builder
 public class AuthMeResponse {
 
@@ -19,5 +17,4 @@ public class AuthMeResponse {
   private Long corpId;
   private Set<String> permission;
   private Set<String> roles;
-
 }

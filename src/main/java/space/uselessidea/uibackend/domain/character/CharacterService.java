@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import space.uselessidea.uibackend.api.config.security.CharacterPrincipal;
@@ -38,8 +39,7 @@ public class CharacterService implements CharacterPrimaryPort {
 
   @Override
   public void changeTokenStatus(Long charId, boolean tokenStatus) {
-    CharactedData characterData = characterSecondaryPort.getCharacterData(
-        charId);
+    CharactedData characterData = characterSecondaryPort.getCharacterData(charId);
     characterData.setTokenActive(tokenStatus);
     characterSecondaryPort.saveCharacterData(characterData);
   }
@@ -50,14 +50,10 @@ public class CharacterService implements CharacterPrimaryPort {
   }
 
   @Override
-
   public Map<Long, Skill> getUserSkills(Long characterId, CharacterPrincipal principal) {
     canGetUserSkills(characterId, principal);
     Optional<String> accessToken = tokenPrimaryPort.getAccessToken(characterId);
-    return accessToken.map(
-        token -> eveApiPort.getUserSkills(characterId, token)
-    ).orElse(Map.of());
-
+    return accessToken.map(token -> eveApiPort.getUserSkills(characterId, token)).orElse(Map.of());
   }
 
   @Override
@@ -72,16 +68,24 @@ public class CharacterService implements CharacterPrimaryPort {
   }
 
   @Override
-  public Page<CharactedData> getCharacterDataPage(Pageable pageable, CharacterPrincipal characterPrincipal) {
+  public Page<CharactedData> getCharacterDataPage(
+      Pageable pageable, CharacterPrincipal characterPrincipal) {
     canGetCharacterDataPage(characterPrincipal);
     return characterSecondaryPort.getCharacterDataPage(pageable);
+  }
 
+  @Override
+  public Map<Long, String> getCharacterIdNameMap(CharacterPrincipal characterPrincipal) {
+    canGetCharacterDataPage(characterPrincipal);
+    return characterSecondaryPort
+        .getCharacterDataPage(PageRequest.of(0, Integer.MAX_VALUE))
+        .stream()
+        .collect(Collectors.toMap(CharactedData::getCharacterId, CharactedData::getCharacterName));
   }
 
   @Override
   public boolean hasRequiredSkills(Long characterId, Map<Long, Long> requiredSkills) {
-    Map<Long, Skill> charSkills = getUserSkills(
-        characterId, null);
+    Map<Long, Skill> charSkills = getUserSkills(characterId, null);
     for (Entry<Long, Long> requiredEntry : requiredSkills.entrySet()) {
       if (!charSkills.containsKey(requiredEntry.getKey())) {
         return false;
@@ -89,28 +93,29 @@ public class CharacterService implements CharacterPrimaryPort {
       if (charSkills.get(requiredEntry.getKey()).getActiveSkillLevel() < requiredEntry.getValue()) {
         return false;
       }
-
     }
     return true;
   }
 
   @Override
   public Set<CharacterFeature> getFeatureScope(Long characterId) {
-    Set<String> spcList = tokenPrimaryPort.getAccessToken(characterId)
-        .flatMap(this::parseJwtOptional)
-        .flatMap(this::extractScpClaim)
-        .orElse(Set.of());
-    return Arrays.stream(FeatureEnum.values()).map(
-        item ->
-            CharacterFeature.builder()
-                .feature(item)
-                .active(spcList.containsAll(item.getScopes()))
-                .build()
-    ).collect(Collectors.toSet());
-
+    Set<String> spcList =
+        tokenPrimaryPort
+            .getAccessToken(characterId)
+            .flatMap(this::parseJwtOptional)
+            .flatMap(this::extractScpClaim)
+            .orElse(Set.of());
+    return Arrays.stream(FeatureEnum.values())
+        .map(
+            item ->
+                CharacterFeature.builder()
+                    .feature(item)
+                    .active(spcList.containsAll(item.getScopes()))
+                    .build())
+        .collect(Collectors.toSet());
   }
 
-  //TODO to trzeba gdzieś wyciągnąć może do jakiegoś token UTILS
+  // TODO to trzeba gdzieś wyciągnąć może do jakiegoś token UTILS
   private Optional<JWT> parseJwtOptional(String token) {
     try {
       return Optional.of(JWTParser.parse(token));
@@ -119,16 +124,14 @@ public class CharacterService implements CharacterPrimaryPort {
     }
   }
 
-  //TODO to trzeba gdzieś wyciągnąć może do jakiegoś token UTILS
+  // TODO to trzeba gdzieś wyciągnąć może do jakiegoś token UTILS
   private Optional<Set<String>> extractScpClaim(JWT jwt) {
     try {
       List<?> raw = jwt.getJWTClaimsSet().getListClaim("scp");
       if (raw == null) {
         return Optional.empty();
       }
-      Set<String> scpList = raw.stream()
-          .map(Object::toString)
-          .collect(Collectors.toSet());
+      Set<String> scpList = raw.stream().map(Object::toString).collect(Collectors.toSet());
 
       return Optional.of(scpList);
 
@@ -171,6 +174,4 @@ public class CharacterService implements CharacterPrimaryPort {
     }
     throw new ApplicationException(ErrorCode.INVALID_PERMISSION);
   }
-
-
 }

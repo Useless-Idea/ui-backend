@@ -19,16 +19,10 @@ public class SkillApiService {
   private static final Long SKILL_CATEGORY_ID = 16L;
 
   public Map<String, Set<Long>> getGroupSkillMapping() {
-    CategoryDto categoryData = categoryPrimaryPort.getCategoryDataById(
-        SKILL_CATEGORY_ID);
+    CategoryDto categoryData = categoryPrimaryPort.getCategoryDataById(SKILL_CATEGORY_ID);
     return categoryData.getGroups().stream()
         .map(groupPrimaryPort::getGroupDataById)
         .filter(GroupDto::isPublished)
-        .collect(Collectors.toMap(
-            GroupDto::getName,
-            GroupDto::getTypes
-        ));
-
+        .collect(Collectors.toMap(GroupDto::getName, GroupDto::getTypes));
   }
-
 }

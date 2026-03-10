@@ -17,27 +17,29 @@ import space.uselessidea.uibackend.infrastructure.eve.api.data.SkillsApiResponse
 @FeignClient(value = "eveApiFeignClient", url = "https://esi.evetech.net/latest")
 public interface EveApiFeignClient {
 
-  @RequestMapping(method = RequestMethod.GET, value = "/characters/{characterId}/?datasource=tranquility")
+  @RequestMapping(
+      method = RequestMethod.GET,
+      value = "/characters/{characterId}/?datasource=tranquility")
   CharacterPublicData getCharacterPublicData(@PathVariable("characterId") Long characterId);
 
-
-  /**
-   * Get User Skill
-   */
-  @RequestMapping(method = RequestMethod.GET,
+  /** Get User Skill */
+  @RequestMapping(
+      method = RequestMethod.GET,
       value = "/characters/{characterId}/skills/?datasource=tranquility&token={jwtToken}")
-  SkillsApiResponse getCharacterSkills(@PathVariable("characterId") Long characterId,
-      @PathVariable("jwtToken") String token);
+  SkillsApiResponse getCharacterSkills(
+      @PathVariable("characterId") Long characterId, @PathVariable("jwtToken") String token);
 
-  /**
-   * Corporation data
-   */
-  @RequestMapping(method = RequestMethod.GET, value = "/corporations/{corporation_id}/?datasource=tranquility")
-  CorporationPublicData getCorporationPublicData(@PathVariable("corporation_id") Long corporationId);
+  /** Corporation data */
+  @RequestMapping(
+      method = RequestMethod.GET,
+      value = "/corporations/{corporation_id}/?datasource=tranquility")
+  CorporationPublicData getCorporationPublicData(
+      @PathVariable("corporation_id") Long corporationId);
 
-  @RequestMapping(method = RequestMethod.GET, value = "/universe/types/?datasource=tranquility&page={page}")
+  @RequestMapping(
+      method = RequestMethod.GET,
+      value = "/universe/types/?datasource=tranquility&page={page}")
   ResponseEntity<Set<Long>> getItemTypeIds(@PathVariable("page") Integer page);
-
 
   /**
    * Get Item Type by ID
@@ -45,14 +47,20 @@ public interface EveApiFeignClient {
    * @param itemTypeId ID
    * @return Item Type
    */
-  @RequestMapping(method = RequestMethod.GET, value = "/universe/types/{type_id}/?datasource=tranquility&language=en")
+  @RequestMapping(
+      method = RequestMethod.GET,
+      value = "/universe/types/{type_id}/?datasource=tranquility&language=en")
   @Cacheable(value = "type", key = "#itemTypeId")
   ItemTypeApiResponse getItemByItemTypeId(@PathVariable("type_id") Long itemTypeId);
 
-  @RequestMapping(method = RequestMethod.GET, value = "/universe/categories/{id}/?datasource=tranquility&language=en")
+  @RequestMapping(
+      method = RequestMethod.GET,
+      value = "/universe/categories/{id}/?datasource=tranquility&language=en")
   CategoryDto getCategoryDataById(@PathVariable("id") Long id);
 
-  @RequestMapping(method = RequestMethod.GET, value = "/universe/groups/{id}/?datasource=tranquility&language=en")
+  @RequestMapping(
+      method = RequestMethod.GET,
+      value = "/universe/groups/{id}/?datasource=tranquility&language=en")
   GroupDto getGroupDataById(@PathVariable("id") Long groupId);
 
   @RequestMapping(method = RequestMethod.GET, value = "/status")

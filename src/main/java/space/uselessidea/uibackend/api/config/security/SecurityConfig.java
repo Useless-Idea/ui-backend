@@ -22,35 +22,29 @@ public class SecurityConfig {
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    http
-        .csrf(
-            AbstractHttpConfigurer::disable
-        )
-        .authorizeHttpRequests(auth -> auth
-            .requestMatchers(
-                antMatcher("/api/v1/test"),
-                antMatcher("/api/v1/auth/login"),
-                antMatcher("/api/v1/auth/callback"),
-                antMatcher("/api/v1/skill/map"),
-                antMatcher("/v3/api-docs/**"),
-                antMatcher("/swagger-ui/**"),
-                antMatcher("/swagger-ui.html"),
-                antMatcher(HttpMethod.OPTIONS, "/**")
-            ).permitAll()
-            .anyRequest().authenticated()
-        )
-        .oauth2ResourceServer(oauth2 -> oauth2
-            .jwt(jwt -> jwt.jwtAuthenticationConverter(customAuthenticationTokenConverter))
-            .accessDeniedHandler(customErrorHandler)
-            .authenticationEntryPoint(customErrorHandler)
-        )
+    http.csrf(AbstractHttpConfigurer::disable)
+        .authorizeHttpRequests(
+            auth ->
+                auth.requestMatchers(
+                        antMatcher("/api/v1/test"),
+                        antMatcher("/api/v1/auth/login"),
+                        antMatcher("/api/v1/auth/callback"),
+                        antMatcher("/api/v1/skill/map"),
+                        antMatcher("/v3/api-docs/**"),
+                        antMatcher("/swagger-ui/**"),
+                        antMatcher("/swagger-ui.html"),
+                        antMatcher(HttpMethod.OPTIONS, "/**"))
+                    .permitAll()
+                    .anyRequest()
+                    .authenticated())
+        .oauth2ResourceServer(
+            oauth2 ->
+                oauth2
+                    .jwt(jwt -> jwt.jwtAuthenticationConverter(customAuthenticationTokenConverter))
+                    .accessDeniedHandler(customErrorHandler)
+                    .authenticationEntryPoint(customErrorHandler))
         .sessionManagement(
-            session -> session
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        )
-    ;
+            session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
     return http.build();
   }
-
-
 }

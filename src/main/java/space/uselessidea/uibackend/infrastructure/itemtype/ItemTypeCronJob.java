@@ -12,13 +12,11 @@ public class ItemTypeCronJob {
 
   private final PrimaryItemTypePort primaryItemTypePort;
 
-
-  //Once per day
-  //@Scheduled(fixedDelay = 24 * 60 * 60 * 1000)
+  // Once per day
+  // @Scheduled(fixedDelay = 24 * 60 * 60 * 1000)
   public void updateItemTypes() {
     log.info("UpdateItemTypes---START");
     primaryItemTypePort.updateItemTypes();
     log.info("UpdateItemTypes---FINISH");
   }
-
 }

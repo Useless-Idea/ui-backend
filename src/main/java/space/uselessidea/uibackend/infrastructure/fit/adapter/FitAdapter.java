@@ -29,7 +29,6 @@ public class FitAdapter implements FitSecondaryPort {
     fit.setFitName(fitDto.getName());
     fit = fitRepository.save(fit);
     return fit.getUuid();
-
   }
 
   @Override
@@ -53,14 +52,12 @@ public class FitAdapter implements FitSecondaryPort {
 
   @Override
   public Set<UUID> getAllUuid() {
-    return fitRepository.findAll()
-        .stream()
-        .map(Fit::getUuid)
-        .collect(Collectors.toSet());
+    return fitRepository.findAll().stream().map(Fit::getUuid).collect(Collectors.toSet());
   }
 
   @Override
   public Page<Fit> getFits(SearchFitDto searchFitDto) {
-    return fitRepository.findFits(searchFitDto.getFitName(), searchFitDto.getPilots(), searchFitDto.toPageable());
+    return fitRepository.findFits(
+        searchFitDto.getFitName(), searchFitDto.getPilots(), searchFitDto.toPageable());
   }
 }

@@ -9,5 +9,4 @@ public class Pilot {
 
   private Long id;
   private String name;
-
 }

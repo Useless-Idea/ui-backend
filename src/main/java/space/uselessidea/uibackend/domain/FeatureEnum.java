@@ -24,11 +24,9 @@ public enum FeatureEnum {
     return Arrays.stream(values())
         .filter(featureEnum -> new HashSet<>(scpList).containsAll(featureEnum.getScopes()))
         .collect(Collectors.toSet());
-
   }
 
   public String getName() {
     return name();
   }
-
 }

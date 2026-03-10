@@ -11,7 +11,5 @@ public class ItemTypeDto {
 
   private Long itemId;
   private String name;
-  @Builder.Default
-  private Map<Long, Long> requiredSkillMap = new HashMap<>();
-
+  @Builder.Default private Map<Long, Long> requiredSkillMap = new HashMap<>();
 }

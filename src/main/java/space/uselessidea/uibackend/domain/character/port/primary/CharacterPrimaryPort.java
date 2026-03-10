@@ -21,7 +21,10 @@ public interface CharacterPrimaryPort {
 
   CharactedData updateCharacterData(Long characterId);
 
-  Page<CharactedData> getCharacterDataPage(Pageable pageable, CharacterPrincipal characterPrincipal);
+  Page<CharactedData> getCharacterDataPage(
+      Pageable pageable, CharacterPrincipal characterPrincipal);
+
+  Map<Long, String> getCharacterIdNameMap(CharacterPrincipal characterPrincipal);
 
   boolean hasRequiredSkills(Long characterId, Map<Long, Long> requiredSkills);
 

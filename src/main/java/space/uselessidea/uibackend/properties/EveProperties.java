@@ -13,5 +13,4 @@ public class EveProperties {
   private String secret;
   private String callback;
   private String issuerUri;
-
 }

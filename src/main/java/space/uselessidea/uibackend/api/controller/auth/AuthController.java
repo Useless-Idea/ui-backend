@@ -18,7 +18,6 @@ import space.uselessidea.uibackend.domain.auth.dto.AuthMeResponse;
 @Slf4j
 public class AuthController {
 
-
   private final AuthApiService authApiService;
 
   @GetMapping("/me")
@@ -38,5 +37,4 @@ public class AuthController {
     authApiService.handleCallback(code, state);
     return ResponseEntity.ok().build();
   }
-
 }

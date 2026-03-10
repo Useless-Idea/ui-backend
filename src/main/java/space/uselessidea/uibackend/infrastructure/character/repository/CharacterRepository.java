@@ -5,7 +5,4 @@ import org.springframework.stereotype.Repository;
 import space.uselessidea.uibackend.infrastructure.character.persistence.Character;
 
 @Repository
-public interface CharacterRepository extends JpaRepository<Character, Long> {
-
-
-}
+public interface CharacterRepository extends JpaRepository<Character, Long> {}

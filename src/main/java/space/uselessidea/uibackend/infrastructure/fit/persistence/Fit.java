@@ -14,7 +14,6 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.Type;
 import org.hibernate.type.SqlTypes;
 
-
 @Getter
 @Setter
 @Entity
@@ -26,13 +25,10 @@ public class Fit {
   @GeneratedValue
   private UUID uuid;
 
-  @NotNull
-  private String shipName;
-  @NotNull
-  private Long shipId;
+  @NotNull private String shipName;
+  @NotNull private Long shipId;
 
-  @NotNull
-  private String fitName;
+  @NotNull private String fitName;
 
   @NotNull
   @Column(name = "eft", nullable = false, length = Integer.MAX_VALUE)
@@ -42,5 +38,4 @@ public class Fit {
   @JdbcTypeCode(SqlTypes.JSON)
   @Column(name = "pilots", columnDefinition = "jsonb")
   private Pilots pilots;
-
 }

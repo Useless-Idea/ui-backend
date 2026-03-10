@@ -12,7 +12,9 @@ import space.uselessidea.uibackend.infrastructure.fit.persistence.Fit;
 @Repository
 public interface FitRepository extends JpaRepository<Fit, UUID> {
 
-  @Query(value = """
+  @Query(
+      value =
+          """
       SELECT *
       FROM fit f
       WHERE
@@ -32,7 +34,8 @@ public interface FitRepository extends JpaRepository<Fit, UUID> {
           )
       )
       """,
-      countQuery = """
+      countQuery =
+          """
           SELECT count(*)
           FROM fit f
           WHERE

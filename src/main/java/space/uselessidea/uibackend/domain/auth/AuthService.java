@@ -13,10 +13,10 @@ public class AuthService {
 
   private final EveApiPort eveApiPort;
 
-
   public AuthMeResponse getMe(CharacterPrincipal jwtUserToken) {
     Long corporationId = jwtUserToken.getCorpId();
-    CorporationPublicData corporationPublicData = eveApiPort.getCorporationPublicData(corporationId);
+    CorporationPublicData corporationPublicData =
+        eveApiPort.getCorporationPublicData(corporationId);
     return AuthMeResponse.builder()
         .charId(jwtUserToken.getCharacterId())
         .charName(jwtUserToken.getCharName())
@@ -26,6 +26,4 @@ public class AuthService {
         .permission(jwtUserToken.getPermissions())
         .build();
   }
-
-
 }

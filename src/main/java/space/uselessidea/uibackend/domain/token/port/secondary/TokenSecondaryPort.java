@@ -10,8 +10,8 @@ import space.uselessidea.uibackend.infrastructure.eve.auth.data.TokenData;
 
 public interface TokenSecondaryPort {
 
-
-  EsiTokenDto saveToken(Long charId, Instant expiresAt, TokenData tokenData, Set<FeatureEnum> featureSet);
+  EsiTokenDto saveToken(
+      Long charId, Instant expiresAt, TokenData tokenData, Set<FeatureEnum> featureSet);
 
   Optional<EsiTokenDto> getToken(Long charId);
 
