@@ -21,6 +21,8 @@ import org.testcontainers.containers.PostgreSQLContainer
 import space.uselessidea.uibackend.domain.character.dto.CharactedData
 import space.uselessidea.uibackend.domain.character.port.secondary.CharacterSecondaryPort
 import space.uselessidea.uibackend.infrastructure.eve.api.EveApiFeignClient
+import space.uselessidea.uibackend.infrastructure.eve.api.data.CharacterPublicData
+import space.uselessidea.uibackend.infrastructure.eve.api.data.CorporationPublicData
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -56,9 +58,8 @@ class RestAssuredSpecification extends Specification {
 
     @MockitoBean
     RabbitTemplate rabbitTemplate
-
+    @SpringBean
     EveApiFeignClient eveApiFeignClient = Mock()
-
     @Autowired
     CharacterSecondaryPort characterSecondaryPort
 
@@ -69,10 +70,21 @@ class RestAssuredSpecification extends Specification {
 
 
     def setup() {
-        context.getBeanFactory().registerSingleton("eveApiFeignClient", eveApiFeignClient)
+
         //context.getBeanFactory().registerSingleton("jwtDecoder", jwtDecoder)
         //mock eveApiStatus Response
         eveApiFeignClient.getStatus() >> "ok"
+        eveApiFeignClient.getCharacterPublicData(_ as Long) >> new CharacterPublicData(
+                name: "Lord Paridae",
+                corporationId: 98729426L,
+                allianceId: 0L
+        )
+        eveApiFeignClient.getCorporationPublicData(_ as Long) >> new CorporationPublicData(
+                name: "Paridae Nest",
+                allianceId: 0L,
+                ceoId: 0L,
+                ticker: "PAR"
+        )
         RestAssured.baseURI = "http://localhost"
         RestAssured.port = port
 
@@ -107,3 +119,8 @@ class RestAssuredSpecification extends Specification {
                 .build()
     }
 }
+
+
+
+
+
