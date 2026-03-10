@@ -5,8 +5,10 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import space.uselessidea.uibackend.domain.fit.dto.FitDto;
+import space.uselessidea.uibackend.domain.fit.dto.SearchFitDto;
 import space.uselessidea.uibackend.domain.fit.port.FitSecondaryPort;
 import space.uselessidea.uibackend.infrastructure.fit.persistence.Fit;
 import space.uselessidea.uibackend.infrastructure.fit.persistence.Pilots;
@@ -55,5 +57,10 @@ public class FitAdapter implements FitSecondaryPort {
         .stream()
         .map(Fit::getUuid)
         .collect(Collectors.toSet());
+  }
+
+  @Override
+  public Page<Fit> getFits(SearchFitDto searchFitDto) {
+    return fitRepository.findFits(searchFitDto.getFitName(), searchFitDto.getPilots(), searchFitDto.toPageable());
   }
 }

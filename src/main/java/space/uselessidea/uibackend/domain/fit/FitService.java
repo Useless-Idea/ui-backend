@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import space.uselessidea.uibackend.domain.character.port.primary.CharacterPrimaryPort;
 import space.uselessidea.uibackend.domain.exception.ApplicationException;
@@ -20,6 +21,7 @@ import space.uselessidea.uibackend.domain.exception.ErrorCode;
 import space.uselessidea.uibackend.domain.fit.dto.FitDto;
 import space.uselessidea.uibackend.domain.fit.dto.FitDto.FitDtoBuilder;
 import space.uselessidea.uibackend.domain.fit.dto.FitForm;
+import space.uselessidea.uibackend.domain.fit.dto.SearchFitDto;
 import space.uselessidea.uibackend.domain.fit.port.FitPrimaryPort;
 import space.uselessidea.uibackend.domain.fit.port.FitSecondaryPort;
 import space.uselessidea.uibackend.domain.itemtype.dto.ItemTypeDto;
@@ -95,13 +97,7 @@ public class FitService implements FitPrimaryPort {
   public FitDto getFitByUuid(UUID uuid) {
     Fit fit = fitSecondaryPort.getFitByUuid(uuid)
         .orElseThrow(() -> new ApplicationException(ErrorCode.FIT_NOT_EXIST, uuid));
-    return FitDto.builder()
-        .uuid(fit.getUuid())
-        .name(fit.getFitName())
-        .shipId(fit.getShipId())
-        .shipName(fit.getShipName())
-        .pilots(fit.getPilots())
-        .build();
+    return mapToDto(fit);
   }
 
 
@@ -109,6 +105,21 @@ public class FitService implements FitPrimaryPort {
   @Transactional
   public Set<UUID> getAllUuid() {
     return fitSecondaryPort.getAllUuid();
+  }
+
+  @Override
+  public Page<FitDto> getFitBySearchFitDto(SearchFitDto searchFitDto) {
+    return fitSecondaryPort.getFits(searchFitDto).map(this::mapToDto);
+  }
+
+  private FitDto mapToDto(Fit fit) {
+    return FitDto.builder()
+        .uuid(fit.getUuid())
+        .name(fit.getFitName())
+        .shipId(fit.getShipId())
+        .shipName(fit.getShipName())
+        .pilots(fit.getPilots())
+        .build();
   }
 
   private FitDtoBuilder fromEft(String eft) {
