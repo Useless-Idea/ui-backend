@@ -114,7 +114,7 @@ public class CharacterService implements CharacterPrimaryPort {
         .collect(Collectors.toSet());
   }
 
-  // TODO to trzeba gdzieś wyciągnąć może do jakiegoś token UTILS
+  // TODO to trzeba gdzieĹ› wyciÄ…gnÄ…Ä‡ moĹĽe do jakiegoĹ› token UTILS
   private Optional<JWT> parseJwtOptional(String token) {
     try {
       return Optional.of(JWTParser.parse(token));
@@ -123,7 +123,7 @@ public class CharacterService implements CharacterPrimaryPort {
     }
   }
 
-  // TODO to trzeba gdzieś wyciągnąć może do jakiegoś token UTILS
+  // TODO to trzeba gdzieĹ› wyciÄ…gnÄ…Ä‡ moĹĽe do jakiegoĹ› token UTILS
   private Optional<Set<String>> extractScpClaim(JWT jwt) {
     try {
       List<?> raw = jwt.getJWTClaimsSet().getListClaim("scp");
