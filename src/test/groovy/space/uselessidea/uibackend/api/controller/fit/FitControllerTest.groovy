@@ -64,6 +64,9 @@ class FitControllerTest extends RestAssuredSpecification {
                 .header("Authorization", "Bearer ${UI_ADMIN_TOKEN}")
                 .contentType(ContentType.JSON)
                 .accept(ContentType.JSON)
+                .queryParam("fitName", "Beta")
+                .queryParam("page", 0)
+                .queryParam("size", 10)
                 .body('{"fitName":"Beta","pilots":[],"ships":[],"page":0,"size":10}')
                 .request("GET", '/api/v1/fit')
 
@@ -78,6 +81,160 @@ class FitControllerTest extends RestAssuredSpecification {
         response.then().body("content[0].shipName", equalTo("Orthrus"))
     }
 
+    def "should return paged fits filtered by pilot"() {
+        given:
+        def simpleListFit = SimpleListFit.builder()
+                .uuid(UUID.fromString("33333333-3333-3333-3333-333333333333"))
+                .name("Pilot Fit")
+                .shipId(587L)
+                .shipName("Rifter")
+                .build()
+
+        when:
+        def response = given()
+                .header("Authorization", "Bearer ${UI_ADMIN_TOKEN}")
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .queryParam("fitName", "Pilot")
+                .queryParam("pilots", "Viral")
+                .queryParam("page", 0)
+                .queryParam("size", 10)
+                .body('{"fitName":"Pilot","pilots":["Viral"],"ships":[],"page":0,"size":10}')
+                .request("GET", '/api/v1/fit')
+
+        then:
+        1 * fitApiService.getFits({ SearchFitDto dto ->
+            dto.fitName == "Pilot" &&
+                    dto.pilots == ["Viral"] &&
+                    dto.ships == [] &&
+                    dto.page == 0 &&
+                    dto.size == 10
+        }) >> new PageImpl<>([simpleListFit])
+
+        response.then().statusCode(200)
+        response.then().body("content.size()", equalTo(1))
+        response.then().body("content[0].uuid", equalTo("33333333-3333-3333-3333-333333333333"))
+        response.then().body("content[0].name", equalTo("Pilot Fit"))
+        response.then().body("content[0].shipId", equalTo(587))
+        response.then().body("content[0].shipName", equalTo("Rifter"))
+    }
+
+    def "should return paged fits filtered by ship"() {
+        given:
+        def simpleListFit = SimpleListFit.builder()
+                .uuid(UUID.fromString("44444444-4444-4444-4444-444444444444"))
+                .name("Ship Fit")
+                .shipId(17715L)
+                .shipName("Orthrus")
+                .build()
+
+        when:
+        def response = given()
+                .header("Authorization", "Bearer ${UI_ADMIN_TOKEN}")
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .queryParam("fitName", "Ship")
+                .queryParam("ships", "Orthrus")
+                .queryParam("page", 0)
+                .queryParam("size", 10)
+                .body('{"fitName":"Ship","pilots":[],"ships":["Orthrus"],"page":0,"size":10}')
+                .request("GET", '/api/v1/fit')
+
+        then:
+        1 * fitApiService.getFits({ SearchFitDto dto ->
+            dto.fitName == "Ship" &&
+                    dto.pilots == [] &&
+                    dto.ships == ["Orthrus"] &&
+                    dto.page == 0 &&
+                    dto.size == 10
+        }) >> new PageImpl<>([simpleListFit])
+
+        response.then().statusCode(200)
+        response.then().body("content.size()", equalTo(1))
+        response.then().body("content[0].uuid", equalTo("44444444-4444-4444-4444-444444444444"))
+        response.then().body("content[0].name", equalTo("Ship Fit"))
+        response.then().body("content[0].shipId", equalTo(17715))
+        response.then().body("content[0].shipName", equalTo("Orthrus"))
+    }
+
+    def "should return paged fits filtered by pilot and ship"() {
+        given:
+        def simpleListFit = SimpleListFit.builder()
+                .uuid(UUID.fromString("55555555-5555-5555-5555-555555555555"))
+                .name("Pilot Ship Fit")
+                .shipId(24698L)
+                .shipName("Gila")
+                .build()
+
+        when:
+        def response = given()
+                .header("Authorization", "Bearer ${UI_ADMIN_TOKEN}")
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .queryParam("fitName", "Combo")
+                .queryParam("pilots", "Viral")
+                .queryParam("ships", "Gila")
+                .queryParam("page", 0)
+                .queryParam("size", 10)
+                .body('{"fitName":"Combo","pilots":["Viral"],"ships":["Gila"],"page":0,"size":10}')
+                .request("GET", '/api/v1/fit')
+
+        then:
+        1 * fitApiService.getFits({ SearchFitDto dto ->
+            dto.fitName == "Combo" &&
+                    dto.pilots == ["Viral"] &&
+                    dto.ships == ["Gila"] &&
+                    dto.page == 0 &&
+                    dto.size == 10
+        }) >> new PageImpl<>([simpleListFit])
+
+        response.then().statusCode(200)
+        response.then().body("content.size()", equalTo(1))
+        response.then().body("content[0].uuid", equalTo("55555555-5555-5555-5555-555555555555"))
+        response.then().body("content[0].name", equalTo("Pilot Ship Fit"))
+        response.then().body("content[0].shipId", equalTo(24698))
+        response.then().body("content[0].shipName", equalTo("Gila"))
+    }
+
+
+    def "should return paged fits when pilots and ships params are missing"() {
+        given:
+        def simpleListFit = SimpleListFit.builder()
+                .uuid(UUID.fromString("66666666-6666-6666-6666-666666666666"))
+                .name("Null Safe Fit")
+                .shipId(587L)
+                .shipName("Rifter")
+                .build()
+
+        when:
+        def response = given()
+                .header("Authorization", "Bearer ${UI_ADMIN_TOKEN}")
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .queryParam("fitName", "NullSafe")
+                .queryParam("page", 0)
+                .queryParam("size", 10)
+                .body('{"fitName":"NullSafe","pilots":null,"ships":null,"page":0,"size":10}')
+                .request("GET", '/api/v1/fit')
+
+        then:
+        1 * fitApiService.getFits({ SearchFitDto dto ->
+            dto.fitName == "NullSafe" &&
+                    dto.pilots != null &&
+                    dto.ships != null &&
+                    dto.pilots.isEmpty() &&
+                    dto.ships.isEmpty() &&
+                    dto.page == 0 &&
+                    dto.size == 10
+        }) >> new PageImpl<>([simpleListFit])
+
+        response.then().statusCode(200)
+        response.then().body("content.size()", equalTo(1))
+        response.then().body("content[0].uuid", equalTo("66666666-6666-6666-6666-666666666666"))
+        response.then().body("content[0].name", equalTo("Null Safe Fit"))
+        response.then().body("content[0].shipId", equalTo(587))
+        response.then().body("content[0].shipName", equalTo("Rifter"))
+    }
     def "should return empty ship map"() {
         when:
         def response = given()

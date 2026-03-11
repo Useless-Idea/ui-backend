@@ -5,6 +5,7 @@ target/
 !**/src/test/**/target/
 
 .codex-settings.xml
+.codex/
 
 ### STS ###
 .apt_generated

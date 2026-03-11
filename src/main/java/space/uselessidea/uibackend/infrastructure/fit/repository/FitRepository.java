@@ -21,7 +21,6 @@ public interface FitRepository extends JpaRepository<Fit, UUID> {
           (:fitName IS NULL OR :fitName = '' OR f.fit_name = :fitName)
       AND (
           :pilotNames IS NULL
-          OR cardinality(:pilotNames) = 0
           OR EXISTS (
               SELECT 1
               FROM jsonb_array_elements(f.pilots->'active') p
@@ -42,7 +41,6 @@ public interface FitRepository extends JpaRepository<Fit, UUID> {
               (:fitName IS NULL OR :fitName = '' OR f.fit_name = :fitName)
           AND (
               :pilotNames IS NULL
-              OR cardinality(:pilotNames) = 0
               OR EXISTS (
                   SELECT 1
                   FROM jsonb_array_elements(f.pilots->'active') p

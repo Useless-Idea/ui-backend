@@ -1,5 +1,6 @@
 package space.uselessidea.uibackend.api.controller.character;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import java.util.Map;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import space.uselessidea.uibackend.domain.character.dto.CharacterFeature;
 @RequestMapping("/api/v1/character")
 @RequiredArgsConstructor
 @Slf4j
+@SecurityRequirement(name = "Bearer")
 public class CharacterController {
 
   private final CharacterApiService characterApiService;
