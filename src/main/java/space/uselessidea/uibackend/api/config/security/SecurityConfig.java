@@ -32,8 +32,7 @@ public class SecurityConfig {
                         antMatcher("/api/v1/skill/map"),
                         antMatcher("/v3/api-docs/**"),
                         antMatcher("/swagger-ui/**"),
-                    antMatcher("/api/v1/character/**"),
-
+                        antMatcher("/api/v1/character/**"),
                         antMatcher("/swagger-ui.html"),
                         antMatcher(HttpMethod.OPTIONS, "/**"))
                     .permitAll()
