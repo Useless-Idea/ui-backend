@@ -57,6 +57,10 @@ public class FitAdapter implements FitSecondaryPort {
 
   @Override
   public Page<Fit> getFits(SearchFitDto searchFitDto) {
+    if (searchFitDto == null) {
+      searchFitDto = SearchFitDto.builder().build();
+    }
+    searchFitDto.normalizeLists();
     return fitRepository.findFits(
         searchFitDto.getFitName(), searchFitDto.getPilots(), searchFitDto.toPageable());
   }

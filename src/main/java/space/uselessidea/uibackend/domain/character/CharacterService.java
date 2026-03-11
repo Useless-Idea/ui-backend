@@ -76,7 +76,6 @@ public class CharacterService implements CharacterPrimaryPort {
 
   @Override
   public Map<Long, String> getCharacterIdNameMap(CharacterPrincipal characterPrincipal) {
-    canGetCharacterDataPage(characterPrincipal);
     return characterSecondaryPort
         .getCharacterDataPage(PageRequest.of(0, Integer.MAX_VALUE))
         .stream()
