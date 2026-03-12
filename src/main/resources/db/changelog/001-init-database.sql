@@ -130,6 +130,11 @@ ALTER TABLE "point"
     RENAME COLUMN x TO xpos;
 ALTER TABLE "point"
     RENAME COLUMN y TO ypos;
+--liquibase formatted sql
+--changeset psikora:13
+ALTER TABLE fit
+    ADD COLUMN doctrines JSONB DEFAULT '[]'::jsonb NOT NULL;
+
 
 
 

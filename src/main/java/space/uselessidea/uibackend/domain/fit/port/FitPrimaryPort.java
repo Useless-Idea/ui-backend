@@ -1,5 +1,6 @@
 package space.uselessidea.uibackend.domain.fit.port;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -21,4 +22,8 @@ public interface FitPrimaryPort {
   Page<FitDto> getFitBySearchFitDto(SearchFitDto searchFitDto);
 
   Map<String, Long> getShipNameIdMap();
+
+  List<String> getDoctrines();
+
+  void refreshDoctrinesCache();
 }

@@ -27,6 +27,7 @@ public class FitAdapter implements FitSecondaryPort {
     fit.setShipId(fitDto.getShipId());
     fit.setShipName(fitDto.getShipName());
     fit.setFitName(fitDto.getName());
+    fit.setDoctrines(fitDto.getDoctrines() == null ? java.util.List.of() : fitDto.getDoctrines());
     fit = fitRepository.save(fit);
     return fit.getUuid();
   }
@@ -63,5 +64,16 @@ public class FitAdapter implements FitSecondaryPort {
     searchFitDto.normalizeLists();
     return fitRepository.findFits(
         searchFitDto.getFitName(), searchFitDto.getPilots(), searchFitDto.toPageable());
+  }
+
+  @Override
+  public Set<String> getAllDoctrines() {
+    return fitRepository.findAll().stream()
+        .map(Fit::getDoctrines)
+        .filter(doctrines -> doctrines != null && !doctrines.isEmpty())
+        .flatMap(java.util.Collection::stream)
+        .filter(doctrine -> doctrine != null && !doctrine.isBlank())
+        .map(String::trim)
+        .collect(Collectors.toSet());
   }
 }

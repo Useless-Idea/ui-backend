@@ -26,6 +26,7 @@ import space.uselessidea.uibackend.domain.fit.port.FitPrimaryPort;
 import space.uselessidea.uibackend.domain.fit.port.FitSecondaryPort;
 import space.uselessidea.uibackend.domain.itemtype.dto.ItemTypeDto;
 import space.uselessidea.uibackend.domain.itemtype.port.PrimaryItemTypePort;
+import space.uselessidea.uibackend.infrastructure.fit.FitDoctrineRedisService;
 import space.uselessidea.uibackend.infrastructure.fit.persistence.Fit;
 import space.uselessidea.uibackend.infrastructure.fit.persistence.Pilot;
 import space.uselessidea.uibackend.infrastructure.fit.persistence.Pilots;
@@ -41,14 +42,17 @@ public class FitService implements FitPrimaryPort {
   private final PrimaryItemTypePort primaryItemTypePort;
   private final CharacterPrimaryPort characterPrimaryPort;
   private final FitSecondaryPort fitSecondaryPort;
+  private final FitDoctrineRedisService fitDoctrineRedisService;
   private final RabbitTemplate rabbitTemplate;
   private final Queue fitUpdateQueue;
 
   public FitDto addFit(FitForm fitForm) {
     FitDto fitDto = fromEft(fitForm.getFit()).build();
     fitDto.setDescription(fitForm.getDescription());
+    fitDto.setDoctrines(normalizeDoctrines(fitForm.getDoctrines()));
 
     UUID uuid = fitSecondaryPort.saveFit(fitDto);
+    fitDoctrineRedisService.addDoctrines(fitDto.getDoctrines());
     rabbitTemplate.convertAndSend(fitUpdateQueue.getName(), uuid);
     fitDto.setUuid(uuid);
     return fitDto;
@@ -63,6 +67,7 @@ public class FitService implements FitPrimaryPort {
 
     FitDto fitDto = fromEft(fitE.getEft()).build();
     fitDto.setUuid(fitE.getUuid());
+    fitDto.setDoctrines(normalizeDoctrines(fitE.getDoctrines()));
 
     fitSecondaryPort.saveFit(fitDto);
 
@@ -125,6 +130,16 @@ public class FitService implements FitPrimaryPort {
         .collect(Collectors.toMap(FitDto::getShipName, FitDto::getShipId, (a, b) -> a));
   }
 
+  @Override
+  public List<String> getDoctrines() {
+    return fitDoctrineRedisService.getDoctrines();
+  }
+
+  @Override
+  public void refreshDoctrinesCache() {
+    fitDoctrineRedisService.refreshDoctrines(fitSecondaryPort.getAllDoctrines());
+  }
+
   private FitDto mapToDto(Fit fit) {
     return FitDto.builder()
         .uuid(fit.getUuid())
@@ -132,6 +147,7 @@ public class FitService implements FitPrimaryPort {
         .shipId(fit.getShipId())
         .shipName(fit.getShipName())
         .pilots(fit.getPilots())
+        .doctrines(normalizeDoctrines(fit.getDoctrines()))
         .build();
   }
 
@@ -167,5 +183,16 @@ public class FitService implements FitPrimaryPort {
         .map(String::trim)
         .filter(s -> !s.isBlank())
         .collect(Collectors.toSet());
+  }
+
+  private List<String> normalizeDoctrines(List<String> doctrines) {
+    if (doctrines == null) {
+      return List.of();
+    }
+    return doctrines.stream()
+        .filter(doctrine -> doctrine != null && !doctrine.isBlank())
+        .map(String::trim)
+        .distinct()
+        .toList();
   }
 }

@@ -271,4 +271,21 @@ class FitControllerTest extends RestAssuredSpecification {
         response.then().body("Orthrus", equalTo(17715))
         response.then().body("Gila", equalTo(24698))
     }
+
+    def "should return doctrines list"() {
+        when:
+        def response = given()
+                .header("Authorization", "Bearer ${UI_ADMIN_TOKEN}")
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .get('/api/v1/fit/doctrines')
+
+        then:
+        1 * fitApiService.getDoctrines() >> ["Armor", "Shield"]
+
+        response.then().statusCode(200)
+        response.then().body("size()", equalTo(2))
+        response.then().body("[0]", equalTo("Armor"))
+        response.then().body("[1]", equalTo("Shield"))
+    }
 }

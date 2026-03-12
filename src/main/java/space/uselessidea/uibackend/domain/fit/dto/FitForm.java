@@ -3,6 +3,7 @@ package space.uselessidea.uibackend.domain.fit.dto;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import java.util.List;
 import lombok.Data;
 
 @Data
@@ -14,6 +15,8 @@ public class FitForm {
 
   @JsonSerialize(using = NewLineSerializer.class)
   private String description;
+
+  private List<String> doctrines;
 
   public static FitForm fromEft(String eft) {
     FitForm fitForm = new FitForm();

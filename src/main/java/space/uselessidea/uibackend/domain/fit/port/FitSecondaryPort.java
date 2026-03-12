@@ -20,4 +20,6 @@ public interface FitSecondaryPort {
   Set<UUID> getAllUuid();
 
   Page<Fit> getFits(SearchFitDto searchFitDto);
+
+  Set<String> getAllDoctrines();
 }

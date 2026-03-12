@@ -7,6 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import java.util.List;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
@@ -38,4 +39,9 @@ public class Fit {
   @JdbcTypeCode(SqlTypes.JSON)
   @Column(name = "pilots", columnDefinition = "jsonb")
   private Pilots pilots;
+
+  @Type(JsonBinaryType.class)
+  @JdbcTypeCode(SqlTypes.JSON)
+  @Column(name = "doctrines", columnDefinition = "jsonb", nullable = false)
+  private List<String> doctrines;
 }
