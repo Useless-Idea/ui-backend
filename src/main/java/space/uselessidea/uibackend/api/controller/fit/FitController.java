@@ -54,4 +54,9 @@ public class FitController {
   public ResponseEntity<Map<String, Long>> getShipNameIdMap() {
     return ResponseEntity.ok(fitApiService.getShipNameIdMap());
   }
+
+  @GetMapping("/doctrines")
+  public ResponseEntity<List<String>> getDoctrines() {
+    return ResponseEntity.ok(fitApiService.getDoctrines());
+  }
 }
