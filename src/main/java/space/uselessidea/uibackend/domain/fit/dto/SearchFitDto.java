@@ -14,6 +14,7 @@ public class SearchFitDto {
   private String fitName;
   @Builder.Default private List<String> pilots = new ArrayList<>();
   @Builder.Default private List<String> ships = new ArrayList<>();
+  @Builder.Default private List<String> doctrines = new ArrayList<>();
   private int page;
   private int size;
 
@@ -23,6 +24,9 @@ public class SearchFitDto {
     }
     if (ships == null) {
       ships = new ArrayList<>();
+    }
+    if (doctrines == null) {
+      doctrines = new ArrayList<>();
     }
     return this;
   }

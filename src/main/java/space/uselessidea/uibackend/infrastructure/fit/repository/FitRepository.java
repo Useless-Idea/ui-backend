@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import space.uselessidea.uibackend.infrastructure.fit.persistence.Fit;
 
@@ -32,6 +33,14 @@ public interface FitRepository extends JpaRepository<Fit, UUID> {
               WHERE (p->>'name')::text IN (:pilotNames)
           )
       )
+      AND (
+          :doctrines IS NULL
+          OR EXISTS (
+              SELECT 1
+              FROM jsonb_array_elements_text(f.doctrines) d
+              WHERE d IN (:doctrines)
+          )
+      )
       """,
       countQuery =
           """
@@ -52,7 +61,19 @@ public interface FitRepository extends JpaRepository<Fit, UUID> {
                   WHERE (p->>'name')::text IN (:pilotNames)
               )
           )
+          AND (
+              :doctrines IS NULL
+              OR EXISTS (
+                  SELECT 1
+                  FROM jsonb_array_elements_text(f.doctrines) d
+                  WHERE d IN (:doctrines)
+              )
+          )
           """,
       nativeQuery = true)
-  Page<Fit> findFits(String fitName, List<String> pilotNames, Pageable pageable);
+  Page<Fit> findFits(
+      @Param("fitName") String fitName,
+      @Param("pilotNames") List<String> pilotNames,
+      @Param("doctrines") List<String> doctrines,
+      Pageable pageable);
 }

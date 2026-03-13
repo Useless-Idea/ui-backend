@@ -63,7 +63,10 @@ public class FitAdapter implements FitSecondaryPort {
     }
     searchFitDto.normalizeLists();
     return fitRepository.findFits(
-        searchFitDto.getFitName(), searchFitDto.getPilots(), searchFitDto.toPageable());
+        searchFitDto.getFitName(),
+        searchFitDto.getPilots(),
+        searchFitDto.getDoctrines(),
+        searchFitDto.toPageable());
   }
 
   @Override

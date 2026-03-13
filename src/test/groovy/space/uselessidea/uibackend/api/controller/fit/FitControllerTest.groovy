@@ -197,7 +197,7 @@ class FitControllerTest extends RestAssuredSpecification {
     }
 
 
-    def "should return paged fits when pilots and ships params are missing"() {
+    def "should return paged fits when pilots, ships and doctrines params are missing"() {
         given:
         def simpleListFit = SimpleListFit.builder()
                 .uuid(UUID.fromString("66666666-6666-6666-6666-666666666666"))
@@ -222,8 +222,10 @@ class FitControllerTest extends RestAssuredSpecification {
             dto.fitName == "NullSafe" &&
                     dto.pilots != null &&
                     dto.ships != null &&
+                    dto.doctrines != null &&
                     dto.pilots.isEmpty() &&
                     dto.ships.isEmpty() &&
+                    dto.doctrines.isEmpty() &&
                     dto.page == 0 &&
                     dto.size == 10
         }) >> new PageImpl<>([simpleListFit])
@@ -234,6 +236,44 @@ class FitControllerTest extends RestAssuredSpecification {
         response.then().body("content[0].name", equalTo("Null Safe Fit"))
         response.then().body("content[0].shipId", equalTo(587))
         response.then().body("content[0].shipName", equalTo("Rifter"))
+    }
+
+    def "should return paged fits filtered by doctrine"() {
+        given:
+        def simpleListFit = SimpleListFit.builder()
+                .uuid(UUID.fromString("77777777-7777-7777-7777-777777777777"))
+                .name("Doctrine Fit")
+                .shipId(12003L)
+                .shipName("Zealot")
+                .build()
+
+        when:
+        def response = given()
+                .header("Authorization", "Bearer ${UI_ADMIN_TOKEN}")
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .queryParam("fitName", "Doctrine")
+                .queryParam("doctrines", "Armor")
+                .queryParam("page", 0)
+                .queryParam("size", 10)
+                .request("GET", '/api/v1/fit')
+
+        then:
+        1 * fitApiService.getFits({ SearchFitDto dto ->
+            dto.fitName == "Doctrine" &&
+                    dto.pilots == [] &&
+                    dto.ships == [] &&
+                    dto.doctrines == ["Armor"] &&
+                    dto.page == 0 &&
+                    dto.size == 10
+        }) >> new PageImpl<>([simpleListFit])
+
+        response.then().statusCode(200)
+        response.then().body("content.size()", equalTo(1))
+        response.then().body("content[0].uuid", equalTo("77777777-7777-7777-7777-777777777777"))
+        response.then().body("content[0].name", equalTo("Doctrine Fit"))
+        response.then().body("content[0].shipId", equalTo(12003))
+        response.then().body("content[0].shipName", equalTo("Zealot"))
     }
     def "should return empty ship map"() {
         when:

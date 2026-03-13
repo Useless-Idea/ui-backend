@@ -36,6 +36,7 @@ public class FitController {
       @RequestParam(required = false) String fitName,
       @RequestParam(required = false) List<String> pilots,
       @RequestParam(required = false) List<String> ships,
+      @RequestParam(required = false) List<String> doctrines,
       @RequestParam(defaultValue = "0") int page,
       @RequestParam(defaultValue = "10") int size) {
     SearchFitDto normalizedSearchFitDto =
@@ -43,6 +44,7 @@ public class FitController {
             .fitName(fitName)
             .pilots(pilots)
             .ships(ships)
+            .doctrines(doctrines)
             .page(page)
             .size(size)
             .build()
