@@ -81,6 +81,87 @@ class FitControllerTest extends RestAssuredSpecification {
         response.then().body("content[0].shipName", equalTo("Orthrus"))
     }
 
+    def "should return fit by uuid"() {
+        given:
+        def fitUuid = UUID.fromString("88888888-8888-8888-8888-888888888888")
+        def fitDto = FitDto.builder()
+                .uuid(fitUuid)
+                .name("Gamma Fit")
+                .shipId(24698L)
+                .shipName("Drake")
+                .eft("[Drake, Gamma Fit]\\nBallistic Control System II")
+                .doctrines(["Shield", "Missile"])
+                .build()
+
+        when:
+        def response = given()
+                .header("Authorization", "Bearer ${UI_ADMIN_TOKEN}")
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .get("/api/v1/fit/${fitUuid}")
+
+        then:
+        1 * fitApiService.getFitByUuid(fitUuid) >> fitDto
+
+        response.then().statusCode(200)
+        response.then().body("uuid", equalTo("88888888-8888-8888-8888-888888888888"))
+        response.then().body("name", equalTo("Gamma Fit"))
+        response.then().body("shipId", equalTo(24698))
+        response.then().body("shipName", equalTo("Drake"))
+        response.then().body("eft", equalTo("[Drake, Gamma Fit]\\nBallistic Control System II"))
+        response.then().body("doctrines.size()", equalTo(2))
+        response.then().body("doctrines[0]", equalTo("Shield"))
+        response.then().body("doctrines[1]", equalTo("Missile"))
+    }
+
+    def "should edit fit by uuid"() {
+        given:
+        def fitUuid = UUID.fromString("99999999-9999-9999-9999-999999999999")
+        def fitDto = FitDto.builder()
+                .uuid(fitUuid)
+                .name("Updated Fit")
+                .shipId(17715L)
+                .shipName("Orthrus")
+                .eft("[Orthrus, Updated Fit]\\nDamage Control II")
+                .doctrines(["Armor"])
+                .build()
+
+        when:
+        def response = given()
+                .header("Authorization", "Bearer ${UI_ADMIN_TOKEN}")
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .body('{"fit":"[Orthrus, Updated Fit]\\nDamage Control II","description":"updated","doctrines":["Armor"]}')
+                .put("/api/v1/fit/${fitUuid}")
+
+        then:
+        1 * fitApiService.editFit(fitUuid, _ as FitForm) >> fitDto
+
+        response.then().statusCode(200)
+        response.then().body("uuid", equalTo("99999999-9999-9999-9999-999999999999"))
+        response.then().body("name", equalTo("Updated Fit"))
+        response.then().body("shipId", equalTo(17715))
+        response.then().body("shipName", equalTo("Orthrus"))
+        response.then().body("eft", equalTo("[Orthrus, Updated Fit]\\nDamage Control II"))
+        response.then().body("doctrines[0]", equalTo("Armor"))
+    }
+
+    def "should delete fit by uuid"() {
+        given:
+        def fitUuid = UUID.fromString("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa")
+
+        when:
+        def response = given()
+                .header("Authorization", "Bearer ${UI_ADMIN_TOKEN}")
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .delete("/api/v1/fit/${fitUuid}")
+
+        then:
+        1 * fitApiService.deleteFit(fitUuid)
+        response.then().statusCode(200)
+    }
+
     def "should return paged fits filtered by pilot"() {
         given:
         def simpleListFit = SimpleListFit.builder()

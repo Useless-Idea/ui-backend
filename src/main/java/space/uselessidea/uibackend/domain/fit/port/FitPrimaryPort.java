@@ -13,7 +13,11 @@ public interface FitPrimaryPort {
 
   FitDto addFit(FitForm fitForm);
 
+  FitDto editFit(UUID fitUuid, FitForm fitForm);
+
   FitDto getFitByUuid(UUID uuid);
+
+  void deleteFit(UUID fitUuid);
 
   void updateFit(UUID fitUuid);
 

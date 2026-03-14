@@ -58,6 +58,26 @@ public class FitService implements FitPrimaryPort {
     return fitDto;
   }
 
+  @Override
+  @Transactional
+  public FitDto editFit(UUID fitUuid, FitForm fitForm) {
+    fitSecondaryPort
+        .getFitByUuid(fitUuid)
+        .orElseThrow(() -> new ApplicationException(ErrorCode.FIT_NOT_EXIST, fitUuid));
+
+    FitDto fitDto = fromEft(fitForm.getFit()).build();
+    fitDto.setUuid(fitUuid);
+    fitDto.setDescription(fitForm.getDescription());
+    fitDto.setDoctrines(normalizeDoctrines(fitForm.getDoctrines()));
+
+    fitSecondaryPort.saveFit(fitDto);
+    fitSecondaryPort.updatePilotsList(
+        fitUuid, Pilots.builder().active(List.of()).inactive(List.of()).build());
+    rabbitTemplate.convertAndSend(fitUpdateQueue.getName(), fitUuid);
+
+    return getFitByUuid(fitUuid);
+  }
+
   @Transactional
   public void updateFit(UUID fitUuid) {
     Fit fitE =
@@ -112,6 +132,15 @@ public class FitService implements FitPrimaryPort {
 
   @Override
   @Transactional
+  public void deleteFit(UUID fitUuid) {
+    fitSecondaryPort
+        .getFitByUuid(fitUuid)
+        .orElseThrow(() -> new ApplicationException(ErrorCode.FIT_NOT_EXIST, fitUuid));
+    fitSecondaryPort.deleteFit(fitUuid);
+  }
+
+  @Override
+  @Transactional
   public Set<UUID> getAllUuid() {
     return fitSecondaryPort.getAllUuid();
   }
@@ -146,6 +175,7 @@ public class FitService implements FitPrimaryPort {
         .name(fit.getFitName())
         .shipId(fit.getShipId())
         .shipName(fit.getShipName())
+        .eft(fit.getEft())
         .pilots(fit.getPilots())
         .doctrines(normalizeDoctrines(fit.getDoctrines()))
         .build();

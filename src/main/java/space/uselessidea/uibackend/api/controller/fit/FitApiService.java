@@ -2,6 +2,7 @@ package space.uselessidea.uibackend.api.controller.fit;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -21,8 +22,16 @@ public class FitApiService {
     return fitPrimaryPort.addFit(fitForm);
   }
 
+  public FitDto editFit(UUID fitUuid, FitForm fitForm) {
+    return fitPrimaryPort.editFit(fitUuid, fitForm);
+  }
+
   public Page<SimpleListFit> getFits(SearchFitDto searchFitDto) {
     return fitPrimaryPort.getFitBySearchFitDto(searchFitDto).map(SimpleListFit::fromFitDto);
+  }
+
+  public FitDto getFitByUuid(UUID fitUuid) {
+    return fitPrimaryPort.getFitByUuid(fitUuid);
   }
 
   public Map<String, Long> getShipNameIdMap() {
@@ -31,5 +40,9 @@ public class FitApiService {
 
   public List<String> getDoctrines() {
     return fitPrimaryPort.getDoctrines();
+  }
+
+  public void deleteFit(UUID fitUuid) {
+    fitPrimaryPort.deleteFit(fitUuid);
   }
 }
