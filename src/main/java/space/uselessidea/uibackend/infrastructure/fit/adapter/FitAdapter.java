@@ -52,6 +52,11 @@ public class FitAdapter implements FitSecondaryPort {
   }
 
   @Override
+  public void deleteFit(UUID fitUuid) {
+    fitRepository.deleteById(fitUuid);
+  }
+
+  @Override
   public Set<UUID> getAllUuid() {
     return fitRepository.findAll().stream().map(Fit::getUuid).collect(Collectors.toSet());
   }

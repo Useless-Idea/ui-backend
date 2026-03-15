@@ -17,6 +17,8 @@ public interface FitSecondaryPort {
 
   Optional<Fit> getFitByUuid(UUID fitUuid);
 
+  void deleteFit(UUID fitUuid);
+
   Set<UUID> getAllUuid();
 
   Page<Fit> getFits(SearchFitDto searchFitDto);
