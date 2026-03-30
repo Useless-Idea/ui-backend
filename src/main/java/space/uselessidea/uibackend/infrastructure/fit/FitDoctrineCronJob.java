@@ -18,7 +18,7 @@ public class FitDoctrineCronJob {
   public void refreshDoctrines() {
     log.info("RefreshFitDoctrines---START");
     try {
-      fitPrimaryPort.refreshDoctrinesCache();
+      fitPrimaryPort.getDoctrines();
       log.info("RefreshFitDoctrines---FINISH");
     } catch (Exception ex) {
       log.error("RefreshFitDoctrines---FAILED", ex);

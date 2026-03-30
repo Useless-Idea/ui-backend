@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import space.uselessidea.uibackend.domain.character.port.primary.CharacterPrimaryPort;
@@ -26,7 +27,6 @@ import space.uselessidea.uibackend.domain.fit.port.FitPrimaryPort;
 import space.uselessidea.uibackend.domain.fit.port.FitSecondaryPort;
 import space.uselessidea.uibackend.domain.itemtype.dto.ItemTypeDto;
 import space.uselessidea.uibackend.domain.itemtype.port.PrimaryItemTypePort;
-import space.uselessidea.uibackend.infrastructure.fit.FitDoctrineRedisService;
 import space.uselessidea.uibackend.infrastructure.fit.persistence.Fit;
 import space.uselessidea.uibackend.infrastructure.fit.persistence.Pilot;
 import space.uselessidea.uibackend.infrastructure.fit.persistence.Pilots;
@@ -42,7 +42,6 @@ public class FitService implements FitPrimaryPort {
   private final PrimaryItemTypePort primaryItemTypePort;
   private final CharacterPrimaryPort characterPrimaryPort;
   private final FitSecondaryPort fitSecondaryPort;
-  private final FitDoctrineRedisService fitDoctrineRedisService;
   private final RabbitTemplate rabbitTemplate;
   private final Queue fitUpdateQueue;
 
@@ -52,7 +51,7 @@ public class FitService implements FitPrimaryPort {
     fitDto.setDoctrines(normalizeDoctrines(fitForm.getDoctrines()));
 
     UUID uuid = fitSecondaryPort.saveFit(fitDto);
-    fitDoctrineRedisService.addDoctrines(fitDto.getDoctrines());
+    // TODO pobieramy doktryny i strzelamy do rabbita
     rabbitTemplate.convertAndSend(fitUpdateQueue.getName(), uuid);
     fitDto.setUuid(uuid);
     return fitDto;
@@ -160,13 +159,9 @@ public class FitService implements FitPrimaryPort {
   }
 
   @Override
-  public List<String> getDoctrines() {
-    return fitDoctrineRedisService.getDoctrines();
-  }
-
-  @Override
-  public void refreshDoctrinesCache() {
-    fitDoctrineRedisService.refreshDoctrines(fitSecondaryPort.getAllDoctrines());
+  @Cacheable(value = "doctrine")
+  public Set<String> getDoctrines() {
+    return fitSecondaryPort.getAllDoctrines();
   }
 
   private FitDto mapToDto(Fit fit) {
