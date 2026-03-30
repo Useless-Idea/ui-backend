@@ -1,7 +1,7 @@
 package space.uselessidea.uibackend.api.controller.fit;
 
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -38,7 +38,7 @@ public class FitApiService {
     return fitPrimaryPort.getShipNameIdMap();
   }
 
-  public List<String> getDoctrines() {
+  public Set<String> getDoctrines() {
     return fitPrimaryPort.getDoctrines();
   }
 

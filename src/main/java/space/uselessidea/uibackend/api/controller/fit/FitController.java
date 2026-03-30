@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -231,7 +232,7 @@ public class FitController {
                 examples = @ExampleObject(value = "[\"Shield\",\"Armor\",\"Missile\"]"))),
     @ApiResponse(responseCode = "401", description = "Brak autoryzacji")
   })
-  public ResponseEntity<List<String>> getDoctrines() {
+  public ResponseEntity<Set<String>> getDoctrines() {
     return ResponseEntity.ok(fitApiService.getDoctrines());
   }
 

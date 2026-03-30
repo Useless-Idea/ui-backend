@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.Duration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
@@ -78,11 +79,23 @@ public class RedisConfig {
                 RedisSerializationContext.SerializationPair.fromSerializer(
                     new Jackson2JsonRedisSerializer<>(type)));
 
+    JavaType listOfStringsType =
+        objectMapper.getTypeFactory().constructCollectionType(List.class, String.class);
+
+    RedisCacheConfiguration doctrineCacheConfig =
+        RedisCacheConfiguration.defaultCacheConfig()
+            .entryTtl(Duration.ofMinutes(60))
+            .disableCachingNullValues()
+            .serializeValuesWith(
+                RedisSerializationContext.SerializationPair.fromSerializer(
+                    new Jackson2JsonRedisSerializer<>(objectMapper, listOfStringsType)));
+
     Map<String, RedisCacheConfiguration> cacheConfigs = new HashMap<>();
     cacheConfigs.put("type", itemCacheConfig);
     cacheConfigs.put("fit", fitCacheConfig);
     cacheConfigs.put("access-token", accessTokenConfig);
     cacheConfigs.put("user-skill", userSkillsCacheConfig);
+    cacheConfigs.put("doctrine", doctrineCacheConfig);
 
     return RedisCacheManager.builder(connectionFactory)
         .withInitialCacheConfigurations(cacheConfigs)
