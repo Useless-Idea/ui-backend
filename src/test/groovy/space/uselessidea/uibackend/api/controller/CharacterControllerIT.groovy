@@ -16,7 +16,7 @@ import static org.mockito.ArgumentMatchers.nullable
 import static org.mockito.Mockito.when
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class CharacterControllerTest extends RestAssuredSpecification {
+class CharacterControllerIT extends RestAssuredSpecification {
 
     @MockitoBean
     TokenPrimaryPort tokenPrimaryPort

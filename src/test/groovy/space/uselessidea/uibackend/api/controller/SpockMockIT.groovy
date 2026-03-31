@@ -2,7 +2,7 @@ package space.uselessidea.uibackend.api.controller
 
 import space.uselessidea.uibackend.RestAssuredSpecification
 
-class SpockMockTest extends RestAssuredSpecification {
+class SpockMockIT extends RestAssuredSpecification {
 
 
     def setup() {

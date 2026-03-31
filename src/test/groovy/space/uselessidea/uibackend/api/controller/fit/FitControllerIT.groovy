@@ -16,7 +16,7 @@ import static io.restassured.RestAssured.given
 import static org.hamcrest.Matchers.equalTo
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class FitControllerTest extends RestAssuredSpecification {
+class FitControllerIT extends RestAssuredSpecification {
 
     @SpringBean
     FitApiService fitApiService = Mock()
