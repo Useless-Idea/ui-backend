@@ -10,7 +10,8 @@ import space.uselessidea.uibackend.api.config.security.CharacterPrincipal;
 import space.uselessidea.uibackend.domain.character.dto.CharactedData;
 import space.uselessidea.uibackend.domain.character.dto.CharacterFeature;
 import space.uselessidea.uibackend.domain.character.port.primary.CharacterPrimaryPort;
-import space.uselessidea.uibackend.infrastructure.eve.api.Skill;
+import space.uselessidea.uibackend.domain.eve.api.dto.SkillDto;
+import space.uselessidea.uibackend.domain.security.UserContext;
 
 @Service
 @RequiredArgsConstructor
@@ -18,17 +19,18 @@ public class CharacterApiService {
 
   private final CharacterPrimaryPort characterPrimaryPort;
 
-  public Map<Long, Skill> getUserSkills(Long characterId, CharacterPrincipal characterPrincipal) {
-    return characterPrimaryPort.getUserSkills(characterId, characterPrincipal);
+  public Map<Long, SkillDto> getUserSkills(
+      Long characterId, CharacterPrincipal characterPrincipal) {
+    return characterPrimaryPort.getUserSkills(characterId, toUserContext(characterPrincipal));
   }
 
   public CharactedData getCharacter(Long characterId, CharacterPrincipal characterPrincipal) {
-    return characterPrimaryPort.getCharacterData(characterId, characterPrincipal);
+    return characterPrimaryPort.getCharacterData(characterId, toUserContext(characterPrincipal));
   }
 
   public Page<CharactedData> getCharacters(
       Pageable pageable, CharacterPrincipal characterPrincipal) {
-    return characterPrimaryPort.getCharacterDataPage(pageable, characterPrincipal);
+    return characterPrimaryPort.getCharacterDataPage(pageable, toUserContext(characterPrincipal));
   }
 
   public Set<CharacterFeature> getCharacterFeatures(Long characterId) {
@@ -36,6 +38,19 @@ public class CharacterApiService {
   }
 
   public Map<Long, String> getCharacterIdNameMap(CharacterPrincipal characterPrincipal) {
-    return characterPrimaryPort.getCharacterIdNameMap(characterPrincipal);
+    return characterPrimaryPort.getCharacterIdNameMap(toUserContext(characterPrincipal));
+  }
+
+  private UserContext toUserContext(CharacterPrincipal principal) {
+    if (principal == null) {
+      return null;
+    }
+    return UserContext.builder()
+        .characterId(principal.getCharacterId())
+        .charName(principal.getCharName())
+        .corpId(principal.getCorpId())
+        .roles(principal.getRoles())
+        .permissions(principal.getPermissions())
+        .build();
   }
 }

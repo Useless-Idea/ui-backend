@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+import space.uselessidea.uibackend.domain.token.dto.TokenDataDto;
 import space.uselessidea.uibackend.domain.token.port.secondary.EveAuthSecondaryPort;
 import space.uselessidea.uibackend.infrastructure.eve.auth.data.TokenData;
 import space.uselessidea.uibackend.properties.EveProperties;
@@ -38,21 +39,22 @@ public class EveAuthAdapter implements EveAuthSecondaryPort {
   }
 
   @Override
-  public TokenData refreshToken(String refreshToken) {
+  public TokenDataDto refreshToken(String refreshToken) {
     String form = "grant_type=refresh_token&refresh_token=" + refreshToken;
 
     return getTokenDataByForm(form);
   }
 
-  private TokenData getTokenDataByForm(String form) {
+  private TokenDataDto getTokenDataByForm(String form) {
     RestTemplate restTemplate = new RestTemplate();
 
     HttpEntity<String> request = new HttpEntity<String>(form, createHeaders());
-    return restTemplate.postForObject(TOKEN_URL, request, TokenData.class);
+    TokenData tokenData = restTemplate.postForObject(TOKEN_URL, request, TokenData.class);
+    return map(tokenData);
   }
 
   @Override
-  public TokenData handleCallback(String code) {
+  public TokenDataDto handleCallback(String code) {
     String form = "grant_type=authorization_code&code=" + code;
     return getTokenDataByForm(form);
   }
@@ -68,5 +70,16 @@ public class EveAuthAdapter implements EveAuthSecondaryPort {
   private String getEncodedAuth() {
     String originalInput = eveProperties.getClientId() + ":" + eveProperties.getSecret();
     return Base64.getEncoder().encodeToString(originalInput.getBytes());
+  }
+
+  private TokenDataDto map(TokenData tokenData) {
+    if (tokenData == null) {
+      return null;
+    }
+    return TokenDataDto.builder()
+        .accessToken(tokenData.getAccessToken())
+        .refreshToken(tokenData.getRefreshToken())
+        .expiresIn(tokenData.getExpiresIn())
+        .build();
   }
 }

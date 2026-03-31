@@ -7,8 +7,8 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 import space.uselessidea.uibackend.api.config.rabbit.RabbitMqConfig;
 import space.uselessidea.uibackend.domain.exception.ApplicationException;
+import space.uselessidea.uibackend.domain.token.dto.TokenDataDto;
 import space.uselessidea.uibackend.domain.token.port.primary.TokenPrimaryPort;
-import space.uselessidea.uibackend.infrastructure.eve.auth.data.TokenData;
 
 @Component
 @RequiredArgsConstructor
@@ -20,7 +20,7 @@ public class TokenListener {
   @RabbitListener(queues = {RabbitMqConfig.TOKEN_QUEUE})
   private void handleNewToken(String token) {
     Gson gson = new Gson();
-    TokenData tokenData = gson.fromJson(token, TokenData.class);
+    TokenDataDto tokenData = gson.fromJson(token, TokenDataDto.class);
     Long charId;
     try {
       charId = tokenPrimaryPort.addToken(tokenData);

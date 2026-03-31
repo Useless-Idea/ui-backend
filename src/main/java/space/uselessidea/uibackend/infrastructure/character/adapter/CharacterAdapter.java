@@ -9,6 +9,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import space.uselessidea.uibackend.domain.character.dto.CharactedData;
 import space.uselessidea.uibackend.domain.character.port.secondary.CharacterSecondaryPort;
+import space.uselessidea.uibackend.domain.eve.api.dto.CharacterPublicDataDto;
+import space.uselessidea.uibackend.domain.eve.api.dto.CorporationPublicDataDto;
 import space.uselessidea.uibackend.domain.eve.api.secondary.EveApiPort;
 import space.uselessidea.uibackend.infrastructure.character.persistence.Character;
 import space.uselessidea.uibackend.infrastructure.character.persistence.Corporation;
@@ -16,8 +18,6 @@ import space.uselessidea.uibackend.infrastructure.character.persistence.Permissi
 import space.uselessidea.uibackend.infrastructure.character.persistence.Role;
 import space.uselessidea.uibackend.infrastructure.character.repository.CharacterRepository;
 import space.uselessidea.uibackend.infrastructure.character.repository.CorporationRepository;
-import space.uselessidea.uibackend.infrastructure.eve.api.data.CharacterPublicData;
-import space.uselessidea.uibackend.infrastructure.eve.api.data.CorporationPublicData;
 
 @Service
 @RequiredArgsConstructor
@@ -56,7 +56,7 @@ public class CharacterAdapter implements CharacterSecondaryPort {
   }
 
   private Character createCharacter(Long characterId) {
-    CharacterPublicData characterPublicData = eveApiPort.getCharPublicData(characterId);
+    CharacterPublicDataDto characterPublicData = eveApiPort.getCharPublicData(characterId);
     Corporation corporation = getCorporation(characterPublicData.getCorporationId());
     Character character = new Character();
     character.setId(characterId);
@@ -74,7 +74,7 @@ public class CharacterAdapter implements CharacterSecondaryPort {
   }
 
   private Corporation createCorporation(Long corporationId) {
-    CorporationPublicData corporationPublicData =
+    CorporationPublicDataDto corporationPublicData =
         eveApiPort.getCorporationPublicData(corporationId);
     Corporation corporation = new Corporation();
     corporation.setName(corporationPublicData.getName());

@@ -5,23 +5,22 @@ import java.util.Set;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
 import space.uselessidea.uibackend.domain.fit.dto.FitDto;
+import space.uselessidea.uibackend.domain.fit.dto.PilotsDto;
 import space.uselessidea.uibackend.domain.fit.dto.SearchFitDto;
-import space.uselessidea.uibackend.infrastructure.fit.persistence.Fit;
-import space.uselessidea.uibackend.infrastructure.fit.persistence.Pilots;
 
 public interface FitSecondaryPort {
 
   UUID saveFit(FitDto eft);
 
-  Optional<Fit> updatePilotsList(UUID fitUuid, Pilots pilots);
+  Optional<FitDto> updatePilotsList(UUID fitUuid, PilotsDto pilots);
 
-  Optional<Fit> getFitByUuid(UUID fitUuid);
+  Optional<FitDto> getFitByUuid(UUID fitUuid);
 
   void deleteFit(UUID fitUuid);
 
   Set<UUID> getAllUuid();
 
-  Page<Fit> getFits(SearchFitDto searchFitDto);
+  Page<FitDto> getFits(SearchFitDto searchFitDto);
 
   Set<String> getAllDoctrines();
 }

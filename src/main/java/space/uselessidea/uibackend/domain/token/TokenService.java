@@ -21,10 +21,10 @@ import space.uselessidea.uibackend.domain.FeatureEnum;
 import space.uselessidea.uibackend.domain.exception.ApplicationException;
 import space.uselessidea.uibackend.domain.exception.ErrorCode;
 import space.uselessidea.uibackend.domain.token.dto.EsiTokenDto;
+import space.uselessidea.uibackend.domain.token.dto.TokenDataDto;
 import space.uselessidea.uibackend.domain.token.port.primary.TokenPrimaryPort;
 import space.uselessidea.uibackend.domain.token.port.secondary.EveAuthSecondaryPort;
 import space.uselessidea.uibackend.domain.token.port.secondary.TokenSecondaryPort;
-import space.uselessidea.uibackend.infrastructure.eve.auth.data.TokenData;
 import space.uselessidea.uibackend.properties.EveProperties;
 
 @Service
@@ -41,7 +41,7 @@ public class TokenService implements TokenPrimaryPort {
   private final ConcurrentHashMap<Long, Lock> locks = new ConcurrentHashMap<>();
 
   @Override
-  public Long addToken(TokenData tokenData) {
+  public Long addToken(TokenDataDto tokenData) {
     if (!eveAuthSecondaryPort.verifyToken(tokenData.getAccessToken())) {
       throw new ApplicationException(ErrorCode.ACCESS_TOKEN_IS_INVALID);
     }
@@ -84,7 +84,7 @@ public class TokenService implements TokenPrimaryPort {
   }
 
   public Optional<String> refreshToken(EsiTokenDto esiTokenDto) {
-    TokenData tokenData = null;
+    TokenDataDto tokenData = null;
     try {
       tokenData = eveAuthSecondaryPort.refreshToken(esiTokenDto.getRefreshToken());
     } catch (HttpClientErrorException e) {

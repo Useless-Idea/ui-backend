@@ -2,10 +2,10 @@ package space.uselessidea.uibackend.domain.auth;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import space.uselessidea.uibackend.api.config.security.CharacterPrincipal;
 import space.uselessidea.uibackend.domain.auth.dto.AuthMeResponse;
+import space.uselessidea.uibackend.domain.eve.api.dto.CorporationPublicDataDto;
 import space.uselessidea.uibackend.domain.eve.api.secondary.EveApiPort;
-import space.uselessidea.uibackend.infrastructure.eve.api.data.CorporationPublicData;
+import space.uselessidea.uibackend.domain.security.UserContext;
 
 @Service
 @RequiredArgsConstructor
@@ -13,9 +13,9 @@ public class AuthService {
 
   private final EveApiPort eveApiPort;
 
-  public AuthMeResponse getMe(CharacterPrincipal jwtUserToken) {
+  public AuthMeResponse getMe(UserContext jwtUserToken) {
     Long corporationId = jwtUserToken.getCorpId();
-    CorporationPublicData corporationPublicData =
+    CorporationPublicDataDto corporationPublicData =
         eveApiPort.getCorporationPublicData(corporationId);
     return AuthMeResponse.builder()
         .charId(jwtUserToken.getCharacterId())
