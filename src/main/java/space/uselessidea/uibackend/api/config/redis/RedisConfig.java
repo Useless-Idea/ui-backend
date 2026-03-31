@@ -17,8 +17,8 @@ import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.RedisSerializationContext.SerializationPair;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import space.uselessidea.uibackend.domain.eve.api.dto.SkillDto;
 import space.uselessidea.uibackend.domain.fit.dto.FitDto;
-import space.uselessidea.uibackend.infrastructure.eve.api.Skill;
 import space.uselessidea.uibackend.infrastructure.eve.api.data.ItemTypeApiResponse;
 
 @Configuration
@@ -70,7 +70,7 @@ public class RedisConfig {
                 RedisSerializationContext.SerializationPair.fromSerializer(
                     new Jackson2JsonRedisSerializer<>(FitDto.class)));
     JavaType type =
-        objectMapper.getTypeFactory().constructMapType(Map.class, Long.class, Skill.class);
+        objectMapper.getTypeFactory().constructMapType(Map.class, Long.class, SkillDto.class);
 
     RedisCacheConfiguration userSkillsCacheConfig =
         RedisCacheConfiguration.defaultCacheConfig()

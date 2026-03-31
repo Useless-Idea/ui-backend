@@ -4,10 +4,10 @@ import java.util.Map;
 import java.util.Set;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import space.uselessidea.uibackend.api.config.security.CharacterPrincipal;
 import space.uselessidea.uibackend.domain.character.dto.CharactedData;
 import space.uselessidea.uibackend.domain.character.dto.CharacterFeature;
-import space.uselessidea.uibackend.infrastructure.eve.api.Skill;
+import space.uselessidea.uibackend.domain.eve.api.dto.SkillDto;
+import space.uselessidea.uibackend.domain.security.UserContext;
 
 public interface CharacterPrimaryPort {
 
@@ -15,16 +15,15 @@ public interface CharacterPrimaryPort {
 
   Set<Long> getCharacterIds();
 
-  Map<Long, Skill> getUserSkills(Long characterId, CharacterPrincipal principal);
+  Map<Long, SkillDto> getUserSkills(Long characterId, UserContext principal);
 
-  CharactedData getCharacterData(Long characterId, CharacterPrincipal principal);
+  CharactedData getCharacterData(Long characterId, UserContext principal);
 
   CharactedData updateCharacterData(Long characterId);
 
-  Page<CharactedData> getCharacterDataPage(
-      Pageable pageable, CharacterPrincipal characterPrincipal);
+  Page<CharactedData> getCharacterDataPage(Pageable pageable, UserContext characterPrincipal);
 
-  Map<Long, String> getCharacterIdNameMap(CharacterPrincipal characterPrincipal);
+  Map<Long, String> getCharacterIdNameMap(UserContext characterPrincipal);
 
   boolean hasRequiredSkills(Long characterId, Map<Long, Long> requiredSkills);
 

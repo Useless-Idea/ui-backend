@@ -16,17 +16,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import space.uselessidea.uibackend.api.config.security.CharacterPrincipal;
 import space.uselessidea.uibackend.domain.FeatureEnum;
 import space.uselessidea.uibackend.domain.character.dto.CharactedData;
 import space.uselessidea.uibackend.domain.character.dto.CharacterFeature;
 import space.uselessidea.uibackend.domain.character.port.primary.CharacterPrimaryPort;
 import space.uselessidea.uibackend.domain.character.port.secondary.CharacterSecondaryPort;
+import space.uselessidea.uibackend.domain.eve.api.dto.SkillDto;
 import space.uselessidea.uibackend.domain.eve.api.secondary.EveApiPort;
 import space.uselessidea.uibackend.domain.exception.ApplicationException;
 import space.uselessidea.uibackend.domain.exception.ErrorCode;
+import space.uselessidea.uibackend.domain.security.UserContext;
 import space.uselessidea.uibackend.domain.token.port.primary.TokenPrimaryPort;
-import space.uselessidea.uibackend.infrastructure.eve.api.Skill;
 
 @Service
 @RequiredArgsConstructor
@@ -50,14 +50,14 @@ public class CharacterService implements CharacterPrimaryPort {
   }
 
   @Override
-  public Map<Long, Skill> getUserSkills(Long characterId, CharacterPrincipal principal) {
+  public Map<Long, SkillDto> getUserSkills(Long characterId, UserContext principal) {
     canGetUserSkills(characterId, principal);
     Optional<String> accessToken = tokenPrimaryPort.getAccessToken(characterId);
     return accessToken.map(token -> eveApiPort.getUserSkills(characterId, token)).orElse(Map.of());
   }
 
   @Override
-  public CharactedData getCharacterData(Long characterId, CharacterPrincipal principal) {
+  public CharactedData getCharacterData(Long characterId, UserContext principal) {
     canGetCharacterData(characterId, principal);
     return characterSecondaryPort.getCharacterData(characterId);
   }
@@ -69,13 +69,13 @@ public class CharacterService implements CharacterPrimaryPort {
 
   @Override
   public Page<CharactedData> getCharacterDataPage(
-      Pageable pageable, CharacterPrincipal characterPrincipal) {
+      Pageable pageable, UserContext characterPrincipal) {
     canGetCharacterDataPage(characterPrincipal);
     return characterSecondaryPort.getCharacterDataPage(pageable);
   }
 
   @Override
-  public Map<Long, String> getCharacterIdNameMap(CharacterPrincipal characterPrincipal) {
+  public Map<Long, String> getCharacterIdNameMap(UserContext characterPrincipal) {
     return characterSecondaryPort
         .getCharacterDataPage(PageRequest.of(0, Integer.MAX_VALUE))
         .stream()
@@ -84,7 +84,7 @@ public class CharacterService implements CharacterPrimaryPort {
 
   @Override
   public boolean hasRequiredSkills(Long characterId, Map<Long, Long> requiredSkills) {
-    Map<Long, Skill> charSkills = getUserSkills(characterId, null);
+    Map<Long, SkillDto> charSkills = getUserSkills(characterId, null);
     for (Entry<Long, Long> requiredEntry : requiredSkills.entrySet()) {
       if (!charSkills.containsKey(requiredEntry.getKey())) {
         return false;
@@ -139,7 +139,7 @@ public class CharacterService implements CharacterPrimaryPort {
     }
   }
 
-  private void canGetCharacterDataPage(CharacterPrincipal principal) {
+  private void canGetCharacterDataPage(UserContext principal) {
 
     if (principal.getRoles().contains("ADMIN")) {
       return;
@@ -147,7 +147,7 @@ public class CharacterService implements CharacterPrimaryPort {
     throw new ApplicationException(ErrorCode.INVALID_PERMISSION);
   }
 
-  private void canGetCharacterData(Long characterId, CharacterPrincipal principal) {
+  private void canGetCharacterData(Long characterId, UserContext principal) {
     if (principal == null) {
       return;
     }
@@ -161,7 +161,7 @@ public class CharacterService implements CharacterPrimaryPort {
     throw new ApplicationException(ErrorCode.INVALID_PERMISSION);
   }
 
-  private void canGetUserSkills(Long characterId, CharacterPrincipal principal) {
+  private void canGetUserSkills(Long characterId, UserContext principal) {
     if (principal == null) {
       return;
     }

@@ -17,8 +17,9 @@ import space.uselessidea.uibackend.domain.FeatureEnum;
 import space.uselessidea.uibackend.domain.auth.AuthService;
 import space.uselessidea.uibackend.domain.auth.AuthUtils;
 import space.uselessidea.uibackend.domain.auth.dto.AuthMeResponse;
-import space.uselessidea.uibackend.infrastructure.eve.auth.EveAuthAdapter;
-import space.uselessidea.uibackend.infrastructure.eve.auth.data.TokenData;
+import space.uselessidea.uibackend.domain.security.UserContext;
+import space.uselessidea.uibackend.domain.token.dto.TokenDataDto;
+import space.uselessidea.uibackend.domain.token.port.secondary.EveAuthSecondaryPort;
 import space.uselessidea.uibackend.properties.EveProperties;
 
 @Service
@@ -28,14 +29,14 @@ public class AuthApiService {
 
   private final EveProperties eveProperties;
   private final AuthService authService;
-  private final EveAuthAdapter eveAuthAdapter;
+  private final EveAuthSecondaryPort eveAuthSecondaryPort;
   private final RabbitTemplate rabbitTemplate;
   private final Queue tokenQueue;
   private final Queue stateIdQueue;
   private final AuthUtils authUtils;
 
   public AuthMeResponse getMe(CharacterPrincipal principal) {
-    return authService.getMe(principal);
+    return authService.getMe(toUserContext(principal));
   }
 
   public String generateUrlForToken(Set<FeatureEnum> featureEnums) {
@@ -53,7 +54,7 @@ public class AuthApiService {
   }
 
   public void handleCallback(String code, String state) {
-    TokenData token = eveAuthAdapter.handleCallback(code);
+    TokenDataDto token = eveAuthSecondaryPort.handleCallback(code);
 
     Gson gson = new Gson();
     rabbitTemplate.convertAndSend(tokenQueue.getName(), gson.toJson(token));
@@ -67,5 +68,18 @@ public class AuthApiService {
 
     log.info(token.getAccessToken());
     log.info(token.getRefreshToken());
+  }
+
+  private UserContext toUserContext(CharacterPrincipal principal) {
+    if (principal == null) {
+      return null;
+    }
+    return UserContext.builder()
+        .characterId(principal.getCharacterId())
+        .charName(principal.getCharName())
+        .corpId(principal.getCorpId())
+        .roles(principal.getRoles())
+        .permissions(principal.getPermissions())
+        .build();
   }
 }

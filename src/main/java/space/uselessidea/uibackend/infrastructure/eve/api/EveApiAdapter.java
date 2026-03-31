@@ -10,6 +10,9 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import space.uselessidea.uibackend.domain.category.dto.CategoryDto;
+import space.uselessidea.uibackend.domain.eve.api.dto.CharacterPublicDataDto;
+import space.uselessidea.uibackend.domain.eve.api.dto.CorporationPublicDataDto;
+import space.uselessidea.uibackend.domain.eve.api.dto.SkillDto;
 import space.uselessidea.uibackend.domain.eve.api.secondary.EveApiPort;
 import space.uselessidea.uibackend.domain.group.dto.GroupDto;
 import space.uselessidea.uibackend.domain.itemtype.dto.ItemTypeDto;
@@ -26,21 +29,32 @@ public class EveApiAdapter implements EveApiPort {
   private final EveApiFeignClient eveApiFeignClient;
 
   @Override
-  public CharacterPublicData getCharPublicData(Long charId) {
-    return eveApiFeignClient.getCharacterPublicData(charId);
+  public CharacterPublicDataDto getCharPublicData(Long charId) {
+    CharacterPublicData response = eveApiFeignClient.getCharacterPublicData(charId);
+    return CharacterPublicDataDto.builder()
+        .name(response.getName())
+        .corporationId(response.getCorporationId())
+        .allianceId(response.getAllianceId())
+        .build();
   }
 
   @Override
-  public CorporationPublicData getCorporationPublicData(Long corporationId) {
-    return eveApiFeignClient.getCorporationPublicData(corporationId);
+  public CorporationPublicDataDto getCorporationPublicData(Long corporationId) {
+    CorporationPublicData response = eveApiFeignClient.getCorporationPublicData(corporationId);
+    return CorporationPublicDataDto.builder()
+        .name(response.getName())
+        .allianceId(response.getAllianceId())
+        .ceoId(response.getCeoId())
+        .ticker(response.getTicker())
+        .build();
   }
 
   @Override
   @Cacheable(value = "user-skill", key = "#characterId")
-  public Map<Long, Skill> getUserSkills(Long characterId, String accessToken) {
+  public Map<Long, SkillDto> getUserSkills(Long characterId, String accessToken) {
     SkillsApiResponse skillsApiResponse =
         eveApiFeignClient.getCharacterSkills(characterId, accessToken);
-    Map<Long, Skill> map = toSkillMap(skillsApiResponse);
+    Map<Long, SkillDto> map = toSkillMap(skillsApiResponse);
     return map;
   }
 
@@ -95,18 +109,18 @@ public class EveApiAdapter implements EveApiPort {
     return eveApiFeignClient.getItemByItemTypeId(typeId);
   }
 
-  private Map<Long, Skill> toSkillMap(SkillsApiResponse skillsApiResponse) {
+  private Map<Long, SkillDto> toSkillMap(SkillsApiResponse skillsApiResponse) {
     return skillsApiResponse.getSkills().stream()
         .map(
             skill ->
-                Skill.builder()
+                SkillDto.builder()
                     .skillId(skill.getSkillId())
                     .activeSkillLevel(skill.getActiveSkillLevel())
                     .skillpointsInSkill(skill.getSkillpointsInSkill())
                     .trainedSkillLevel(skill.getTrainedSkillLevel())
                     .name(getType(skill.getSkillId()).getName())
                     .build())
-        .collect(Collectors.toMap(Skill::getSkillId, s -> s));
+        .collect(Collectors.toMap(SkillDto::getSkillId, s -> s));
   }
 
   public String getStatus() {

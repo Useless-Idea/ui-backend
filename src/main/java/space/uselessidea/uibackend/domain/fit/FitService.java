@@ -22,14 +22,13 @@ import space.uselessidea.uibackend.domain.exception.ErrorCode;
 import space.uselessidea.uibackend.domain.fit.dto.FitDto;
 import space.uselessidea.uibackend.domain.fit.dto.FitDto.FitDtoBuilder;
 import space.uselessidea.uibackend.domain.fit.dto.FitForm;
+import space.uselessidea.uibackend.domain.fit.dto.PilotDto;
+import space.uselessidea.uibackend.domain.fit.dto.PilotsDto;
 import space.uselessidea.uibackend.domain.fit.dto.SearchFitDto;
 import space.uselessidea.uibackend.domain.fit.port.FitPrimaryPort;
 import space.uselessidea.uibackend.domain.fit.port.FitSecondaryPort;
 import space.uselessidea.uibackend.domain.itemtype.dto.ItemTypeDto;
 import space.uselessidea.uibackend.domain.itemtype.port.PrimaryItemTypePort;
-import space.uselessidea.uibackend.infrastructure.fit.persistence.Fit;
-import space.uselessidea.uibackend.infrastructure.fit.persistence.Pilot;
-import space.uselessidea.uibackend.infrastructure.fit.persistence.Pilots;
 
 @Slf4j
 @Service
@@ -71,7 +70,7 @@ public class FitService implements FitPrimaryPort {
 
     fitSecondaryPort.saveFit(fitDto);
     fitSecondaryPort.updatePilotsList(
-        fitUuid, Pilots.builder().active(List.of()).inactive(List.of()).build());
+        fitUuid, PilotsDto.builder().active(List.of()).inactive(List.of()).build());
     rabbitTemplate.convertAndSend(fitUpdateQueue.getName(), fitUuid);
 
     return getFitByUuid(fitUuid);
@@ -79,14 +78,13 @@ public class FitService implements FitPrimaryPort {
 
   @Transactional
   public void updateFit(UUID fitUuid) {
-    Fit fitE =
+    FitDto existingFit =
         fitSecondaryPort
             .getFitByUuid(fitUuid)
             .orElseThrow(() -> new ApplicationException(ErrorCode.FIT_NOT_EXIST, fitUuid));
-
-    FitDto fitDto = fromEft(fitE.getEft()).build();
-    fitDto.setUuid(fitE.getUuid());
-    fitDto.setDoctrines(normalizeDoctrines(fitE.getDoctrines()));
+    FitDto fitDto = fromEft(existingFit.getEft()).build();
+    fitDto.setUuid(fitUuid);
+    fitDto.setDoctrines(normalizeDoctrines(existingFit.getDoctrines()));
 
     fitSecondaryPort.saveFit(fitDto);
 
@@ -104,7 +102,7 @@ public class FitService implements FitPrimaryPort {
             .map(Map::entrySet)
             .flatMap(Set::stream)
             .collect(Collectors.toMap(Entry::getKey, Entry::getValue, Long::max));
-    List<Pilot> pilotsList =
+    List<PilotDto> pilotsList =
         characterPrimaryPort.getCharacterIds().stream()
             .filter(
                 characterId ->
@@ -112,21 +110,19 @@ public class FitService implements FitPrimaryPort {
             .map(characterId -> characterPrimaryPort.getCharacterData(characterId, null))
             .map(
                 characterData ->
-                    Pilot.builder()
+                    PilotDto.builder()
                         .name(characterData.getCharacterName())
                         .id(characterData.getCharacterId())
                         .build())
             .toList();
-    fitSecondaryPort.updatePilotsList(fitUuid, Pilots.builder().active(pilotsList).build());
+    fitSecondaryPort.updatePilotsList(fitUuid, PilotsDto.builder().active(pilotsList).build());
   }
 
   @Transactional
   public FitDto getFitByUuid(UUID uuid) {
-    Fit fit =
-        fitSecondaryPort
-            .getFitByUuid(uuid)
-            .orElseThrow(() -> new ApplicationException(ErrorCode.FIT_NOT_EXIST, uuid));
-    return mapToDto(fit);
+    return fitSecondaryPort
+        .getFitByUuid(uuid)
+        .orElseThrow(() -> new ApplicationException(ErrorCode.FIT_NOT_EXIST, uuid));
   }
 
   @Override
@@ -146,14 +142,13 @@ public class FitService implements FitPrimaryPort {
 
   @Override
   public Page<FitDto> getFitBySearchFitDto(SearchFitDto searchFitDto) {
-    return fitSecondaryPort.getFits(searchFitDto).map(this::mapToDto);
+    return fitSecondaryPort.getFits(searchFitDto);
   }
 
   @Override
   public Map<String, Long> getShipNameIdMap() {
     SearchFitDto searchFitDto = SearchFitDto.builder().page(0).size(Integer.MAX_VALUE).build();
     return fitSecondaryPort.getFits(searchFitDto).stream()
-        .map(this::mapToDto)
         .filter(fitDto -> fitDto.getShipName() != null && fitDto.getShipId() != null)
         .collect(Collectors.toMap(FitDto::getShipName, FitDto::getShipId, (a, b) -> a));
   }
@@ -162,18 +157,6 @@ public class FitService implements FitPrimaryPort {
   @Cacheable(value = "doctrine")
   public Set<String> getDoctrines() {
     return fitSecondaryPort.getAllDoctrines();
-  }
-
-  private FitDto mapToDto(Fit fit) {
-    return FitDto.builder()
-        .uuid(fit.getUuid())
-        .name(fit.getFitName())
-        .shipId(fit.getShipId())
-        .shipName(fit.getShipName())
-        .eft(fit.getEft())
-        .pilots(fit.getPilots())
-        .doctrines(normalizeDoctrines(fit.getDoctrines()))
-        .build();
   }
 
   private FitDtoBuilder fromEft(String eft) {

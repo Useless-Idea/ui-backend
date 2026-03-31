@@ -4,19 +4,19 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import space.uselessidea.uibackend.domain.category.dto.CategoryDto;
+import space.uselessidea.uibackend.domain.eve.api.dto.CharacterPublicDataDto;
+import space.uselessidea.uibackend.domain.eve.api.dto.CorporationPublicDataDto;
+import space.uselessidea.uibackend.domain.eve.api.dto.SkillDto;
 import space.uselessidea.uibackend.domain.group.dto.GroupDto;
 import space.uselessidea.uibackend.domain.itemtype.dto.ItemTypeDto;
-import space.uselessidea.uibackend.infrastructure.eve.api.Skill;
-import space.uselessidea.uibackend.infrastructure.eve.api.data.CharacterPublicData;
-import space.uselessidea.uibackend.infrastructure.eve.api.data.CorporationPublicData;
 
 public interface EveApiPort {
 
-  CharacterPublicData getCharPublicData(Long charId);
+  CharacterPublicDataDto getCharPublicData(Long charId);
 
-  CorporationPublicData getCorporationPublicData(Long corporationId);
+  CorporationPublicDataDto getCorporationPublicData(Long corporationId);
 
-  Map<Long, Skill> getUserSkills(Long characterId, String accessToken);
+  Map<Long, SkillDto> getUserSkills(Long characterId, String accessToken);
 
   Set<Long> getAllItemTypeId();
 

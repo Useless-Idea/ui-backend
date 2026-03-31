@@ -4,7 +4,7 @@ import java.util.UUID;
 import lombok.Builder;
 import lombok.Data;
 import space.uselessidea.uibackend.domain.fit.dto.FitDto;
-import space.uselessidea.uibackend.infrastructure.fit.persistence.Pilots;
+import space.uselessidea.uibackend.domain.fit.dto.PilotsDto;
 
 @Builder
 @Data
@@ -13,7 +13,7 @@ public class SimpleListFit {
   private UUID uuid;
   private String name;
   private String shipName;
-  private Pilots pilots;
+  private PilotsDto pilots;
   private Long shipId;
 
   public static SimpleListFit fromFitDto(FitDto fitDto) {

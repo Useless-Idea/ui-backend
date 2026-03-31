@@ -11,8 +11,8 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 import space.uselessidea.uibackend.domain.character.dto.CharactedData;
 import space.uselessidea.uibackend.domain.character.port.secondary.CharacterSecondaryPort;
+import space.uselessidea.uibackend.domain.eve.api.dto.CharacterPublicDataDto;
 import space.uselessidea.uibackend.domain.eve.api.secondary.EveApiPort;
-import space.uselessidea.uibackend.infrastructure.eve.api.data.CharacterPublicData;
 
 @RequiredArgsConstructor
 @Component
@@ -25,7 +25,7 @@ public class CustomAuthenticationTokenConverter
   @Override
   public AbstractAuthenticationToken convert(Jwt source) {
     Long charId = Long.valueOf(source.getClaimAsString("sub").split(":")[2]);
-    CharacterPublicData charPublicData = eveApiPort.getCharPublicData(charId);
+    CharacterPublicDataDto charPublicData = eveApiPort.getCharPublicData(charId);
     CharactedData characterData = characterPort.getCharacterData(charId);
     Set<String> userRole = characterData.getRoles();
     Set<String> userPermission = characterData.getPermission();

@@ -10,10 +10,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import space.uselessidea.uibackend.domain.FeatureEnum;
 import space.uselessidea.uibackend.domain.token.dto.EsiTokenDto;
+import space.uselessidea.uibackend.domain.token.dto.TokenDataDto;
 import space.uselessidea.uibackend.domain.token.port.secondary.TokenSecondaryPort;
 import space.uselessidea.uibackend.infrastructure.eve.api.token.persistence.EsiToken;
 import space.uselessidea.uibackend.infrastructure.eve.api.token.repository.EsiTokenRepository;
-import space.uselessidea.uibackend.infrastructure.eve.auth.data.TokenData;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +24,7 @@ public class TokenAdapter implements TokenSecondaryPort {
 
   @Override
   public EsiTokenDto saveToken(
-      Long charId, Instant expiresAt, TokenData tokenData, Set<FeatureEnum> featureSet) {
+      Long charId, Instant expiresAt, TokenDataDto tokenData, Set<FeatureEnum> featureSet) {
     EsiToken esiToken =
         esiTokenRepository
             .findById(charId)
