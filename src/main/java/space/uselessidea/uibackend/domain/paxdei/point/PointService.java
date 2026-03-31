@@ -4,7 +4,7 @@ import java.util.Set;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import space.uselessidea.uibackend.api.controller.paxdei.points.CreatePointRequest;
+import space.uselessidea.uibackend.domain.paxdei.point.dto.CreatePointCommand;
 import space.uselessidea.uibackend.domain.paxdei.point.dto.PointDto;
 import space.uselessidea.uibackend.domain.paxdei.point.port.PointPrimaryPoint;
 import space.uselessidea.uibackend.domain.paxdei.point.port.PointSecondaryPort;
@@ -16,8 +16,8 @@ public class PointService implements PointPrimaryPoint {
   private final PointSecondaryPort pointSecondaryPort;
 
   @Override
-  public void createPoint(CreatePointRequest createPointRequest) {
-    pointSecondaryPort.createPoint(createPointRequest);
+  public void createPoint(CreatePointCommand createPointCommand) {
+    pointSecondaryPort.createPoint(createPointCommand);
   }
 
   @Override

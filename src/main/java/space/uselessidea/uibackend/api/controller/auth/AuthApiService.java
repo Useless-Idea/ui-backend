@@ -65,9 +65,6 @@ public class AuthApiService {
     rabbitTemplate.convertAndSend(
         stateIdQueue.getName(),
         gson.toJson(ScopeUserDto.builder().id(userId).state(state).build()));
-
-    log.info(token.getAccessToken());
-    log.info(token.getRefreshToken());
   }
 
   private UserContext toUserContext(CharacterPrincipal principal) {

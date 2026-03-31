@@ -1,14 +1,12 @@
 package space.uselessidea.uibackend.domain.paxdei.point.dto;
 
-import java.util.UUID;
 import lombok.Builder;
 import lombok.Data;
 
-@Builder
 @Data
-public class PointDto {
+@Builder
+public class CreatePointCommand {
 
-  private UUID uuid;
   private Long xpos;
   private Long ypos;
   private String text;
