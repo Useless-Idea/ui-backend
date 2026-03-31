@@ -7,7 +7,7 @@ import space.uselessidea.uibackend.RestAssuredSpecification
 import static io.restassured.RestAssured.given
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class AuthControllerTest extends RestAssuredSpecification {
+class AuthControllerIT extends RestAssuredSpecification {
 
     def "get my info as ADMIN"() {
         when:
