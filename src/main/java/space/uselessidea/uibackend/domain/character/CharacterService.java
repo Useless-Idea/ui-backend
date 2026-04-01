@@ -25,6 +25,8 @@ import space.uselessidea.uibackend.domain.eve.api.dto.SkillDto;
 import space.uselessidea.uibackend.domain.eve.api.secondary.EveApiPort;
 import space.uselessidea.uibackend.domain.exception.ApplicationException;
 import space.uselessidea.uibackend.domain.exception.ErrorCode;
+import space.uselessidea.uibackend.domain.permission.Permissions;
+import space.uselessidea.uibackend.domain.permission.Roles;
 import space.uselessidea.uibackend.domain.security.UserContext;
 import space.uselessidea.uibackend.domain.token.port.primary.TokenPrimaryPort;
 
@@ -141,10 +143,19 @@ public class CharacterService implements CharacterPrimaryPort {
 
   private void canGetCharacterDataPage(UserContext principal) {
 
-    if (principal.getRoles().contains("ADMIN")) {
+    if (hasPermission(principal, Permissions.SHOW_CHAR)) {
       return;
     }
     throw new ApplicationException(ErrorCode.INVALID_PERMISSION);
+  }
+
+  private boolean hasPermission(UserContext principal, Permissions permission) {
+    return principal.getPermissions() != null
+        && principal.getPermissions().contains(permission.name());
+  }
+
+  private boolean hasRole(UserContext principal, Roles role) {
+    return principal.getRoles() != null && principal.getRoles().contains(role.name());
   }
 
   private void canGetCharacterData(Long characterId, UserContext principal) {
@@ -154,7 +165,7 @@ public class CharacterService implements CharacterPrimaryPort {
     if (principal.getCharacterId().equals(characterId)) {
       return;
     }
-    if (principal.getRoles().contains("ADMIN")) {
+    if (hasRole(principal, Roles.ADMIN)) {
       return;
     }
 
@@ -168,7 +179,7 @@ public class CharacterService implements CharacterPrimaryPort {
     if (principal.getCharacterId().equals(characterId)) {
       return;
     }
-    if (principal.getRoles().contains("ADMIN")) {
+    if (hasRole(principal, Roles.ADMIN)) {
       return;
     }
     throw new ApplicationException(ErrorCode.INVALID_PERMISSION);

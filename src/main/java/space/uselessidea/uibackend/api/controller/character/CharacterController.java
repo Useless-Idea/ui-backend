@@ -1,7 +1,6 @@
 package space.uselessidea.uibackend.api.controller.character;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -60,8 +59,7 @@ public class CharacterController {
     @ApiResponse(responseCode = "403", description = "Brak dostępu do postaci")
   })
   public ResponseEntity getSkills(
-      @PathVariable("id") Long characterId,
-      @Parameter(hidden = true) CharacterPrincipal characterPrincipal) {
+      @PathVariable("id") Long characterId, CharacterPrincipal characterPrincipal) {
     return ResponseEntity.ok(characterApiService.getUserSkills(characterId, characterPrincipal));
   }
 
@@ -105,8 +103,7 @@ public class CharacterController {
     @ApiResponse(responseCode = "403", description = "Brak dostępu do postaci")
   })
   public ResponseEntity getCharacter(
-      @PathVariable("id") Long characterId,
-      @Parameter(hidden = true) CharacterPrincipal characterPrincipal) {
+      @PathVariable("id") Long characterId, CharacterPrincipal characterPrincipal) {
     return ResponseEntity.ok(characterApiService.getCharacter(characterId, characterPrincipal));
   }
 
@@ -149,8 +146,7 @@ public class CharacterController {
                             """))),
     @ApiResponse(responseCode = "401", description = "Brak autoryzacji")
   })
-  public ResponseEntity getCharacterPage(
-      Pageable pageable, @Parameter(hidden = true) CharacterPrincipal characterPrincipal) {
+  public ResponseEntity getCharacterPage(Pageable pageable, CharacterPrincipal characterPrincipal) {
     return ResponseEntity.ok(characterApiService.getCharacters(pageable, characterPrincipal));
   }
 
@@ -169,7 +165,7 @@ public class CharacterController {
     @ApiResponse(responseCode = "401", description = "Brak autoryzacji")
   })
   public ResponseEntity<Map<Long, String>> getCharacterIdNameMap(
-      @Parameter(hidden = true) CharacterPrincipal characterPrincipal) {
+      CharacterPrincipal characterPrincipal) {
     return ResponseEntity.ok(characterApiService.getCharacterIdNameMap(characterPrincipal));
   }
 
@@ -195,8 +191,7 @@ public class CharacterController {
                             """))),
     @ApiResponse(responseCode = "401", description = "Brak autoryzacji")
   })
-  public ResponseEntity<Set<CharacterFeature>> getScope(
-      @Parameter(hidden = true) CharacterPrincipal principal) {
+  public ResponseEntity<Set<CharacterFeature>> getScope(CharacterPrincipal principal) {
 
     Long characterId = principal.getCharacterId();
     Set<CharacterFeature> response = characterApiService.getCharacterFeatures(characterId);
