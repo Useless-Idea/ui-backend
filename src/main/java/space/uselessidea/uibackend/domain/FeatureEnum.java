@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.Getter;
@@ -28,5 +29,13 @@ public enum FeatureEnum {
 
   public String getName() {
     return name();
+  }
+
+  public static Optional<FeatureEnum> fromString(String name) {
+    try {
+      return Optional.of(valueOf(name));
+    } catch (IllegalArgumentException e) {
+      return Optional.empty();
+    }
   }
 }

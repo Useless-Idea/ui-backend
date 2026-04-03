@@ -8,6 +8,4 @@ public interface TokenPrimaryPort {
   Long addToken(TokenDataDto tokenData);
 
   Optional<String> getAccessToken(Long characterId);
-
-  void refreshAllTokens();
 }

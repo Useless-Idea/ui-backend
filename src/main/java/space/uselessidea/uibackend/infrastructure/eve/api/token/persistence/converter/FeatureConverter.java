@@ -4,6 +4,7 @@ import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import space.uselessidea.uibackend.domain.FeatureEnum;
@@ -21,7 +22,10 @@ public class FeatureConverter implements AttributeConverter<Set<FeatureEnum>, St
   @Override
   public Set<FeatureEnum> convertToEntityAttribute(String dbData) {
     return dbData != null
-        ? Arrays.stream(dbData.split(",")).map(FeatureEnum::valueOf).collect(Collectors.toSet())
+        ? Arrays.stream(dbData.split(","))
+            .map(FeatureEnum::fromString)
+            .flatMap(Optional::stream)
+            .collect(Collectors.toSet())
         : new HashSet<>();
   }
 }
