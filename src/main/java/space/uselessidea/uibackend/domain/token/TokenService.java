@@ -9,6 +9,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.cache.annotation.Cacheable;
@@ -42,9 +43,6 @@ public class TokenService implements TokenPrimaryPort {
 
   @Override
   public Long addToken(TokenDataDto tokenData) {
-    if (!eveAuthSecondaryPort.verifyToken(tokenData.getAccessToken())) {
-      throw new ApplicationException(ErrorCode.ACCESS_TOKEN_IS_INVALID);
-    }
     JwtDecoder jwtDecoder =
         NimbusJwtDecoder.withIssuerLocation(eveProperties.getIssuerUri()).build();
     Jwt jwt = jwtDecoder.decode(tokenData.getAccessToken());
@@ -78,13 +76,11 @@ public class TokenService implements TokenPrimaryPort {
     }
   }
 
-  @Override
-  public void refreshAllTokens() {
-    tokenSecondaryPort.getAllTokens().forEach(this::refreshToken);
-  }
-
   public Optional<String> refreshToken(EsiTokenDto esiTokenDto) {
     TokenDataDto tokenData = null;
+    if (StringUtils.isBlank(esiTokenDto.getRefreshToken())) {
+      return Optional.empty();
+    }
     try {
       tokenData = eveAuthSecondaryPort.refreshToken(esiTokenDto.getRefreshToken());
     } catch (HttpClientErrorException e) {
